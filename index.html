@@ -59,6 +59,70 @@ const ARTICLES = [
   }
 ];
 
+// Sub Component: Journal All Page
+const JournalAllPage = ({ onBack }) => (
+  <div className="pt-32 pb-24 bg-gray-50 min-h-screen">
+    <div className="container mx-auto px-6">
+      <div className="mb-12">
+        <button 
+          onClick={onBack}
+          className="group flex items-center text-xs tracking-widest text-gray-500 hover:text-gray-900 transition-colors mb-6"
+        >
+          <ArrowLeft size={14} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+          BACK TO HOME
+        </button>
+        <h2 className="text-4xl md:text-5xl font-serif mb-4">Journal & Columns</h2>
+        <p className="text-sm text-gray-500 font-serif">知性を磨く、視点を養うためのアーカイブ。</p>
+      </div>
+
+      {/* Categories */}
+      <div className="flex flex-wrap gap-4 mb-16 border-b border-gray-200 pb-6">
+        {['ALL', 'HISTORY', 'TECHNIQUE', 'GALLERY', 'INTERVIEW'].map((cat, idx) => (
+          <button 
+            key={cat} 
+            className={`text-xs tracking-widest px-4 py-2 transition-colors ${idx === 0 ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-200'}`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Article Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        {ARTICLES.map((article) => (
+          <article key={article.id} className="group cursor-pointer">
+            <div className={`aspect-[4/5] ${article.bgColor} overflow-hidden mb-6 relative`}>
+               <div className={`absolute inset-0 group-hover:scale-105 transition-transform duration-700 flex items-center justify-center ${article.iconColor}`}>
+                  <span className="font-serif italic text-2xl">{article.category}</span>
+               </div>
+            </div>
+            <div className="space-y-3">
+              <span className="text-xs font-bold tracking-widest text-gray-400 uppercase">{article.subCategory}</span>
+              <h3 className="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors">
+                {article.title}
+              </h3>
+              <p className="text-xs text-gray-500 line-clamp-3 leading-relaxed">
+                {article.excerpt}
+              </p>
+              <div className="pt-2">
+                <span className="text-[10px] border-b border-gray-300 pb-0.5 text-gray-400 group-hover:text-gray-900 group-hover:border-gray-900 transition-colors">READ MORE</span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Pagination Placeholder */}
+      <div className="mt-20 flex justify-center gap-2">
+         <span className="w-8 h-8 flex items-center justify-center border border-gray-900 text-gray-900 text-xs">1</span>
+         <span className="w-8 h-8 flex items-center justify-center border border-transparent text-gray-400 hover:text-gray-900 text-xs cursor-pointer">2</span>
+         <span className="w-8 h-8 flex items-center justify-center border border-transparent text-gray-400 hover:text-gray-900 text-xs cursor-pointer">3</span>
+      </div>
+    </div>
+  </div>
+);
+
+// Main App Component
 const App = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -77,13 +141,23 @@ const App = () => {
   const navigateTo = (view, sectionId = null) => {
     setCurrentView(view);
     setIsMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // ハッシュリンク（ページ内リンク）の処理を簡易的にシミュレート
+    // 画面遷移時にトップへスクロール
+    if (view !== 'home' || !sectionId) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // ホーム内のセクション移動の場合
     if (view === 'home' && sectionId) {
+       // Viewの切り替え完了を待つために少し遅延させる
       setTimeout(() => {
         const element = document.getElementById(sectionId);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        } else {
+           // 要素が見つからない場合（View切り替え直後など）はトップへ
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }, 100);
     }
   };
@@ -92,71 +166,8 @@ const App = () => {
     { name: 'Philosophy', action: () => navigateTo('home', 'philosophy') },
     { name: 'Journal', action: () => navigateTo('journal_all') },
     { name: 'Community', action: () => navigateTo('home', 'community') },
-    { name: 'About', action: () => navigateTo('home', 'about') }, // Aboutは今回はHome下部想定
+    { name: 'About', action: () => navigateTo('home', 'about') },
   ];
-
-  // Journal All Page Component
-  const JournalAllPage = () => (
-    <div className="pt-32 pb-24 bg-gray-50 min-h-screen">
-      <div className="container mx-auto px-6">
-        <div className="mb-12">
-          <button 
-            onClick={() => navigateTo('home')}
-            className="group flex items-center text-xs tracking-widest text-gray-500 hover:text-gray-900 transition-colors mb-6"
-          >
-            <ArrowLeft size={14} className="mr-2 group-hover:-translate-x-1 transition-transform" />
-            BACK TO HOME
-          </button>
-          <h2 className="text-4xl md:text-5xl font-serif mb-4">Journal & Columns</h2>
-          <p className="text-sm text-gray-500 font-serif">知性を磨く、視点を養うためのアーカイブ。</p>
-        </div>
-
-        {/* Categories */}
-        <div className="flex flex-wrap gap-4 mb-16 border-b border-gray-200 pb-6">
-          {['ALL', 'HISTORY', 'TECHNIQUE', 'GALLERY', 'INTERVIEW'].map((cat, idx) => (
-            <button 
-              key={cat} 
-              className={`text-xs tracking-widest px-4 py-2 transition-colors ${idx === 0 ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-200'}`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Article Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {ARTICLES.map((article) => (
-            <article key={article.id} className="group cursor-pointer">
-              <div className={`aspect-[4/5] ${article.bgColor} overflow-hidden mb-6 relative`}>
-                 <div className={`absolute inset-0 group-hover:scale-105 transition-transform duration-700 flex items-center justify-center ${article.iconColor}`}>
-                    <span className="font-serif italic text-2xl">{article.category}</span>
-                 </div>
-              </div>
-              <div className="space-y-3">
-                <span className="text-xs font-bold tracking-widest text-gray-400 uppercase">{article.subCategory}</span>
-                <h3 className="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors">
-                  {article.title}
-                </h3>
-                <p className="text-xs text-gray-500 line-clamp-3 leading-relaxed">
-                  {article.excerpt}
-                </p>
-                <div className="pt-2">
-                  <span className="text-[10px] border-b border-gray-300 pb-0.5 text-gray-400 group-hover:text-gray-900 group-hover:border-gray-900 transition-colors">READ MORE</span>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Pagination Placeholder */}
-        <div className="mt-20 flex justify-center gap-2">
-           <span className="w-8 h-8 flex items-center justify-center border border-gray-900 text-gray-900 text-xs">1</span>
-           <span className="w-8 h-8 flex items-center justify-center border border-transparent text-gray-400 hover:text-gray-900 text-xs cursor-pointer">2</span>
-           <span className="w-8 h-8 flex items-center justify-center border border-transparent text-gray-400 hover:text-gray-900 text-xs cursor-pointer">3</span>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-gray-200">
@@ -416,7 +427,7 @@ const App = () => {
           </section>
         </>
       ) : (
-        <JournalAllPage />
+        <JournalAllPage onBack={() => navigateTo('home')} />
       )}
 
       {/* Footer */}
@@ -434,7 +445,7 @@ const App = () => {
             <div>
               <h4 className="font-bold mb-4">Content</h4>
               <ul className="space-y-3 text-gray-500">
-                <li><button onClick={() => navigateTo('journal_all')} className="hover:text-gray-900">Journal</button></li>
+                <li><button onClick={() => navigateTo('journal_all')} className="hover:text-gray-900 text-left">Journal</button></li>
                 <li><a href="#" className="hover:text-gray-900">Interview</a></li>
                 <li><a href="#" className="hover:text-gray-900">Gallery Guide</a></li>
               </ul>
