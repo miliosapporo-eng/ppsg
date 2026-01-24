@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal | 見つめる写真のはじめ型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        serif: ['"Noto Serif JP"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+        .nav-scrolled { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); padding-top: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #f3f4f6; }
+        .content-body p { margin-bottom: 2rem; line-height: 2.2; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 selection:bg-gray-100">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-8">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index.html" class="flex flex-col">
+                <h1 class="text-xl font-serif tracking-widest font-bold leading-none">見つめる写真のはじめ型</h1>
+                <span class="text-[8px] tracking-[0.15em] mt-1 font-medium text-gray-400 uppercase">Photography Philosophy Study Group</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8 font-medium text-xs uppercase tracking-widest">
+                <a href="index.html#philosophy" class="hover:text-gray-500 transition-colors">Philosophy</a>
+                <a href="journal.html" class="hover:text-gray-500 transition-colors">Journal</a>
+                <a href="index.html#community" class="hover:text-gray-500 transition-colors">Community</a>
+                <button class="bg-gray-900 text-white px-6 py-2 font-bold hover:bg-gray-700 transition-colors">JOIN US</button>
+            </div>
+        </div>
+    </nav>
+
+    <article id="article-content" class="pt-48 pb-32 opacity-0 transition-opacity duration-700">
+        <!-- JS will inject content here -->
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="text-center mb-16">
+                <p id="post-category" class="text-[10px] tracking-[0.3em] mb-4 text-gray-400 uppercase font-bold"></p>
+                <h1 id="post-title" class="text-3xl md:text-5xl font-serif leading-tight mb-8"></h1>
+                <p id="post-date" class="text-xs text-gray-400 font-serif"></p>
+            </div>
+            
+            <div class="aspect-video overflow-hidden mb-20 bg-gray-100">
+                <img id="post-image" src="" alt="" class="w-full h-full object-cover">
+            </div>
+
+            <div id="post-body" class="content-body text-gray-700 font-serif text-base md:text-lg leading-relaxed text-justify">
+                <!-- Detailed text goes here -->
+            </div>
+
+            <div class="mt-32 pt-16 border-t border-gray-100 flex justify-between items-center">
+                <a href="journal.html" class="text-xs tracking-widest uppercase font-bold hover:text-gray-400 transition-colors flex items-center gap-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Journal
+                </a>
+                <div class="flex gap-4">
+                    <i data-lucide="share-2" class="w-4 h-4 text-gray-300 cursor-pointer hover:text-gray-900 transition-colors"></i>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 py-20 border-t border-gray-100">
+        <!-- (Same footer as journal.html) -->
+        <div class="container mx-auto px-6 text-center">
+             <p class="text-[8px] tracking-widest text-gray-400 uppercase">&copy; 2024 Photography Philosophy Study Group.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 本来は外部ファイル化するのが理想ですが、ここではデモ用に同じ配列を定義します
+        const articles = [
+            {
+                id: 1,
+                category: "Philosophy",
+                date: "2024.05.10",
+                title: "「待つ」という行為の解像度について",
+                content: `
+                    <p>決定的な瞬間を追い求めるあまり、私たちは被写体との対話を忘れてはいないでしょうか。写真とは、世界を切り取る行為であると同時に、世界が心に浸透してくるのを待つ時間でもあります。</p>
+                    <p>現代のデジタルカメラは、一秒間に数十枚の連写を可能にしました。しかし、その便利さと引き換えに、私たちは一回のシャッターに込める「思考の重み」を少しずつ失っているのかもしれません。</p>
+                    <p>あえてカメラを構えず、ただ眺める。光が回り込み、影が静かに伸びていくのを待つ。そのプロセスこそが、写真に奥行きを与えるのです。技術を磨くことと同じくらい、あるいはそれ以上に、「待つ」という行為の解像度を上げていくことが重要です。</p>
+                `,
+                image: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?auto=format&fit=crop&q=80&w=1200"
+            },
+            // ...他の記事データも同様に追加
+        ];
+
+        function loadArticle() {
+            // URLから ?id=X を取得
+            const params = new URLSearchParams(window.location.search);
+            const id = parseInt(params.get('id'));
+
+            const article = articles.find(a => a.id === id);
+
+            if (article) {
+                document.title = `${article.title} | 見つめる写真のはじめ型`;
+                document.getElementById('post-category').innerText = article.category;
+                document.getElementById('post-title').innerText = article.title;
+                document.getElementById('post-date').innerText = article.date;
+                document.getElementById('post-image').src = article.image;
+                document.getElementById('post-body').innerHTML = article.content;
+                
+                // フェードイン表示
+                document.getElementById('article-content').classList.remove('opacity-0');
+            } else {
+                document.getElementById('article-content').innerHTML = `
+                    <div class="container mx-auto px-6 text-center py-20">
+                        <h2 class="text-2xl font-serif mb-8">Article Not Found</h2>
+                        <a href="journal.html" class="text-xs tracking-widest uppercase font-bold border-b border-gray-900 pb-1">Return to Journal</a>
+                    </div>
+                `;
+                document.getElementById('article-content').classList.remove('opacity-0');
+            }
+        }
+
+        window.onload = () => {
+            loadArticle();
+            lucide.createIcons();
+            
+            // Navbar scroll
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) navbar.classList.add('nav-scrolled');
+                else navbar.classList.remove('nav-scrolled');
+            });
+        };
+    </script>
+</body>
+</html>
