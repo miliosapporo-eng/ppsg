@@ -6,7 +6,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-        if (localStorage.getItem('isMember') !== 'true') window.location.href = 'login.html';
+       if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
+        // 鍵を持っていなければログインページへ飛ばす
+        window.location.href = 'login.html';
+    }
     </script>
     <style>body { font-family: sans-serif; }</style>
 </head>
