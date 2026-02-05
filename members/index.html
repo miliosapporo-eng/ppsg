@@ -1,6 +1,69 @@
-<script>
-    // ログインしていなければ強制的にログインページへ飛ばす
-    if (localStorage.getItem('isMember') !== 'true') {
-        window.location.href = 'login.html';
-    }
-</script>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Members | 見つめる写真のはじめ型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        if (localStorage.getItem('isMember') !== 'true') window.location.href = 'login.html';
+    </script>
+    <style>body { font-family: sans-serif; }</style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <header class="p-6 border-b border-gray-800 flex justify-between items-center">
+        <h1 class="text-xl font-bold tracking-widest text-white">MEMBERS</h1>
+        <button onclick="localStorage.removeItem('isMember'); location.href='/'" class="text-xs text-gray-500 hover:text-white">LOGOUT</button>
+    </header>
+
+    <div class="p-6 border-b border-gray-800 overflow-x-auto">
+        <div class="flex gap-4 text-xs font-bold tracking-widest">
+            <button onclick="renderMembers('All')" class="hover:text-white transition-colors">ALL</button>
+            <button onclick="renderMembers('Photographer')" class="hover:text-white transition-colors">PHOTOGRAPHERS</button>
+            <button onclick="renderMembers('Model')" class="hover:text-white transition-colors">MODELS</button>
+            <button onclick="renderMembers('Owner')" class="hover:text-white transition-colors">OWNERS</button>
+        </div>
+    </div>
+
+    <main class="p-6">
+        <div id="members-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            </div>
+    </main>
+
+    <script src="../js/members.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function renderMembers(filterType) {
+            const container = document.getElementById('members-grid');
+            container.innerHTML = '';
+
+            const filtered = filterType === 'All' ? membersData : membersData.filter(m => m.type === filterType);
+
+            filtered.forEach(m => {
+                const card = `
+                    <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-colors group">
+                        <div class="aspect-[4/5] overflow-hidden bg-black">
+                            <img src="${m.images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] bg-gray-700 px-2 py-1 text-gray-300 uppercase">${m.type}</span>
+                                <span class="text-[10px] ${m.status === 'Active' ? 'text-green-400' : 'text-red-400'}">● ${m.status}</span>
+                            </div>
+                            <h3 class="text-lg font-serif text-white mb-1">${m.name}</h3>
+                            <p class="text-xs text-gray-400 mb-3">${m.location}</p>
+                            <p class="text-xs text-gray-500 line-clamp-2 italic border-t border-gray-700 pt-2">"${m.philosophy}"</p>
+                        </div>
+                    </a>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        // Init
+        renderMembers('All');
+    </script>
+</body>
+</html>
