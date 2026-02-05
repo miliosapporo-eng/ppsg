@@ -29,36 +29,27 @@
             padding-bottom: 1rem; 
             border-bottom: 1px solid #f3f4f6; 
         }
-        .journal-card:hover img { transform: scale(1.05); }
-        /* ページ切り替え時のフェードイン */
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-white text-gray-900 selection:bg-gray-100 overflow-x-hidden">
 
-    <!-- Navigation -->
     <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-8">
         <div class="container mx-auto px-6 flex justify-between items-center">
-            <a href="index.html" class="flex flex-col cursor-pointer">
+            <a href="/" class="flex flex-col cursor-pointer">
                 <h1 class="text-xl font-serif tracking-widest font-bold leading-none">見つめる写真のはじめ型</h1>
                 <span class="text-[8px] tracking-[0.15em] mt-1 font-medium text-gray-400 uppercase">Photography Philosophy Study Group</span>
             </a>
             <div class="hidden md:flex items-center gap-8 font-medium text-xs uppercase tracking-widest">
-                <a href="index.html#philosophy" class="hover:text-gray-500 transition-colors">Philosophy</a>
-                <a href="journal.html" class="text-gray-900 border-b border-gray-900 pb-1">Journal</a>
-                <a href="index.html#community" class="hover:text-gray-500 transition-colors">Community</a>
+                <a href="/index.html#philosophy" class="hover:text-gray-500 transition-colors">Philosophy</a>
+                <a href="/journal/" class="text-gray-900 border-b border-gray-900 pb-1">Journal</a>
+                <a href="/index.html#community" class="hover:text-gray-500 transition-colors">Community</a>
                 <button class="bg-gray-900 text-white px-6 py-2 font-bold hover:bg-gray-700 transition-colors">JOIN US</button>
             </div>
         </div>
     </nav>
 
-    <!-- Header Section -->
     <header class="pt-48 pb-20 bg-gray-50">
         <div class="container mx-auto px-6">
             <div class="max-w-4xl">
@@ -72,136 +63,60 @@
         </div>
     </header>
 
-    <!-- Categories / Filter (Mock) -->
     <section class="border-y border-gray-100 py-6 sticky top-[73px] bg-white z-40">
         <div class="container mx-auto px-6 overflow-x-auto">
             <div id="category-filters" class="flex items-center gap-10 whitespace-nowrap text-[10px] tracking-[0.2em] uppercase font-bold text-gray-400">
                 <button onclick="filterCategory('All')" class="text-gray-900 border-b border-gray-900 filter-btn">All Stories</button>
                 <button onclick="filterCategory('Philosophy')" class="hover:text-gray-900 transition-colors filter-btn">Philosophy</button>
-                <button onclick="filterCategory('Technical Ritual')" class="hover:text-gray-900 transition-colors filter-btn">Technical Ritual</button>
-                <button onclick="filterCategory('Dialogue')" class="hover:text-gray-900 transition-colors filter-btn">Dialogue</button>
-                <button onclick="filterCategory('Equipment Ethic')" class="hover:text-gray-900 transition-colors filter-btn">Equipment Ethic</button>
+                <button onclick="filterCategory('Technique')" class="hover:text-gray-900 transition-colors filter-btn">Technique</button>
+                <button onclick="filterCategory('Interview')" class="hover:text-gray-900 transition-colors filter-btn">Interview</button>
+                <button onclick="filterCategory('History')" class="hover:text-gray-900 transition-colors filter-btn">History</button>
             </div>
         </div>
     </section>
 
-    <!-- Journal Grid -->
     <main class="py-24 container mx-auto px-6">
         <div id="journal-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
-            <!-- JavaScript will inject cards here -->
-        </div>
+            </div>
 
-        <!-- Pagination -->
         <div id="pagination" class="mt-32 flex justify-center items-center gap-8 font-bold tracking-widest text-[10px]">
-            <!-- JavaScript will inject pagination here -->
-        </div>
+            </div>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-50 py-20 border-t border-gray-100">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-start gap-12">
                 <div class="flex flex-col">
                     <h1 class="text-lg font-serif tracking-widest font-bold leading-none">見つめる写真のはじめ型</h1>
                     <span class="text-[8px] tracking-[0.15em] mt-1 font-medium text-gray-400 uppercase">Photography Philosophy Study Group</span>
-                    <p class="mt-8 text-[10px] text-gray-400 leading-loose max-w-xs font-serif italic">
-                        問い、撮り、そして取る。<br>
-                        写真の深淵へ、あなたと共に。
-                    </p>
                 </div>
                 <div class="grid grid-cols-2 gap-x-16 gap-y-4 text-[10px] tracking-widest uppercase font-bold">
-                    <a href="index.html" class="hover:text-gray-500 transition-colors">Home</a>
-                    <a href="#" class="hover:text-gray-500 transition-colors">Instagram</a>
-                    <a href="journal.html" class="hover:text-gray-500 transition-colors">Journal</a>
-                    <a href="#" class="hover:text-gray-500 transition-colors">Contact</a>
+                    <a href="/" class="hover:text-gray-500 transition-colors">Home</a>
+                    <a href="/journal/" class="hover:text-gray-500 transition-colors">Journal</a>
                 </div>
             </div>
             <div class="mt-20 pt-8 border-t border-gray-200 flex justify-between items-center">
-                <p class="text-[8px] tracking-widest text-gray-400 uppercase">&copy; 2024 Photography Philosophy Study Group. All Rights Reserved.</p>
-                <div class="flex gap-4">
-                    <i data-lucide="camera" class="w-3 h-3 text-gray-300"></i>
-                    <i data-lucide="feather" class="w-3 h-3 text-gray-300"></i>
-                </div>
+                <p class="text-[8px] tracking-widest text-gray-400 uppercase">&copy; 2025 MiLio, LLC All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
+    <script src="/js/articles.js"></script>
     <script>
-        // --- 記事データ定義 ---
-        const articles = [
-            {
-                id: 1,
-                category: "Philosophy",
-                date: "2024.05.10",
-                title: "「待つ」という行為の解像度について",
-                description: "決定的な瞬間を追い求めるあまり、私たちは被写体との対話を忘れてはいないか。ライティングや構図よりも先に、そこに流れる時間をいかに肯定するかを考える。",
-                image: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?auto=format&fit=crop&q=80&w=800"
-            },
-            {
-                id: 2,
-                category: "Technical Ritual",
-                date: "2024.04.28",
-                title: "露出計と身体感覚の乖離",
-                description: "デジタルカメラが示す適正露出は、果たしてあなたの「見ている世界」を正しく反映しているだろうか。暗部に宿る感情を掬い取るための、あえての不便さ。",
-                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800"
-            },
-            {
-                id: 3,
-                category: "Dialogue",
-                date: "2024.04.15",
-                title: "モデルという鏡、写真家という影",
-                description: "互いの信頼関係が構築された瞬間にだけ現れる、奇跡のような均衡点。ポートレート撮影における倫理と、その境界線についての考察。",
-                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800"
-            },
-            {
-                id: 4,
-                category: "Equipment Ethic",
-                date: "2024.03.30",
-                title: "レンズの収差を「欠点」と呼ばない理由",
-                description: "完璧な描写は、時に想像力の余白を奪う。古いレンズが描く滲みや歪みの中に、私たちが失いかけた「記憶のリアリティ」を探る。",
-                image: "https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&q=80&w=800"
-            },
-            {
-                id: 5,
-                category: "Philosophy",
-                date: "2024.03.15",
-                title: "モノクロームが暴く、光の骨格",
-                description: "色という情報が削ぎ落とされた時、そこには純粋な造形と光の意志だけが残る。色彩に頼らない表現の強度について。",
-                image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&q=80&w=800"
-            },
-            {
-                id: 6,
-                category: "Dialogue",
-                date: "2024.02.20",
-                title: "沈黙を撮るためのフィールドノート",
-                description: "音のない風景に耳を澄ませる。静寂という概念を視覚化するために必要な、精神的な準備とアプローチの記録。",
-                image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800"
-            },
-            {
-                id: 7,
-                category: "Technical Ritual",
-                date: "2024.01.10",
-                title: "暗室という名の瞑想室",
-                description: "印画紙の上に像が浮かび上がるまでの数分間、私たちは何と対峙しているのか。アナログプロセスがもたらす思考の深化。",
-                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=800"
-            }
-        ];
-
         // --- 状態管理 ---
         let currentPage = 1;
         const itemsPerPage = 6;
         let currentCategory = 'All';
 
         // --- 関数定義 ---
-
         function renderArticles() {
             const grid = document.getElementById('journal-grid');
             grid.innerHTML = '';
 
             // カテゴリフィルタリング
             const filtered = currentCategory === 'All' 
-                ? articles 
-                : articles.filter(a => a.category === currentCategory);
+                ? articlesData 
+                : articlesData.filter(a => a.category === currentCategory);
 
             // ページング計算
             const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -213,15 +128,18 @@
             paginatedItems.forEach(article => {
                 const card = `
                     <article class="journal-card group cursor-pointer fade-in">
-                        <div class="aspect-[4/5] overflow-hidden mb-6 bg-gray-100">
-                            <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover transition-transform duration-700">
-                        </div>
-                        <div class="flex items-center gap-4 mb-4">
-                            <span class="text-[10px] tracking-widest uppercase font-bold text-gray-400">${article.category}</span>
-                            <span class="text-[10px] text-gray-300">${article.date}</span>
-                        </div>
-                        <h3 class="text-xl font-serif leading-relaxed mb-4 group-hover:text-gray-500 transition-colors">${article.title}</h3>
-                        <p class="text-xs leading-loose text-gray-500 font-serif line-clamp-3">${article.description}</p>
+                        <a href="/journal/${article.id}/" class="block">
+                            <div class="aspect-[4/5] overflow-hidden mb-6 bg-gray-100 relative">
+                                <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                            </div>
+                            <div class="flex items-center gap-4 mb-4">
+                                <span class="text-[10px] tracking-widest uppercase font-bold text-gray-400">${article.category}</span>
+                                <span class="text-[10px] text-gray-300">${article.date}</span>
+                            </div>
+                            <h3 class="text-xl font-serif leading-relaxed mb-4 group-hover:text-gray-500 transition-colors">${article.title}</h3>
+                            <p class="text-xs leading-loose text-gray-500 font-serif line-clamp-3">${article.excerpt}</p>
+                        </a>
                     </article>
                 `;
                 grid.innerHTML += card;
@@ -236,7 +154,7 @@
 
             if (totalPages <= 1) return;
 
-            // Prev button
+            // Prev
             const prevClass = currentPage === 1 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-900 hover:text-gray-500 cursor-pointer';
             pagination.innerHTML += `<span class="${prevClass} uppercase" onclick="changePage(${currentPage - 1})">Prev</span>`;
 
@@ -249,13 +167,14 @@
             numsHtml += '</div>';
             pagination.innerHTML += numsHtml;
 
-            // Next button
+            // Next
             const nextClass = currentPage === totalPages ? 'text-gray-200 cursor-not-allowed' : 'text-gray-900 hover:text-gray-500 cursor-pointer';
             pagination.innerHTML += `<span class="${nextClass} uppercase" onclick="changePage(${currentPage + 1})">Next</span>`;
         }
 
         window.changePage = function(page) {
-            const totalPages = Math.ceil((currentCategory === 'All' ? articles : articles.filter(a => a.category === currentCategory)).length / itemsPerPage);
+            const filtered = currentCategory === 'All' ? articlesData : articlesData.filter(a => a.category === currentCategory);
+            const totalPages = Math.ceil(filtered.length / itemsPerPage);
             if (page < 1 || page > totalPages) return;
             currentPage = page;
             renderArticles();
@@ -269,7 +188,7 @@
             // ボタンのスタイル更新
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
-                if (btn.innerText.includes(cat)) {
+                if ((cat === 'All' && btn.innerText === 'All Stories') || btn.innerText === cat) {
                     btn.classList.add('text-gray-900', 'border-b', 'border-gray-900');
                     btn.classList.remove('text-gray-400');
                 } else {
