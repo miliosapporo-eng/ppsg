@@ -2,30 +2,43 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Members | 見つめる写真のはじめ型</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+    
     <script>
-       if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
-        // 鍵を持っていなければログインページへ飛ばす
-        window.location.href = 'login.html';
-    }
+        // 難読化キーによる認証チェック
+        // キーが一致しなければ、ログイン画面へ強制リダイレクト
+        if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
+            window.location.href = 'login.html';
+        }
     </script>
-    <style>body { font-family: sans-serif; }</style>
+    
+    <style>
+        body { font-family: sans-serif; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+    </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-900 text-gray-200 min-h-screen">
 
-    <header class="p-6 border-b border-gray-800 flex justify-between items-center">
-        <h1 class="text-xl font-bold tracking-widest text-white">MEMBERS</h1>
-        <button onclick="localStorage.removeItem('isMember'); location.href='/'" class="text-xs text-gray-500 hover:text-white">LOGOUT</button>
+    <header class="p-6 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-gray-900/95 backdrop-blur z-50">
+        <div class="flex items-center gap-4">
+            <a href="/" class="text-xs text-gray-500 hover:text-white transition-colors tracking-widest">← HOME</a>
+            <h1 class="text-xl font-serif font-bold tracking-widest text-white">MEMBERS LIST</h1>
+        </div>
+        <button onclick="logout()" class="text-xs font-bold tracking-widest text-gray-500 hover:text-red-500 transition-colors">
+            LOGOUT
+        </button>
     </header>
 
     <div class="p-6 border-b border-gray-800 overflow-x-auto">
-        <div class="flex gap-4 text-xs font-bold tracking-widest">
-            <button onclick="renderMembers('All')" class="hover:text-white transition-colors">ALL</button>
-            <button onclick="renderMembers('Photographer')" class="hover:text-white transition-colors">PHOTOGRAPHERS</button>
-            <button onclick="renderMembers('Model')" class="hover:text-white transition-colors">MODELS</button>
-            <button onclick="renderMembers('Owner')" class="hover:text-white transition-colors">OWNERS</button>
+        <div class="flex gap-6 text-xs font-bold tracking-widest whitespace-nowrap">
+            <button onclick="renderMembers('All')" class="filter-btn text-white border-b border-white pb-1 transition-colors">ALL</button>
+            <button onclick="renderMembers('Photographer')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1">PHOTOGRAPHERS</button>
+            <button onclick="renderMembers('Model')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1">MODELS</button>
+            <button onclick="renderMembers('Owner')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1">OWNERS</button>
         </div>
     </div>
 
@@ -34,39 +47,79 @@
             </div>
     </main>
 
-    <script src="../js/members.js"></script>
+    <script src="/js/members.js"></script>
     <script>
         lucide.createIcons();
 
+        // ログアウト処理
+        function logout() {
+            if(confirm('ログアウトしますか？')) {
+                // 正しい認証キーを削除する
+                localStorage.removeItem('pt_auth_token_v1');
+                window.location.href = '/';
+            }
+        }
+
+        // メンバー表示処理
         function renderMembers(filterType) {
             const container = document.getElementById('members-grid');
             container.innerHTML = '';
 
+            // データ読み込みエラー回避
+            if (typeof membersData === 'undefined') {
+                container.innerHTML = '<p class="text-gray-500">Loading members data...</p>';
+                return;
+            }
+
+            // フィルタリング
             const filtered = filterType === 'All' ? membersData : membersData.filter(m => m.type === filterType);
 
+            // ボタンのアクティブ表示切替
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.innerText === filterType.toUpperCase() || (filterType === 'All' && btn.innerText === 'ALL')) {
+                    btn.classList.remove('text-gray-500', 'border-transparent');
+                    btn.classList.add('text-white', 'border-b', 'border-white');
+                } else {
+                    btn.classList.add('text-gray-500', 'border-transparent');
+                    btn.classList.remove('text-white', 'border-b', 'border-white');
+                }
+            });
+
+            // カード生成
             filtered.forEach(m => {
                 const card = `
-                    <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-colors group">
-                        <div class="aspect-[4/5] overflow-hidden bg-black">
-                            <img src="${m.images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[10px] bg-gray-700 px-2 py-1 text-gray-300 uppercase">${m.type}</span>
-                                <span class="text-[10px] ${m.status === 'Active' ? 'text-green-400' : 'text-red-400'}">● ${m.status}</span>
+                    <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-colors group relative">
+                        <div class="aspect-[4/5] overflow-hidden bg-black relative">
+                            <img src="${m.images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                            <div class="absolute top-2 right-2">
+                                <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider ${m.status === 'Active' ? 'bg-green-900/80 text-green-300' : 'bg-red-900/80 text-red-300'}">
+                                    ${m.status}
+                                </span>
                             </div>
-                            <h3 class="text-lg font-serif text-white mb-1">${m.name}</h3>
-                            <p class="text-xs text-gray-400 mb-3">${m.location}</p>
-                            <p class="text-xs text-gray-500 line-clamp-2 italic border-t border-gray-700 pt-2">"${m.philosophy}"</p>
+                        </div>
+                        <div class="p-5">
+                            <div class="mb-2">
+                                <span class="text-[10px] bg-gray-700 px-2 py-1 text-gray-300 uppercase tracking-wider">${m.type}</span>
+                            </div>
+                            <h3 class="text-lg font-serif text-white mb-1 tracking-wide">${m.name}</h3>
+                            <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1">
+                                <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location}
+                            </p>
+                            <p class="text-xs text-gray-500 line-clamp-2 italic border-t border-gray-700 pt-3 leading-relaxed">
+                                "${m.philosophy}"
+                            </p>
                         </div>
                     </a>
                 `;
                 container.innerHTML += card;
             });
+            
+            // アイコン再描画
+            lucide.createIcons();
         }
 
-        // Init
-        renderMembers('All');
+        // 初期表示
+        window.onload = () => renderMembers('All');
     </script>
 </body>
 </html>
