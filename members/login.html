@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white h-screen flex items-center justify-center">
+    <div class="w-full max-w-sm p-8 text-center">
+        <h2 class="text-xl font-serif mb-8 tracking-widest">MEMBERS ONLY</h2>
+        <p class="text-xs text-gray-400 mb-6">決済完了メールに記載されたパスコードを入力してください。</p>
+        
+        <input type="password" id="passcode" class="w-full bg-gray-800 border border-gray-700 text-white text-center py-3 mb-4 tracking-widest outline-none focus:border-white transition-colors" placeholder="PASSCODE">
+        
+        <button onclick="checkLogin()" class="w-full bg-white text-black py-3 text-xs font-bold tracking-widest hover:bg-gray-200 transition-colors">ENTER</button>
+        
+        <p id="error" class="text-red-500 text-xs mt-4 hidden">Invalid Passcode</p>
+    </div>
+
+    <script>
+        // 設定したいパスコード（簡易的なのでソースコードを見ればわかってしまいますが、初期フェーズの抑止力としては機能します）
+        const SECRET_CODE = "photo2025"; 
+
+        function checkLogin() {
+            const input = document.getElementById('passcode').value;
+            if (input === SECRET_CODE) {
+                // ブラウザにログイン状態を保存
+                localStorage.setItem('isMember', 'true');
+                // 会員トップへ移動
+                window.location.href = 'index.html'; 
+            } else {
+                document.getElementById('error').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
