@@ -38,10 +38,10 @@
                 <a href="#philosophy" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Philosophy</a>
                 <a href="/journal/" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Journal</a>
                 <a href="#community" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Community</a>
-                <button class="bg-gray-900 text-white px-6 py-2 text-xs tracking-widest hover:bg-gray-700 transition-colors">JOIN US</button>
+                <a href="/pricing.html" class="bg-gray-900 text-white px-6 py-2 text-xs tracking-widest hover:bg-gray-700 transition-colors">JOIN US</a>
             </div>
 
-            <button class="md:hidden z-50" onclick="alert('Menu')">
+            <button class="md:hidden z-50" onclick="alert('Mobile menu logic here')">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </div>
@@ -98,8 +98,7 @@
                 </a>
             </div>
 
-            <div id="home-journal-grid" class="grid md:grid-cols-3 gap-8">
-                </div>
+            <div id="home-journal-grid" class="grid md:grid-cols-3 gap-8"></div>
             
             <div class="md:hidden mt-8 text-center">
                 <a href="/journal/" class="inline-flex items-center text-xs tracking-widest hover:text-gray-600 transition-colors border-b border-gray-900 pb-1">
@@ -109,8 +108,9 @@
         </div>
     </section>
 
-    <section id="community" class="py-24 bg-gray-900 text-gray-100">
-        <div class="container mx-auto px-6">
+    <section id="community" class="relative py-24 bg-gray-900 text-gray-100 overflow-hidden">
+        
+        <div class="container mx-auto px-6 blur-sm select-none pointer-events-none opacity-50">
             <div class="flex flex-col md:flex-row items-center justify-between mb-16 gap-8">
                 <div class="max-w-xl">
                     <h3 class="text-sm font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">Quality Matching</h3>
@@ -121,24 +121,52 @@
                         「リテラシー」と「熱量」でフィルタリングされた、安全で質の高い出会いを。
                     </p>
                 </div>
-                <div class="flex gap-4">
-                    <button class="border border-white/20 px-6 py-3 text-xs tracking-widest hover:bg-white hover:text-gray-900 transition-all">I'M A PHOTOGRAPHER</button>
-                    <button class="bg-white text-gray-900 px-6 py-3 text-xs tracking-widest hover:bg-gray-200 transition-all">I'M A MODEL / CLIENT</button>
-                </div>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-gray-800 p-6 border border-gray-700">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center"><i data-lucide="users" class="text-gray-300"></i></div>
-                        <span class="text-[10px] border border-gray-600 px-2 py-1 tracking-wider uppercase text-gray-400">Portrait</span>
+                        <div class="w-12 h-12 bg-gray-600 rounded-full"></div>
+                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Portrait</span>
                     </div>
                     <h4 class="text-lg font-serif mb-2">Photographer Name</h4>
-                    <p class="text-xs text-gray-400 mb-4 h-12 overflow-hidden">「写真は引き算である」という美学のもと、フィルムカメラでの撮影を主に行っています。</p>
-                    <div class="pt-4 border-t border-gray-600 flex justify-between items-center text-xs text-gray-400">
-                        <div class="flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i> <span>Portfolio</span></div>
+                    <p class="text-xs text-gray-400 mb-4 h-12">「写真は引き算である」という美学のもと...</p>
+                </div>
+                <div class="bg-gray-800 p-6 border border-gray-700">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-gray-600 rounded-full"></div>
+                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Film</span>
                     </div>
+                    <h4 class="text-lg font-serif mb-2">Photographer Name</h4>
+                    <p class="text-xs text-gray-400 mb-4 h-12">光を追い求めて...</p>
                 </div>
+                <div class="bg-gray-800 p-6 border border-gray-700">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-gray-600 rounded-full"></div>
+                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Model</span>
+                    </div>
+                    <h4 class="text-lg font-serif mb-2">Model Name</h4>
+                    <p class="text-xs text-gray-400 mb-4 h-12">表現することへの渇望...</p>
                 </div>
+                <div class="bg-gray-800 p-6 border border-gray-700">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 bg-gray-600 rounded-full"></div>
+                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Owner</span>
+                    </div>
+                    <h4 class="text-lg font-serif mb-2">Gallery Owner</h4>
+                    <p class="text-xs text-gray-400 mb-4 h-12">新しい才能の発掘...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute inset-0 flex flex-col items-center justify-center z-10 px-6 text-center">
+            <h3 class="text-2xl md:text-3xl font-serif mb-4 tracking-widest">Community Member Only</h3>
+            <p class="mb-8 text-sm text-gray-300 leading-loose max-w-lg">
+                これより先の閲覧、およびマッチング機能は<br>
+                メンバーシップへの登録が必要です。
+            </p>
+            <a href="/pricing.html" class="bg-white text-gray-900 px-8 py-3 text-xs tracking-widest font-bold hover:bg-gray-200 transition-colors">
+                VIEW PLANS
+            </a>
         </div>
     </section>
 
@@ -156,11 +184,25 @@
                         <li><a href="#" class="hover:text-gray-900">Interview</a></li>
                     </ul>
                 </div>
+                <div>
+                    <h4 class="font-bold mb-4">Membership</h4>
+                    <ul class="space-y-3 text-gray-500">
+                        <li><a href="/pricing.html" class="hover:text-gray-900">Plans & Pricing</a></li>
+                        <li><a href="/members/login.html" class="hover:text-gray-900">Member Login</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Info</h4>
+                    <ul class="space-y-3 text-gray-500">
+                        <li><a href="#" class="hover:text-gray-900">Contact</a></li>
+                        <li><a href="#" class="hover:text-gray-900">Privacy Policy</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="container mx-auto px-6 mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-400 gap-4">
             <p>© 2025 MiLio, LLC All Rights Reserved.</p>
-        </div>
+            </div>
     </footer>
 
     <script src="/js/articles.js"></script>
@@ -168,7 +210,7 @@
         // Init Icons
         lucide.createIcons();
 
-        // Navbar Scroll
+        // Navbar Scroll Effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -180,37 +222,39 @@
             }
         });
 
-        // Load Latest 3 Articles
+        // Load Latest 3 Articles from articles.js
         const container = document.getElementById('home-journal-grid');
-        // articlesDataは /js/articles.js から読み込まれています
-        articlesData.slice(0, 3).forEach(article => {
-            // 背景色とアイコン色は簡易的にランダムまたはIDハッシュで決めるか、固定にする
-            const html = `
-                <article class="group cursor-pointer">
-                    <a href="/journal/${article.id}/" class="block">
-                        <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-6 relative">
-                            <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                            <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                <span class="font-serif italic text-2xl text-white drop-shadow-md">${article.category}</span>
+        
+        // Ensure articlesData exists to prevent errors
+        if (typeof articlesData !== 'undefined') {
+            articlesData.slice(0, 3).forEach(article => {
+                const html = `
+                    <article class="group cursor-pointer">
+                        <a href="/journal/${article.id}/" class="block">
+                            <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-6 relative">
+                                <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    <span class="font-serif italic text-2xl text-white drop-shadow-md">${article.category}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="space-y-3">
-                            <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">${article.subCategory || article.category}</span>
-                            <h3 class="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors">
-                                ${article.title}
-                            </h3>
-                            <p class="text-xs text-gray-500 line-clamp-2">
-                                ${article.excerpt}
-                            </p>
-                            <div class="pt-2">
-                                <span class="text-[10px] border-b border-gray-300 pb-0.5 text-gray-400 group-hover:text-gray-900 group-hover:border-gray-900 transition-colors">READ MORE</span>
+                            <div class="space-y-3">
+                                <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">${article.subCategory || article.category}</span>
+                                <h3 class="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors">
+                                    ${article.title}
+                                </h3>
+                                <p class="text-xs text-gray-500 line-clamp-2">
+                                    ${article.excerpt}
+                                </p>
+                                <div class="pt-2">
+                                    <span class="text-[10px] border-b border-gray-300 pb-0.5 text-gray-400 group-hover:text-gray-900 group-hover:border-gray-900 transition-colors">READ MORE</span>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </article>
-            `;
-            container.innerHTML += html;
-        });
+                        </a>
+                    </article>
+                `;
+                container.innerHTML += html;
+            });
+        }
     </script>
 </body>
 </html>
