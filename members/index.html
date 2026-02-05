@@ -1,0 +1,6 @@
+<script>
+    // ログインしていなければ強制的にログインページへ飛ばす
+    if (localStorage.getItem('isMember') !== 'true') {
+        window.location.href = 'login.html';
+    }
+</script>
