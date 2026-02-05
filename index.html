@@ -274,30 +274,29 @@
             });
         }
 
-        // 3. Member Auth & UI Switching
-        document.addEventListener('DOMContentLoaded', () => {
-            const isMember = localStorage.getItem('isMember') === 'true';
-            
-            const guestNav = document.getElementById('guest-nav');
-            const memberNav = document.getElementById('member-nav');
-            const commContent = document.getElementById('comm-content');
-            const commLock = document.getElementById('comm-lock');
-            const commUnlockBtn = document.getElementById('comm-unlock-btn');
+       // 3. Member Auth & UI Switching
+document.addEventListener('DOMContentLoaded', () => {
+    // ▼▼▼ ここを変更しました ▼▼▼
+    // 変更前: const isMember = localStorage.getItem('isMember') === 'true';
+    const isMember = localStorage.getItem('pt_auth_token_v1') === 'xc9-access-granted';
+    
+    const guestNav = document.getElementById('guest-nav');
+    // ... (中略) ...
 
-            if (isMember) {
-                // Change Nav
-                if(guestNav) guestNav.classList.add('hidden');
-                if(memberNav) memberNav.classList.remove('hidden');
+    if (isMember) {
+        // ... (中略: 表示切り替え処理) ...
+    }
+});
 
-                // Unlock Community
-                if(commLock) commLock.classList.add('hidden');
-                if(commContent) {
-                    commContent.classList.remove('blur-sm', 'select-none', 'pointer-events-none', 'opacity-50');
-                    commContent.classList.add('opacity-100');
-                }
-                if(commUnlockBtn) commUnlockBtn.classList.remove('hidden');
-            }
-        });
+function logout() {
+    if(confirm('ログアウトしますか？')) {
+        // ▼▼▼ ここを変更しました ▼▼▼
+        // 変更前: localStorage.removeItem('isMember');
+        localStorage.removeItem('pt_auth_token_v1');
+        
+        window.location.reload();
+    }
+}
 
         function logout() {
             if(confirm('ログアウトしますか？')) {
