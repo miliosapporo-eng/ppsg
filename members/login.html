@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: sans-serif; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+    </style>
 </head>
 <body class="bg-gray-900 text-white h-screen flex items-center justify-center">
     <div class="w-full max-w-sm p-8 text-center">
@@ -16,23 +21,39 @@
         <button onclick="checkLogin()" class="w-full bg-white text-black py-3 text-xs font-bold tracking-widest hover:bg-gray-200 transition-colors">ENTER</button>
         
         <p id="error" class="text-red-500 text-xs mt-4 hidden">Invalid Passcode</p>
+        
+        <div class="mt-8">
+            <a href="/" class="text-[10px] text-gray-500 border-b border-gray-600 pb-1 hover:text-gray-300">BACK TO HOME</a>
+        </div>
     </div>
 
     <script>
-        // 設定したいパスコード（簡易的なのでソースコードを見ればわかってしまいますが、初期フェーズの抑止力としては機能します）
+        // 設定したいパスコード
         const SECRET_CODE = "photo2025"; 
 
         function checkLogin() {
             const input = document.getElementById('passcode').value;
+            
             if (input === SECRET_CODE) {
-                // ブラウザにログイン状態を保存
+                // ▼▼▼ ここが重要：root/index.html と同じキー・値にする ▼▼▼
                 localStorage.setItem('pt_auth_token_v1', 'xc9-access-granted');
-                // 会員トップへ移動
-                window.location.href = 'index.html'; 
+                
+                // 成功したらサイトのトップページへ戻る（ロックが解除された状態で見れます）
+                window.location.href = '/'; 
             } else {
+                // 間違い
                 document.getElementById('error').classList.remove('hidden');
+                document.getElementById('passcode').value = '';
+                document.getElementById('passcode').focus();
             }
         }
+
+        // エンターキーでもログインできるようにする
+        document.getElementById('passcode').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkLogin();
+            }
+        });
     </script>
 </body>
 </html>
