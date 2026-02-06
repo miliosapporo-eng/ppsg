@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Role | 見つめる写真のはじめ型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .font-serif { font-family: 'Noto Serif JP', serif; }
+        
+        /* Custom Animations */
+        .fade-in { animation: fadeIn 1.2s ease-out forwards; opacity: 0; }
+        .slide-up { animation: slideUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* Modal Animation */
+        dialog[open] { animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); animation: fadeIn 0.4s forwards; }
+        @keyframes modalIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+        /* Hover Card Effect */
+        .role-card:hover .card-bg { transform: scale(1.05); opacity: 0.4; }
+        .role-card:hover .card-border { border-color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center relative overflow-x-hidden py-20 px-6">
+
+    <div class="fixed inset-0 bg-[url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2000')] bg-cover bg-center opacity-20 pointer-events-none grayscale"></div>
+    <div class="fixed inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/90 to-[#0f172a]/80 pointer-events-none"></div>
+
+    <header class="relative z-10 text-center mb-16 fade-in">
+        <p class="text-[10px] tracking-[0.3em] text-gray-400 uppercase mb-4">Registration Process</p>
+        <h1 class="text-3xl md:text-5xl font-serif font-medium tracking-wide text-white mb-6">
+            その眼は、何を捉えるか。
+        </h1>
+        <p class="text-xs text-gray-400 font-serif leading-loose">
+            あなたの属性を選択してください。<br>
+            それぞれの役割に応じた登録フォームへご案内します。
+        </p>
+    </header>
+
+    <main class="relative z-10 w-full max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <button onclick="openModal('enthusiast')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.1s;">
+                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+                <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Viewer</span>
+                    <h3 class="text-2xl font-serif text-white">Enthusiast</h3>
+                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                        写真愛好家・サポーターとして参加する
+                    </p>
+                </div>
+            </button>
+
+            <button onclick="openModal('photographer')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.2s;">
+                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1554048612-387768052bf7?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+                <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Creator</span>
+                    <h3 class="text-2xl font-serif text-white">Photographer</h3>
+                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                        世界を切り取る眼差し
+                    </p>
+                </div>
+            </button>
+
+            <button onclick="openModal('model')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.3s;">
+                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+                <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Subject</span>
+                    <h3 class="text-2xl font-serif text-white">Model</h3>
+                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                        表現の核となる存在
+                    </p>
+                </div>
+            </button>
+
+            <button onclick="openModal('mua')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.4s;">
+                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+                <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Artist</span>
+                    <h3 class="text-2xl font-serif text-white">Hair & Make-up</h3>
+                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                        美とニュアンスの演出家
+                    </p>
+                </div>
+            </button>
+
+            <button onclick="openModal('location')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.5s;">
+                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+                <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Partner</span>
+                    <h3 class="text-2xl font-serif text-white">Location Owner</h3>
+                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                        舞台を提供する
+                    </p>
+                </div>
+            </button>
+
+            <button onclick="openModal('gallery')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.6s;">
+                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576669801775-ffdeb36cd3f9?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+                <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Business</span>
+                    <h3 class="text-2xl font-serif text-white">Gallery Owner</h3>
+                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
+                        才能を発掘し、世に問う
+                    </p>
+                </div>
+            </button>
+
+        </div>
+    </main>
+
+    <footer class="relative z-10 mt-16 text-center">
+        <a href="/" class="text-[10px] text-gray-600 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1">BACK TO HOME</a>
+    </footer>
+
+    <dialog id="role-modal" class="bg-transparent p-0 w-full h-full max-w-none max-h-none m-0 backdrop:bg-black/90">
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 relative">
+            
+            <button onclick="closeModal()" class="absolute top-8 right-8 text-gray-500 hover:text-white transition-colors z-50">
+                <span class="text-xs font-bold tracking-widest mr-2">CLOSE</span>
+                <i data-lucide="x" class="w-6 h-6 inline-block"></i>
+            </button>
+
+            <div class="max-w-2xl w-full text-center relative z-10">
+                <span id="modal-subtitle" class="text-xs font-bold tracking-[0.3em] text-amber-500 uppercase mb-6 block"></span>
+                <h2 id="modal-title" class="text-4xl md:text-6xl font-serif text-white mb-12 tracking-wide leading-tight"></h2>
+                
+                <div class="w-12 h-[1px] bg-gray-700 mx-auto mb-12"></div>
+
+                <p id="modal-desc" class="text-sm md:text-base text-gray-400 font-serif leading-loose mb-16 text-justify md:text-center max-w-lg mx-auto">
+                    </p>
+
+                <a id="modal-link" href="#" target="_blank" class="inline-flex items-center gap-4 bg-white text-black px-12 py-4 text-xs font-bold tracking-[0.2em] hover:bg-gray-200 transition-colors group">
+                    <span>PROCEED TO FORM</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                
+                <p class="text-[10px] text-gray-600 mt-6">
+                    ※Googleフォームへ移動します
+                </p>
+            </div>
+
+            <div id="modal-bg" class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none grayscale"></div>
+        </div>
+    </dialog>
+
+    <script>
+        lucide.createIcons();
+
+        // ★ Role Data Configuration
+        // 各ロールの文言と、GoogleフォームのURLをここで設定してください
+        const roleData = {
+            enthusiast: {
+                title: "Observer",
+                subtitle: "Photography Enthusiast",
+                desc: "写真は、撮る者だけのものではありません。その一枚に込められた意図を読み解き、文脈を理解し、深く味わう「鑑賞者」こそが、写真文化を支える土壌です。あなたの知的好奇心が、クリエイターの熱源となります。",
+                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000",
+                link: "https://forms.gle/YOUR_ENTHUSIAST_FORM_ID" // ★GoogleフォームのURL
+            },
+            photographer: {
+                title: "Seeker",
+                subtitle: "Photographer",
+                desc: "あなたは光を追い、時間を止める者です。しかし、ただ綺麗に撮るだけの写真はもう必要ありません。なぜ撮るのか。何を伝えたいのか。その「問い」を持った者だけが、人の心を揺さぶることができます。",
+                image: "https://images.unsplash.com/photo-1554048612-387768052bf7?q=80&w=1000",
+                link: "https://forms.gle/YOUR_PHOTOGRAPHER_FORM_ID" // ★GoogleフォームのURL
+            },
+            model: {
+                title: "Muse",
+                subtitle: "Model / Subject",
+                desc: "被写体とは、単なる「撮られる対象」ではありません。写真家と共に世界観を構築し、言葉にできない感情を身体で翻訳する表現者です。あなたの存在が、作品に魂を吹き込みます。",
+                image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000",
+                link: "https://forms.gle/YOUR_MODEL_FORM_ID" // ★GoogleフォームのURL
+            },
+            mua: {
+                title: "Artist",
+                subtitle: "Hair & Make-up Artist",
+                desc: "1ミリのアイライン、一筋の後れ毛が、写真の品格を決定づけます。被写体の個性を引き出しつつ、作品全体のトーンをコントロールする。あなたは、写真の「空気感」を作る魔術師です。",
+                image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1000",
+                link: "https://forms.gle/YOUR_MUA_FORM_ID" // ★GoogleフォームのURL
+            },
+            location: {
+                title: "Stage",
+                subtitle: "Location Owner",
+                desc: "空間には記憶が宿ります。あなたの所有するその場所は、誰かのクリエイティビティを受け入れることで、新たな物語の舞台へと生まれ変わります。空間と才能のマッチングを。",
+                image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000",
+                link: "https://forms.gle/YOUR_LOCATION_FORM_ID" // ★GoogleフォームのURL
+            },
+            gallery: {
+                title: "Curator",
+                subtitle: "Gallery Owner",
+                desc: "デジタルな海の中から、本物の才能をすくい上げる。その審美眼が、写真の価値を定義します。ビジネスとして、そして文化の守護者として、新たな才能との出会いを。",
+                image: "https://images.unsplash.com/photo-1576669801775-ffdeb36cd3f9?q=80&w=1000",
+                link: "https://forms.gle/YOUR_GALLERY_FORM_ID" // ★GoogleフォームのURL
+            }
+        };
+
+        const modal = document.getElementById('role-modal');
+
+        function openModal(role) {
+            const data = roleData[role];
+            if (!data) return;
+
+            // Inject Data
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-subtitle').innerText = data.subtitle;
+            document.getElementById('modal-desc').innerText = data.desc;
+            document.getElementById('modal-link').href = data.link;
+            document.getElementById('modal-bg').style.backgroundImage = `url('${data.image}')`;
+
+            modal.showModal();
+        }
+
+        function closeModal() {
+            modal.close();
+        }
+
+        // Close on clicking backdrop
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    </script>
+</body>
+</html>
