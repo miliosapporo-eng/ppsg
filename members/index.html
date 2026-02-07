@@ -10,7 +10,6 @@
     
     <script>
         // ★ 認証チェック (Access Guard)
-        // トークンがない場合、警告を出してトップページへ強制送還
         if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
             alert("会員専用エリアです。トップページからログインしてください。");
             window.location.href = '/';
@@ -49,13 +48,13 @@
 
     <div class="p-6 border-b border-gray-800 overflow-x-auto bg-gray-900">
         <div class="flex gap-8 text-xs font-bold tracking-widest whitespace-nowrap min-w-max">
-            <button onclick="renderMembers('All')" class="filter-btn text-white border-b-2 border-white pb-1 transition-colors">ALL MEMBERS</button>
-            <button onclick="renderMembers('Photographer')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">PHOTOGRAPHERS</button>
-            <button onclick="renderMembers('Model')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">MODELS</button>
-            <button onclick="renderMembers('HairMakeup')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">HAIR & MAKE</button>
-            <button onclick="renderMembers('Location')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">LOCATIONS</button>
-            <button onclick="renderMembers('Gallery')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">GALLERIES</button>
-            <button onclick="renderMembers('Enthusiast')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">ENTHUSIASTS</button>
+            <button onclick="renderMembers('All')" data-filter="All" class="filter-btn text-white border-b-2 border-white pb-1 transition-colors">ALL MEMBERS</button>
+            <button onclick="renderMembers('Photographer')" data-filter="Photographer" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">PHOTOGRAPHERS</button>
+            <button onclick="renderMembers('Model')" data-filter="Model" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">MODELS</button>
+            <button onclick="renderMembers('HairMakeup')" data-filter="HairMakeup" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">HAIR & MAKE</button>
+            <button onclick="renderMembers('Location')" data-filter="Location" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">LOCATIONS</button>
+            <button onclick="renderMembers('Gallery')" data-filter="Gallery" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">GALLERIES</button>
+            <button onclick="renderMembers('Enthusiast')" data-filter="Enthusiast" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">ENTHUSIASTS</button>
         </div>
     </div>
 
@@ -102,63 +101,53 @@
                     <div class="col-span-full text-center py-20 text-gray-600">
                         <p class="text-xs tracking-widest">NO MEMBERS FOUND IN THIS CATEGORY.</p>
                     </div>`;
-                return;
+            } else {
+                // カード生成
+                filtered.forEach(m => {
+                    const imgUrl = (m.images && m.images.length > 0) ? m.images[0] : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
+                    
+                    const card = `
+                        <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
+                            <div class="aspect-[4/5] overflow-hidden bg-black relative">
+                                <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                                <div class="absolute top-2 right-2">
+                                    <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
+                                        ${m.status || 'Active'}
+                                    </span>
+                                </div>
+                                <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent">
+                                    <span class="text-[10px] bg-white/10 backdrop-blur px-2 py-1 text-white border border-white/20 uppercase tracking-wider">
+                                        ${m.type}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="text-lg font-serif text-white mb-2 tracking-wide group-hover:text-amber-400 transition-colors">${m.name}</h3>
+                                <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1 uppercase tracking-widest">
+                                    <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || 'Unknown'}
+                                </p>
+                                <div class="border-t border-gray-700 pt-3">
+                                    <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">
+                                        "${m.philosophy || 'No philosophy statement yet.'}"
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                    container.innerHTML += card;
+                });
             }
 
-            // ボタンのアクティブ表示切替
+            // ★ ボタンのアクティブ表示切替（ここを修正）
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                // テキスト比較で判定（Allの場合は特殊処理）
-                const btnText = btn.innerText;
-                const isMatch = (filterType === 'All' && btnText === 'ALL MEMBERS') || btnText.includes(filterType.toUpperCase());
-                
-                if (isMatch) {
+                // data-filter属性を使って厳密に比較する
+                if (btn.dataset.filter === filterType) {
                     btn.classList.remove('text-gray-500', 'border-transparent');
                     btn.classList.add('text-white', 'border-white');
                 } else {
                     btn.classList.add('text-gray-500', 'border-transparent');
                     btn.classList.remove('text-white', 'border-white');
                 }
-            });
-
-            // カード生成
-            filtered.forEach(m => {
-                // 画像がない場合のフォールバック
-                const imgUrl = (m.images && m.images.length > 0) ? m.images[0] : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
-                
-                const card = `
-                    <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
-                        <div class="aspect-[4/5] overflow-hidden bg-black relative">
-                            <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
-                            
-                            <div class="absolute top-2 right-2">
-                                <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
-                                    ${m.status || 'Active'}
-                                </span>
-                            </div>
-                            
-                            <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent">
-                                <span class="text-[10px] bg-white/10 backdrop-blur px-2 py-1 text-white border border-white/20 uppercase tracking-wider">
-                                    ${m.type}
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="p-5">
-                            <h3 class="text-lg font-serif text-white mb-2 tracking-wide group-hover:text-amber-400 transition-colors">${m.name}</h3>
-                            
-                            <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1 uppercase tracking-widest">
-                                <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || 'Unknown'}
-                            </p>
-                            
-                            <div class="border-t border-gray-700 pt-3">
-                                <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">
-                                    "${m.philosophy || 'No philosophy statement yet.'}"
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                `;
-                container.innerHTML += card;
             });
             
             // アイコン再描画
