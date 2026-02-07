@@ -2,21 +2,16 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-<script>
+    <script>
         (function() {
-            // 合言葉を決める（推測されにくい文字列にしてください）
+            // ★ 合言葉を設定
             const SECRET_KEY = "may_you_are_goodman"; 
-
-            // URLの ?auth=... を取得
+            
             const urlParams = new URLSearchParams(window.location.search);
             const authCode = urlParams.get('auth');
-
-            // 合言葉が合わない場合、強制的に料金ページへ飛ばす
-            if (authCode !== SECRET_KEY) {
-                // ローカル環境(file://)でのテスト時は作動させない（開発用）
-                if (window.location.protocol !== 'file:') {
-                    window.location.href = "/pricing.html"; 
-                }
+            // ローカルファイル(file://)以外で、かつ合言葉が一致しない場合はリダイレクト
+            if (window.location.protocol !== 'file:' && authCode !== SECRET_KEY) {
+                window.location.href = "/pricing.html"; 
             }
         })();
     </script>
@@ -59,6 +54,10 @@
         /* Hidden Scrollbar for Modal */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Button Style for Radio/Checkbox */
+        .check-btn { cursor: pointer; border: 1px solid #475569; padding: 0.5rem 1rem; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; transition: all 0.2s; display: inline-block; margin-bottom: 0.5rem; margin-right: 0.5rem; }
+        .peer:checked + .check-btn { background: white; color: black; border-color: white; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center relative overflow-x-hidden py-20 px-6">
@@ -154,7 +153,7 @@
                                 </div>
                             </div>
 
-                            <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-6">
                                 <div>
                                     <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Name <span class="text-red-500">*</span></label>
                                     <input type="text" id="entry-name" required class="form-input" placeholder="Your Name">
@@ -162,6 +161,11 @@
                                 <div>
                                     <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Email <span class="text-red-500">*</span></label>
                                     <input type="email" id="entry-email" required class="form-input" placeholder="email@example.com">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Create Password <span class="text-red-500">*</span></label>
+                                    <input type="password" id="entry-password" required class="form-input" placeholder="Min 8 characters" minlength="8">
+                                    <p class="text-[9px] text-gray-500 mt-1">※ログイン時に使用します</p>
                                 </div>
                             </div>
                         </div>
@@ -396,11 +400,13 @@
     <script>
         lucide.createIcons();
         
+        // ★★★ GAS URL ★★★
+        // 登録機能用のGAS URL（前回ご提示いただいたURL）
         const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwLGxCxXdMH_ZzrxTdhXzh56SblKD5vYWsqptaH6xMbApQIYJFcpmNZY4cqlJHcYJsO/exec";
 
         const areaOptions = ["札幌市内", "札幌市近郊", "東京周辺", "名古屋周辺", "大阪周辺", "福岡周辺", "その他"];
         
-        // ★ Styled Button Generator (Click to turn white)
+        // ★ Styled Button Generator
         const btnStyle = "cursor-pointer block border border-gray-600 px-4 py-2 text-[10px] text-gray-400 tracking-widest uppercase transition-all hover:border-white peer-checked:bg-white peer-checked:text-black peer-checked:border-white";
 
         function createRadios(containerId, name, options) {
@@ -520,6 +526,8 @@
                 role: role,
                 name: getVal('entry-name'),
                 email: getVal('entry-email'),
+                // ★ Added Password Payload
+                password: getVal('entry-password'),
                 profilePhotoName: "", profilePhotoData: "",
                 extraFileName: "", extraFileData: ""
             };
