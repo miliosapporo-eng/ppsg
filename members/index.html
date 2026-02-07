@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
     
     <script>
+        // 認証チェック
         if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
             window.location.href = '/';
         }
@@ -35,7 +36,7 @@
             </h1>
         </div>
         <div class="flex items-center gap-6">
-            <span class="text-[10px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in</span>
+            <span class="text-[10px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in as Member</span>
             <button onclick="logout()" class="text-xs font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-4 py-2 rounded">
                 LOGOUT
             </button>
@@ -83,30 +84,31 @@
                 if (!data || data.length === 0) {
                     document.getElementById('members-grid').innerHTML = `
                         <div class="col-span-full text-center py-20 text-gray-600">
-                            <p class="text-xs tracking-widest">NO MEMBERS FOUND</p>
+                            <p class="text-xs tracking-widest">NO MEMBERS REGISTERED YET.</p>
                         </div>`;
                     return;
                 }
                 allMembers = data; 
                 filterMembers('All'); 
             } catch (error) {
-                console.error(error);
+                console.error("Fetch Error:", error);
                 document.getElementById('members-grid').innerHTML = `
                     <div class="col-span-full text-center py-20 text-red-400">
-                        <p class="text-xs tracking-widest">ERROR LOADING DATA</p>
+                        <p class="text-xs tracking-widest">FAILED TO LOAD DATA.</p>
                     </div>`;
             }
         }
 
-        // ★★★ 画像URL変換ヘルパー ★★★
-        // uc?export=view を thumbnail?id=...&sz=w800 に変換して表示させる
+        // ★★★ 画像URL変換（最強版） ★★★
+        // "drive.google.com" のURLを、直接表示可能な "lh3.googleusercontent.com" に変換します
         function convertDriveLink(url) {
             if (!url) return 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
-            if (url.includes("drive.google.com") && url.includes("id=")) {
-                const idMatch = url.match(/id=([^&]+)/);
-                if (idMatch && idMatch[1]) {
-                    return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w800`;
-                }
+            
+            // "id=" の後ろにあるファイルIDを抽出
+            const idMatch = url.match(/id=([^&]+)/);
+            if (idMatch && idMatch[1]) {
+                // この形式が最もブロックされにくいです
+                return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
             }
             return url;
         }
@@ -117,18 +119,19 @@
             const filtered = filterType === 'All' ? allMembers : allMembers.filter(m => m.type === filterType);
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center py-20 text-gray-600"><p class="text-xs tracking-widest">NO MEMBERS</p></div>`;
+                container.innerHTML = `<div class="col-span-full text-center py-20 text-gray-600"><p class="text-xs tracking-widest">NO MEMBERS FOUND.</p></div>`;
             } else {
                 filtered.forEach(m => {
-                    // ★ ここで変換関数を使う
+                    // ここで変換関数を通す
                     const imgUrl = convertDriveLink(m.image);
                     
                     const card = `
                         <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
                             <div class="aspect-[4/5] overflow-hidden bg-black relative">
-                                <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                                <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/400x500/1f2937/4b5563?text=ERROR'">
+                                
                                 <div class="absolute top-2 right-2">
-                                    <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm bg-green-900/60 text-green-300 border border-green-800">
+                                    <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
                                         ${m.status || 'Active'}
                                     </span>
                                 </div>
@@ -141,10 +144,12 @@
                             <div class="p-5">
                                 <h3 class="text-lg font-serif text-white mb-2 tracking-wide group-hover:text-amber-400 transition-colors">${m.name}</h3>
                                 <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1 uppercase tracking-widest">
-                                    <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || '-'}
+                                    <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || 'Unknown'}
                                 </p>
                                 <div class="border-t border-gray-700 pt-3">
-                                    <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">"${m.philosophy || '...'}"</p>
+                                    <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">
+                                        "${m.philosophy || '...'}"
+                                    </p>
                                 </div>
                             </div>
                         </a>
@@ -152,7 +157,7 @@
                     container.innerHTML += card;
                 });
             }
-            
+
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 if (btn.dataset.filter === filterType) {
                     btn.classList.remove('text-gray-500', 'border-transparent');
