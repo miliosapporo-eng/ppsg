@@ -12,21 +12,33 @@
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         
-        /* Custom Animations */
+        /* Animations */
         .fade-in { animation: fadeIn 1.2s ease-out forwards; opacity: 0; }
         .slide-up { animation: slideUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
-        
         @keyframes fadeIn { to { opacity: 1; } }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* Modal Animation */
         dialog[open] { animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        dialog::backdrop { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); animation: fadeIn 0.4s forwards; }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(5px); animation: fadeIn 0.4s forwards; }
         @keyframes modalIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 
-        /* Hover Card Effect */
+        /* Custom UI Components */
         .role-card:hover .card-bg { transform: scale(1.05); opacity: 0.4; }
         .role-card:hover .card-border { border-color: rgba(255,255,255,0.8); }
+        
+        .form-input { 
+            background: transparent; border-bottom: 1px solid #475569; color: white; width: 100%; padding: 0.8rem 0; outline: none; transition: border-color 0.3s;
+        }
+        .form-input:focus { border-color: #fbbf24; }
+        
+        /* Range Slider Styling */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #ffffff; cursor: pointer; margin-top: -6px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #475569; border-radius: 2px; }
+        
+        /* Radio/Check Button Styling */
+        .check-btn { cursor: pointer; border: 1px solid #475569; padding: 0.5rem 1rem; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; transition: all 0.2s; display: inline-block; margin-bottom: 0.5rem; margin-right: 0.5rem; }
+        .check-input:checked + .check-btn { background: white; color: black; border-color: white; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center relative overflow-x-hidden py-20 px-6">
@@ -35,203 +47,509 @@
     <div class="fixed inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/90 to-[#0f172a]/80 pointer-events-none"></div>
 
     <header class="relative z-10 text-center mb-16 fade-in">
-        <p class="text-[10px] tracking-[0.3em] text-gray-400 uppercase mb-4">Registration Process</p>
-        <h1 class="text-3xl md:text-5xl font-serif font-medium tracking-wide text-white mb-6">
-            その眼は、何を捉えるか。
-        </h1>
-        <p class="text-xs text-gray-400 font-serif leading-loose">
-            あなたの属性を選択してください。<br>
-            それぞれの役割に応じた登録フォームへご案内します。
-        </p>
+        <p class="text-[10px] tracking-[0.3em] text-gray-400 uppercase mb-4">Registration</p>
+        <h1 class="text-3xl md:text-5xl font-serif font-medium tracking-wide text-white mb-6">その眼は、何を捉えるか。</h1>
+        <p class="text-xs text-gray-400 font-serif leading-loose">あなたの属性を選択してください。</p>
     </header>
 
-    <main class="relative z-10 w-full max-w-6xl">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <button onclick="openModal('enthusiast')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.1s;">
-                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
-                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
-                <div class="absolute inset-0 p-8 flex flex-col justify-end">
-                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Viewer</span>
-                    <h3 class="text-2xl font-serif text-white">Enthusiast</h3>
-                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
-                        写真愛好家・サポーターとして参加する
-                    </p>
-                </div>
-            </button>
-
-            <button onclick="openModal('photographer')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.2s;">
-                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1554048612-387768052bf7?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
-                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
-                <div class="absolute inset-0 p-8 flex flex-col justify-end">
-                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Creator</span>
-                    <h3 class="text-2xl font-serif text-white">Photographer</h3>
-                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
-                        世界を切り取る眼差し
-                    </p>
-                </div>
-            </button>
-
-            <button onclick="openModal('model')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.3s;">
-                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
-                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
-                <div class="absolute inset-0 p-8 flex flex-col justify-end">
-                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Subject</span>
-                    <h3 class="text-2xl font-serif text-white">Model</h3>
-                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
-                        表現の核となる存在
-                    </p>
-                </div>
-            </button>
-
-            <button onclick="openModal('mua')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.4s;">
-                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
-                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
-                <div class="absolute inset-0 p-8 flex flex-col justify-end">
-                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Artist</span>
-                    <h3 class="text-2xl font-serif text-white">Hair & Make-up</h3>
-                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
-                        美とニュアンスの演出家
-                    </p>
-                </div>
-            </button>
-
-            <button onclick="openModal('location')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.5s;">
-                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
-                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
-                <div class="absolute inset-0 p-8 flex flex-col justify-end">
-                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Partner</span>
-                    <h3 class="text-2xl font-serif text-white">Location Owner</h3>
-                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
-                        舞台を提供する
-                    </p>
-                </div>
-            </button>
-
-            <button onclick="openModal('gallery')" class="role-card group relative h-64 w-full bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.6s;">
-                <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576669801775-ffdeb36cd3f9?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
-                <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
-                <div class="absolute inset-0 p-8 flex flex-col justify-end">
-                    <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Business</span>
-                    <h3 class="text-2xl font-serif text-white">Gallery Owner</h3>
-                    <p class="text-[10px] text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-y-2 group-hover:translate-y-0">
-                        才能を発掘し、世に問う
-                    </p>
-                </div>
-            </button>
-
-        </div>
+    <main class="relative z-10 w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <button onclick="openModal('Enthusiast')" class="role-card group relative h-64 bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.1s;">
+            <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+            <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Viewer</span>
+                <h3 class="text-2xl font-serif text-white">Enthusiast</h3>
+            </div>
+        </button>
+        <button onclick="openModal('Photographer')" class="role-card group relative h-64 bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.2s;">
+            <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1554048612-387768052bf7?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+            <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Creator</span>
+                <h3 class="text-2xl font-serif text-white">Photographer</h3>
+            </div>
+        </button>
+        <button onclick="openModal('Model')" class="role-card group relative h-64 bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.3s;">
+            <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+            <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Subject</span>
+                <h3 class="text-2xl font-serif text-white">Model</h3>
+            </div>
+        </button>
+        <button onclick="openModal('HairMakeup')" class="role-card group relative h-64 bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.4s;">
+            <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+            <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Artist</span>
+                <h3 class="text-2xl font-serif text-white">Hair & Make-up</h3>
+            </div>
+        </button>
+        <button onclick="openModal('Location')" class="role-card group relative h-64 bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.5s;">
+            <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+            <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Partner</span>
+                <h3 class="text-2xl font-serif text-white">Location Owner</h3>
+            </div>
+        </button>
+        <button onclick="openModal('Gallery')" class="role-card group relative h-64 bg-gray-900/50 overflow-hidden text-left slide-up" style="animation-delay: 0.6s;">
+            <div class="card-bg absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576669801775-ffdeb36cd3f9?q=80&w=1000')] bg-cover bg-center opacity-20 transition-all duration-700"></div>
+            <div class="card-border absolute inset-0 border border-gray-700 transition-colors duration-500 m-4"></div>
+            <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                <span class="text-[10px] tracking-widest text-gray-400 uppercase mb-2">For Business</span>
+                <h3 class="text-2xl font-serif text-white">Gallery Owner</h3>
+            </div>
+        </button>
     </main>
 
-    <footer class="relative z-10 mt-16 text-center">
-        <a href="/" class="text-[10px] text-gray-600 hover:text-white transition-colors border-b border-transparent hover:border-white pb-1">BACK TO HOME</a>
-    </footer>
-
-    <dialog id="role-modal" class="bg-transparent p-0 w-full h-full max-w-none max-h-none m-0 backdrop:bg-black/90">
-        <div class="w-full h-full flex flex-col items-center justify-center p-6 relative">
+    <dialog id="role-modal" class="bg-transparent p-0 w-full h-full max-w-none max-h-none m-0 backdrop:bg-black/95">
+        <div class="w-full h-full flex flex-col items-center justify-start p-6 overflow-y-auto">
             
-            <button onclick="closeModal()" class="absolute top-8 right-8 text-gray-500 hover:text-white transition-colors z-50">
-                <span class="text-xs font-bold tracking-widest mr-2">CLOSE</span>
-                <i data-lucide="x" class="w-6 h-6 inline-block"></i>
+            <button onclick="closeModal()" class="fixed top-8 right-8 text-gray-500 hover:text-white transition-colors z-50">
+                <i data-lucide="x" class="w-8 h-8"></i>
             </button>
 
-            <div class="max-w-2xl w-full text-center relative z-10">
-                <span id="modal-subtitle" class="text-xs font-bold tracking-[0.3em] text-amber-500 uppercase mb-6 block"></span>
-                <h2 id="modal-title" class="text-4xl md:text-6xl font-serif text-white mb-12 tracking-wide leading-tight"></h2>
-                
-                <div class="w-12 h-[1px] bg-gray-700 mx-auto mb-12"></div>
+            <div class="max-w-2xl w-full relative z-10 py-12">
+                <div class="text-center mb-12">
+                    <span id="modal-subtitle" class="text-xs font-bold tracking-[0.3em] text-amber-500 uppercase mb-4 block">Registration</span>
+                    <h2 id="modal-title" class="text-3xl md:text-5xl font-serif text-white mb-6 tracking-wide"></h2>
+                </div>
 
-                <p id="modal-desc" class="text-sm md:text-base text-gray-400 font-serif leading-loose mb-16 text-justify md:text-center max-w-lg mx-auto">
+                <form id="custom-form" onsubmit="handleGasSubmit(event)" class="space-y-8 text-left">
+                    <input type="hidden" id="entry-role">
+
+                    <div class="space-y-6 border-b border-gray-800 pb-8">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Profile Photo *</label>
+                            <div class="border border-dashed border-gray-600 bg-gray-800/50 p-6 text-center group hover:border-white transition-colors cursor-pointer relative" onclick="document.getElementById('entry-photo').click()">
+                                <input type="file" id="entry-photo" accept="image/*" class="hidden" onchange="previewImage(this)">
+                                <div id="upload-placeholder">
+                                    <i data-lucide="camera" class="w-6 h-6 text-gray-400 mx-auto mb-2 group-hover:text-white transition-colors"></i>
+                                    <p class="text-[10px] text-gray-400">UPLOAD FACE PHOTO</p>
+                                </div>
+                                <img id="photo-preview" class="hidden w-24 h-24 object-cover rounded-full mx-auto border-2 border-white shadow-lg">
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Name *</label>
+                                <input type="text" id="entry-name" required class="form-input" placeholder="Your Name">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Email *</label>
+                                <input type="email" id="entry-email" required class="form-input" placeholder="email@example.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="fields-Enthusiast" class="role-fields hidden space-y-6">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Area</label>
+                            <div class="flex flex-wrap" id="enthusiast-area-options"></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Purpose</label>
+                            <div class="flex flex-wrap" id="enthusiast-purpose-options"></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Knowledge Level (1-10)</label>
+                            <input type="range" id="en-level" min="1" max="10" step="1" oninput="updateRangeVal(this, 'en-level-val')">
+                            <div class="flex justify-between text-[9px] text-gray-500 mt-1"><span>Beginner</span><span id="en-level-val" class="text-white font-bold">5</span><span>Expert</span></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Memorable Exhibition/Book</label>
+                            <input type="text" id="en-memorable" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Favorite Photographer</label>
+                            <input type="text" id="en-favorite" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Self Introduction</label>
+                            <textarea id="en-intro" rows="3" class="form-input"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="fields-Photographer" class="role-fields hidden space-y-6">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Activity Area</label>
+                            <div class="flex flex-wrap" id="ph-area-options"></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Portfolio URL</label>
+                            <input type="url" id="ph-portfolio" class="form-input" placeholder="https://...">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Bio / Career</label>
+                            <textarea id="ph-bio" rows="3" class="form-input"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Motto</label>
+                            <input type="text" id="ph-motto" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Budget Level (Under 10k - Over 1M)</label>
+                            <input type="range" id="ph-budget" min="1" max="10" step="1" oninput="updateRangeVal(this, 'ph-budget-val')">
+                            <div class="flex justify-between text-[9px] text-gray-500 mt-1"><span>Low</span><span id="ph-budget-val" class="text-white font-bold">5</span><span>High</span></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Genres</label>
+                            <div class="flex flex-wrap" id="ph-genre-options"></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Future Goals</label>
+                            <textarea id="ph-future" rows="2" class="form-input"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="fields-Model" class="role-fields hidden space-y-6">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Activity Area</label>
+                            <div class="flex flex-wrap" id="mo-area-options"></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Portfolio URL</label>
+                            <input type="url" id="mo-portfolio" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Bio / Career</label>
+                            <textarea id="mo-bio" rows="3" class="form-input"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Wish / Goal</label>
+                            <textarea id="mo-wish" rows="2" class="form-input"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Fee Level (Under 10k - Over 1M)</label>
+                            <input type="range" id="mo-budget" min="1" max="10" step="1" oninput="updateRangeVal(this, 'mo-budget-val')">
+                            <div class="flex justify-between text-[9px] text-gray-500 mt-1"><span>Low</span><span id="mo-budget-val" class="text-white font-bold">5</span><span>High</span></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Future Goals</label>
+                            <textarea id="mo-future" rows="2" class="form-input"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="fields-HairMakeup" class="role-fields hidden space-y-6">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Activity Area</label>
+                            <div class="flex flex-wrap" id="hm-area-options"></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Portfolio URL</label>
+                            <input type="url" id="hm-portfolio" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Bio / Career</label>
+                            <textarea id="hm-bio" rows="3" class="form-input"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Motto</label>
+                            <input type="text" id="hm-motto" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Value of Harmony</label>
+                            <textarea id="hm-value" rows="2" class="form-input"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Fee Level (Under 10k - Over 1M)</label>
+                            <input type="range" id="hm-budget" min="1" max="10" step="1" oninput="updateRangeVal(this, 'hm-budget-val')">
+                            <div class="flex justify-between text-[9px] text-gray-500 mt-1"><span>Low</span><span id="hm-budget-val" class="text-white font-bold">5</span><span>High</span></div>
+                        </div>
+                         <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Styles</label>
+                            <input type="text" id="hm-styles" class="form-input">
+                        </div>
+                         <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Future Goals</label>
+                            <textarea id="hm-future" rows="2" class="form-input"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="fields-Location" class="role-fields hidden space-y-6">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Location Types</label>
+                            <div class="flex flex-wrap" id="lo-type-options"></div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Address *</label>
+                            <input type="text" id="lo-address" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Documents (PDF/Image) *</label>
+                            <input type="file" id="lo-file" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border file:border-gray-500 file:bg-gray-800 file:text-xs file:text-white hover:file:bg-gray-700">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Web URL</label>
+                            <input type="url" id="lo-web" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">History / Usage</label>
+                            <textarea id="lo-history" rows="2" class="form-input"></textarea>
+                        </div>
+                         <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-3">Production Experience</label>
+                            <div class="flex gap-4">
+                                <label class="cursor-pointer"><input type="radio" name="lo_exp" value="Yes" class="peer hidden"><span class="check-btn">Yes</span></label>
+                                <label class="cursor-pointer"><input type="radio" name="lo_exp" value="No" class="peer hidden"><span class="check-btn">No</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Score (50-100)</label>
+                            <input type="range" id="lo-score" min="50" max="100" step="1" oninput="updateRangeVal(this, 'lo-score-val')">
+                            <div class="flex justify-between text-[9px] text-gray-500 mt-1"><span>50</span><span id="lo-score-val" class="text-white font-bold">75</span><span>100</span></div>
+                        </div>
+                    </div>
+
+                    <div id="fields-Gallery" class="role-fields hidden space-y-6">
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Gallery Name *</label>
+                            <input type="text" id="ga-name" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Address *</label>
+                            <input type="text" id="ga-address" required class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Web URL</label>
+                            <input type="url" id="ga-web" class="form-input">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Interior Photo (Image) *</label>
+                            <input type="file" id="ga-file" accept="image/*" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border file:border-gray-500 file:bg-gray-800 file:text-xs file:text-white hover:file:bg-gray-700">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Concept</label>
+                            <textarea id="ga-concept" rows="3" class="form-input"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 uppercase tracking-widest block mb-2">Desired Meeting</label>
+                            <textarea id="ga-meeting" rows="2" class="form-input"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 text-center">
+                        <button type="submit" id="submit-btn" class="bg-white text-black px-12 py-4 text-xs font-bold tracking-[0.2em] hover:bg-gray-200 transition-colors w-full md:w-auto">
+                            COMPLETE REGISTRATION
+                        </button>
+                    </div>
+                </form>
+
+                <div id="success-msg" class="hidden text-center py-12">
+                    <i data-lucide="check-circle" class="w-12 h-12 text-amber-500 mx-auto mb-6"></i>
+                    <h3 class="text-2xl font-serif text-white mb-4">Registration Complete</h3>
+                    <p class="text-xs text-gray-400 leading-loose mb-8">
+                        ご登録ありがとうございます。<br>審査後、ご連絡いたします。
                     </p>
-
-                <a id="modal-link" href="#" target="_blank" class="inline-flex items-center gap-4 bg-white text-black px-12 py-4 text-xs font-bold tracking-[0.2em] hover:bg-gray-200 transition-colors group">
-                    <span>PROCEED TO FORM</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                
-                <p class="text-[10px] text-gray-600 mt-6">
-                    ※Googleフォームへ移動します
-                </p>
+                    <a href="/" class="text-xs font-bold border-b border-white pb-1 hover:text-gray-400 transition-colors">BACK TO HOME</a>
+                </div>
             </div>
-
-            <div id="modal-bg" class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none grayscale"></div>
+            <div id="modal-bg" class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none grayscale -z-10"></div>
         </div>
     </dialog>
 
     <script>
         lucide.createIcons();
+        
+        // ★★★ GAS URLを設定 ★★★
+        const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwLGxCxXdMH_ZzrxTdhXzh56SblKD5vYWsqptaH6xMbApQIYJFcpmNZY4cqlJHcYJsO/exec";
 
-        // ★ Role Data Configuration
-        // 各ロールの文言と、GoogleフォームのURLをここで設定してください
-        const roleData = {
-            enthusiast: {
-                title: "Observer",
-                subtitle: "Photography Enthusiast",
-                desc: "写真は、撮る者だけのものではありません。その一枚に込められた意図を読み解き、文脈を理解し、深く味わう「鑑賞者」こそが、写真文化を支える土壌です。あなたの知的好奇心が、クリエイターの熱源となります。",
-                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000",
-                link: "https://forms.gle/YOUR_ENTHUSIAST_FORM_ID" // ★GoogleフォームのURL
-            },
-            photographer: {
-                title: "Seeker",
-                subtitle: "Photographer",
-                desc: "あなたは光を追い、時間を止める者です。しかし、ただ綺麗に撮るだけの写真はもう必要ありません。なぜ撮るのか。何を伝えたいのか。その「問い」を持った者だけが、人の心を揺さぶることができます。",
-                image: "https://images.unsplash.com/photo-1554048612-387768052bf7?q=80&w=1000",
-                link: "https://forms.gle/YOUR_PHOTOGRAPHER_FORM_ID" // ★GoogleフォームのURL
-            },
-            model: {
-                title: "Muse",
-                subtitle: "Model / Subject",
-                desc: "被写体とは、単なる「撮られる対象」ではありません。写真家と共に世界観を構築し、言葉にできない感情を身体で翻訳する表現者です。あなたの存在が、作品に魂を吹き込みます。",
-                image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000",
-                link: "https://forms.gle/YOUR_MODEL_FORM_ID" // ★GoogleフォームのURL
-            },
-            mua: {
-                title: "Artist",
-                subtitle: "Hair & Make-up Artist",
-                desc: "1ミリのアイライン、一筋の後れ毛が、写真の品格を決定づけます。被写体の個性を引き出しつつ、作品全体のトーンをコントロールする。あなたは、写真の「空気感」を作る魔術師です。",
-                image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1000",
-                link: "https://forms.gle/YOUR_MUA_FORM_ID" // ★GoogleフォームのURL
-            },
-            location: {
-                title: "Stage",
-                subtitle: "Location Owner",
-                desc: "空間には記憶が宿ります。あなたの所有するその場所は、誰かのクリエイティビティを受け入れることで、新たな物語の舞台へと生まれ変わります。空間と才能のマッチングを。",
-                image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1000",
-                link: "https://forms.gle/YOUR_LOCATION_FORM_ID" // ★GoogleフォームのURL
-            },
-            gallery: {
-                title: "Curator",
-                subtitle: "Gallery Owner",
-                desc: "デジタルな海の中から、本物の才能をすくい上げる。その審美眼が、写真の価値を定義します。ビジネスとして、そして文化の守護者として、新たな才能との出会いを。",
-                image: "https://images.unsplash.com/photo-1576669801775-ffdeb36cd3f9?q=80&w=1000",
-                link: "https://forms.gle/YOUR_GALLERY_FORM_ID" // ★GoogleフォームのURL
-            }
-        };
+        const areaOptions = ["札幌市内", "札幌市近郊", "東京周辺", "名古屋周辺", "大阪周辺", "福岡周辺", "その他"];
+        
+        // Helper: Create Radio Buttons
+        function createRadios(containerId, name, options) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            container.innerHTML = options.map(opt => `
+                <label class="cursor-pointer">
+                    <input type="radio" name="${name}" value="${opt}" class="peer hidden">
+                    <span class="check-btn">${opt}</span>
+                </label>
+            `).join('');
+        }
+        // Helper: Create Checkboxes
+        function createChecks(containerId, name, options) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            container.innerHTML = options.map(opt => `
+                <label class="cursor-pointer">
+                    <input type="checkbox" name="${name}" value="${opt}" class="peer hidden">
+                    <span class="check-btn">${opt}</span>
+                </label>
+            `).join('');
+        }
 
+        // Init Options
+        createRadios('enthusiast-area-options', 'en_area', areaOptions);
+        createChecks('enthusiast-purpose-options', 'en_purpose', ["写真について語りたい", "学びたい", "写真家と知り合いたい", "写真展情報収集", "その他"]);
+        
+        createRadios('ph-area-options', 'ph_area', areaOptions);
+        createChecks('ph-genre-options', 'ph_genre', ["Portrait", "Landscape", "Food", "Animal", "Vehicle", "Abstract", "Snap"]);
+
+        createRadios('mo-area-options', 'mo_area', areaOptions);
+        createRadios('hm-area-options', 'hm_area', areaOptions);
+        
+        createChecks('lo-type-options', 'lo_type', ["更地", "農地", "原野", "戸建て", "マンション", "スタジオ", "飲食店", "大型施設", "クルーザー", "ガレージ"]);
+
+        // Modal Logic
         const modal = document.getElementById('role-modal');
-
         function openModal(role) {
-            const data = roleData[role];
-            if (!data) return;
+            document.getElementById('modal-title').innerText = role;
+            document.getElementById('entry-role').value = role;
+            
+            // Hide all role fields first
+            document.querySelectorAll('.role-fields').forEach(el => el.classList.add('hidden'));
+            // Show selected role fields
+            const fields = document.getElementById(`fields-${role}`);
+            if(fields) fields.classList.remove('hidden');
 
-            // Inject Data
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-subtitle').innerText = data.subtitle;
-            document.getElementById('modal-desc').innerText = data.desc;
-            document.getElementById('modal-link').href = data.link;
-            document.getElementById('modal-bg').style.backgroundImage = `url('${data.image}')`;
+            // Reset File Inputs
+            document.getElementById('photo-preview').classList.add('hidden');
+            document.getElementById('upload-placeholder').classList.remove('hidden');
 
             modal.showModal();
         }
-
-        function closeModal() {
-            modal.close();
+        function closeModal() { modal.close(); }
+        
+        function updateRangeVal(input, displayId) {
+            document.getElementById(displayId).innerText = input.value;
         }
 
-        // Close on clicking backdrop
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('photo-preview');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    document.getElementById('upload-placeholder').classList.add('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Helper to get checked values
+        function getChecked(name) {
+            return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value).join(', ');
+        }
+        function getRadio(name) {
+            const el = document.querySelector(`input[name="${name}"]:checked`);
+            return el ? el.value : "";
+        }
+        function getVal(id) {
+            const el = document.getElementById(id);
+            return el ? el.value : "";
+        }
+
+        // Helper to read file as Base64 Promise
+        function readFile(fileInputId) {
+            return new Promise((resolve) => {
+                const input = document.getElementById(fileInputId);
+                if (input && input.files && input.files.length > 0) {
+                    const file = input.files[0];
+                    const reader = new FileReader();
+                    reader.onload = () => resolve({ name: file.name, data: reader.result });
+                    reader.readAsDataURL(file);
+                } else {
+                    resolve({ name: "", data: "" });
+                }
+            });
+        }
+
+        async function handleGasSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = 'SENDING...';
+            btn.disabled = true;
+
+            const role = getVal('entry-role');
+            
+            // 共通データ
+            const payload = {
+                role: role,
+                name: getVal('entry-name'),
+                email: getVal('entry-email'),
+                profilePhotoName: "", profilePhotoData: "",
+                extraFileName: "", extraFileData: "" // For Location/Gallery
+            };
+
+            // ロール別データ収集
+            if (role === 'Enthusiast') {
+                payload.area = getRadio('en_area');
+                payload.purpose = getChecked('en_purpose');
+                payload.level = getVal('en-level');
+                payload.memorable = getVal('en-memorable');
+                payload.favorite = getVal('en-favorite');
+                payload.intro = getVal('en-intro');
+            } else if (role === 'Photographer') {
+                payload.area = getRadio('ph_area');
+                payload.portfolio = getVal('ph-portfolio');
+                payload.bio = getVal('ph-bio');
+                payload.motto = getVal('ph-motto');
+                payload.budget = getVal('ph-budget');
+                payload.genres = getChecked('ph_genre');
+                payload.future = getVal('ph-future');
+            } else if (role === 'Model') {
+                payload.area = getRadio('mo_area');
+                payload.portfolio = getVal('mo-portfolio');
+                payload.bio = getVal('mo-bio');
+                payload.wish = getVal('mo-wish');
+                payload.budget = getVal('mo-budget');
+                payload.future = getVal('mo-future');
+            } else if (role === 'HairMakeup') {
+                payload.area = getRadio('hm_area');
+                payload.portfolio = getVal('hm-portfolio');
+                payload.bio = getVal('hm-bio');
+                payload.motto = getVal('hm-motto');
+                payload.value = getVal('hm-value');
+                payload.budget = getVal('hm-budget');
+                payload.styles = getVal('hm-styles');
+                payload.future = getVal('hm-future');
+            } else if (role === 'Location') {
+                payload.types = getChecked('lo_type');
+                payload.address = getVal('lo-address');
+                payload.web_url = getVal('lo-web');
+                payload.history = getVal('lo-history');
+                payload.exp = getRadio('lo_exp');
+                payload.score = getVal('lo-score');
+            } else if (role === 'Gallery') {
+                payload.g_name = getVal('ga-name');
+                payload.address = getVal('ga-address');
+                payload.web_url = getVal('ga-web');
+                payload.concept = getVal('ga-concept');
+                payload.meeting = getVal('ga-meeting');
+            }
+
+            // ファイル読み込み (共通写真 + 追加資料)
+            const profileFile = await readFile('entry-photo');
+            payload.profilePhotoName = profileFile.name;
+            payload.profilePhotoData = profileFile.data;
+
+            if (role === 'Location') {
+                const extraFile = await readFile('lo-file');
+                payload.extraFileName = extraFile.name;
+                payload.extraFileData = extraFile.data;
+            } else if (role === 'Gallery') {
+                const extraFile = await readFile('ga-file');
+                payload.extraFileName = extraFile.name;
+                payload.extraFileData = extraFile.data;
+            }
+
+            // 送信
+            fetch(GAS_ENDPOINT, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                mode: 'no-cors'
+            }).then(() => {
+                document.getElementById('custom-form').classList.add('hidden');
+                document.getElementById('success-msg').classList.remove('hidden');
+            }).catch(err => {
+                alert('Error sending data.');
+                btn.disabled = false;
+                btn.innerHTML = 'COMPLETE REGISTRATION';
+            });
+        }
     </script>
 </body>
 </html>
