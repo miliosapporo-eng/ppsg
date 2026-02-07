@@ -9,9 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
     
     <script>
-        // ★ 認証チェック
+        // 認証チェック
         if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
-            alert("会員専用エリアです。トップページからログインしてください。");
             window.location.href = '/';
         }
     </script>
@@ -27,7 +26,9 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Header -->
+    <!-- ★デバッグ用表示エリア（エラー時のみ表示） -->
+    <div id="debug-console" class="bg-red-900 text-white text-xs p-4 font-mono hidden whitespace-pre-wrap border-b border-red-500"></div>
+
     <header class="p-6 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-gray-900/95 backdrop-blur z-50">
         <div class="flex items-center gap-4">
             <a href="/" class="text-xs text-gray-500 hover:text-white transition-colors tracking-widest flex items-center gap-1">
@@ -38,16 +39,16 @@
             </h1>
         </div>
         <div class="flex items-center gap-6">
-            <span class="text-[10px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in as Member</span>
+            <span class="text-[10px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in</span>
             <button onclick="logout()" class="text-xs font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-4 py-2 rounded">
                 LOGOUT
             </button>
         </div>
     </header>
 
-    <!-- Filter Bar -->
     <div class="p-6 border-b border-gray-800 overflow-x-auto bg-gray-900">
         <div class="flex gap-8 text-xs font-bold tracking-widest whitespace-nowrap min-w-max">
+            <!-- onclick関数名を filterMembers に統一 -->
             <button onclick="filterMembers('All')" data-filter="All" class="filter-btn text-white border-b-2 border-white pb-1 transition-colors">ALL MEMBERS</button>
             <button onclick="filterMembers('Photographer')" data-filter="Photographer" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">PHOTOGRAPHERS</button>
             <button onclick="filterMembers('Model')" data-filter="Model" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">MODELS</button>
@@ -58,26 +59,25 @@
         </div>
     </div>
 
-    <!-- Main Grid -->
     <main class="p-6 flex-1">
         <div id="members-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Loading Spinner -->
             <div class="col-span-full text-center py-20 text-gray-500">
                 <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-4"></i>
-                <p class="text-xs tracking-widest">LOADING MEMBERS DATA...</p>
+                <p class="text-xs tracking-widest">CONNECTING TO DATABASE...</p>
             </div>
         </div>
     </main>
 
+    <!-- ★ members.js の読み込みは削除しました -->
+    
     <script>
         lucide.createIcons();
 
-        // ★★★ GAS URL (統合版) ★★★
+        // ★★★ GAS URL ★★★
         const API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
 
-        let allMembers = []; // 全データを保持
+        let allMembers = [];
 
-        // ログアウト処理
         function logout() {
             if(confirm('ログアウトしますか？')) {
                 localStorage.removeItem('pt_auth_token_v1');
@@ -85,34 +85,35 @@
             }
         }
 
-        // ★ データ取得処理
+        // デバッグ表示関数
+        function showDebug(msg) {
+            const el = document.getElementById('debug-console');
+            el.classList.remove('hidden');
+            el.innerText += "ERROR: " + msg + "\n";
+        }
+
+        // データ取得
         async function fetchMembers() {
             try {
-                // デバッグログ
-                console.log("Fetching from:", API_URL);
-
                 const response = await fetch(API_URL);
                 
-                // テキストとして取得して内容を確認
-                const textData = await response.text();
-                
-                // JSONパースを試みる
-                let data;
-                try {
-                    data = JSON.parse(textData);
-                } catch (e) {
-                    console.error("JSON Parse Error. Raw response:", textData);
-                    throw new Error("データの取得に失敗しました（GASの設定またはデプロイ更新漏れの可能性があります）");
+                // レスポンスがHTML（エラーページ）になっていないかチェック
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") === -1) {
+                    const text = await response.text();
+                    // GASの設定ミス（全員に公開されていない）の可能性大
+                    if (text.includes("Google ドライブ")) {
+                        throw new Error("GASへのアクセス権限がありません。デプロイ設定で「アクセスできるユーザー：全員」になっているか確認してください。");
+                    }
+                    throw new Error("JSON以外のデータが返されました: " + text.substring(0, 100));
                 }
-                
-                console.log("Fetched Data:", data);
 
-                // データが空の場合
+                const data = await response.json();
+                
                 if (!data || data.length === 0) {
                     document.getElementById('members-grid').innerHTML = `
                         <div class="col-span-full text-center py-20 text-gray-600">
-                            <p class="text-xs tracking-widest">NO MEMBERS REGISTERED YET.</p>
-                            <p class="text-[10px] mt-2 text-gray-500">スプレッドシートにデータがありません。</p>
+                            <p class="text-xs tracking-widest">DATA IS EMPTY (0 members found)</p>
                         </div>`;
                     return;
                 }
@@ -122,62 +123,54 @@
 
             } catch (error) {
                 console.error("Fetch Error:", error);
+                showDebug(error.message); // 画面にエラーを出す
+                
                 document.getElementById('members-grid').innerHTML = `
                     <div class="col-span-full text-center py-20 text-red-400">
                         <i data-lucide="alert-triangle" class="w-8 h-8 mx-auto mb-4"></i>
-                        <p class="text-xs tracking-widest">FAILED TO LOAD DATA.</p>
-                        <p class="text-[10px] mt-2 opacity-70">${error.message}</p>
+                        <p class="text-xs tracking-widest">FAILED TO LOAD DATA</p>
+                        <p class="text-[10px] mt-2 opacity-70">画面上の赤いエラーを確認してください</p>
                     </div>`;
                 lucide.createIcons();
             }
         }
 
-        // ★ フィルタリング＆表示処理
         function filterMembers(filterType) {
             const container = document.getElementById('members-grid');
             container.innerHTML = '';
 
-            // フィルタリング
             const filtered = filterType === 'All' ? allMembers : allMembers.filter(m => m.type === filterType);
 
-            // 該当なし
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-20 text-gray-600">
                         <p class="text-xs tracking-widest">NO MEMBERS FOUND IN THIS CATEGORY.</p>
                     </div>`;
             } else {
-                // カード生成
                 filtered.forEach(m => {
+                    // 画像URLチェック
                     const imgUrl = (m.image && m.image.startsWith('http')) ? m.image : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
                     
                     const card = `
                         <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
                             <div class="aspect-[4/5] overflow-hidden bg-black relative">
                                 <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
-                                
-                                <!-- Status Badge -->
                                 <div class="absolute top-2 right-2">
                                     <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
                                         ${m.status || 'Active'}
                                     </span>
                                 </div>
-                                
-                                <!-- Type Badge -->
                                 <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent">
                                     <span class="text-[10px] bg-white/10 backdrop-blur px-2 py-1 text-white border border-white/20 uppercase tracking-wider">
                                         ${m.type}
                                     </span>
                                 </div>
                             </div>
-                            
                             <div class="p-5">
                                 <h3 class="text-lg font-serif text-white mb-2 tracking-wide group-hover:text-amber-400 transition-colors">${m.name}</h3>
-                                
                                 <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1 uppercase tracking-widest">
                                     <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || 'Unknown'}
                                 </p>
-                                
                                 <div class="border-t border-gray-700 pt-3">
                                     <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">
                                         "${m.philosophy || '...'}"
@@ -190,7 +183,6 @@
                 });
             }
 
-            // ボタン表示切替
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 if (btn.dataset.filter === filterType) {
                     btn.classList.remove('text-gray-500', 'border-transparent');
@@ -204,7 +196,6 @@
             lucide.createIcons();
         }
 
-        // 開始
         window.onload = fetchMembers;
     </script>
 </body>
