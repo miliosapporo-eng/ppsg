@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
     
     <script>
-        // ★ 認証チェック (Access Guard)
+        // ★ 認証チェック
         if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
             alert("会員専用エリアです。トップページからログインしてください。");
             window.location.href = '/';
@@ -19,8 +19,6 @@
     <style>
         body { font-family: sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
-        
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -48,25 +46,32 @@
 
     <div class="p-6 border-b border-gray-800 overflow-x-auto bg-gray-900">
         <div class="flex gap-8 text-xs font-bold tracking-widest whitespace-nowrap min-w-max">
-            <button onclick="renderMembers('All')" data-filter="All" class="filter-btn text-white border-b-2 border-white pb-1 transition-colors">ALL MEMBERS</button>
-            <button onclick="renderMembers('Photographer')" data-filter="Photographer" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">PHOTOGRAPHERS</button>
-            <button onclick="renderMembers('Model')" data-filter="Model" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">MODELS</button>
-            <button onclick="renderMembers('HairMakeup')" data-filter="HairMakeup" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">HAIR & MAKE</button>
-            <button onclick="renderMembers('Location')" data-filter="Location" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">LOCATIONS</button>
-            <button onclick="renderMembers('Gallery')" data-filter="Gallery" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">GALLERIES</button>
-            <button onclick="renderMembers('Enthusiast')" data-filter="Enthusiast" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">ENTHUSIASTS</button>
+            <button onclick="filterMembers('All')" data-filter="All" class="filter-btn text-white border-b-2 border-white pb-1 transition-colors">ALL MEMBERS</button>
+            <button onclick="filterMembers('Photographer')" data-filter="Photographer" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">PHOTOGRAPHERS</button>
+            <button onclick="filterMembers('Model')" data-filter="Model" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">MODELS</button>
+            <button onclick="filterMembers('HairMakeup')" data-filter="HairMakeup" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">HAIR & MAKE</button>
+            <button onclick="filterMembers('Location')" data-filter="Location" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">LOCATIONS</button>
+            <button onclick="filterMembers('Gallery')" data-filter="Gallery" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">GALLERIES</button>
+            <button onclick="filterMembers('Enthusiast')" data-filter="Enthusiast" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">ENTHUSIASTS</button>
         </div>
     </div>
 
     <main class="p-6 flex-1">
         <div id="members-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-20 text-gray-500">
+                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-4"></i>
+                <p class="text-xs tracking-widest">LOADING MEMBERS DATA...</p>
             </div>
+        </div>
     </main>
 
-    <script src="/js/members.js"></script>
-    
     <script>
         lucide.createIcons();
+
+        // ★★★ GAS URL (登録用と同じものでOK。doGetが追加されていれば動きます) ★★★
+        const API_URL = "https://script.google.com/macros/s/AKfycbwLGxCxXdMH_ZzrxTdhXzh56SblKD5vYWsqptaH6xMbApQIYJFcpmNZY4cqlJHcYJsO/exec";
+
+        let allMembers = []; // 全データを保持する変数
 
         // ログアウト処理
         function logout() {
@@ -76,26 +81,34 @@
             }
         }
 
-        // メンバー表示処理
-        function renderMembers(filterType) {
+        // ★ データ取得処理 (Fetch from GAS)
+        async function fetchMembers() {
+            try {
+                // GASのdoGetを叩く
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                allMembers = data; // データを保存
+                filterMembers('All'); // 初期表示
+
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                document.getElementById('members-grid').innerHTML = `
+                    <div class="col-span-full text-center py-20 text-red-400">
+                        <p class="text-xs tracking-widest">FAILED TO LOAD DATA.</p>
+                    </div>`;
+            }
+        }
+
+        // ★ フィルタリング＆表示処理
+        function filterMembers(filterType) {
             const container = document.getElementById('members-grid');
             container.innerHTML = '';
 
-            // データ読み込みエラー回避
-            if (typeof membersData === 'undefined') {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-20 text-gray-500">
-                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-4"></i>
-                        <p class="text-xs tracking-widest">LOADING MEMBERS DATA...</p>
-                    </div>`;
-                lucide.createIcons();
-                return;
-            }
-
             // フィルタリング
-            const filtered = filterType === 'All' ? membersData : membersData.filter(m => m.type === filterType);
+            const filtered = filterType === 'All' ? allMembers : allMembers.filter(m => m.type === filterType);
 
-            // 該当なしの場合
+            // 該当なし
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-20 text-gray-600">
@@ -104,43 +117,45 @@
             } else {
                 // カード生成
                 filtered.forEach(m => {
-                    const imgUrl = (m.images && m.images.length > 0) ? m.images[0] : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
-                    
                     const card = `
-                        <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
+                        <div class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
                             <div class="aspect-[4/5] overflow-hidden bg-black relative">
-                                <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                                <img src="${m.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                                
                                 <div class="absolute top-2 right-2">
                                     <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
-                                        ${m.status || 'Active'}
+                                        ${m.status}
                                     </span>
                                 </div>
+                                
                                 <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent">
                                     <span class="text-[10px] bg-white/10 backdrop-blur px-2 py-1 text-white border border-white/20 uppercase tracking-wider">
                                         ${m.type}
                                     </span>
                                 </div>
                             </div>
+                            
                             <div class="p-5">
                                 <h3 class="text-lg font-serif text-white mb-2 tracking-wide group-hover:text-amber-400 transition-colors">${m.name}</h3>
+                                
                                 <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1 uppercase tracking-widest">
                                     <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || 'Unknown'}
                                 </p>
+                                
                                 <div class="border-t border-gray-700 pt-3">
                                     <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">
-                                        "${m.philosophy || 'No philosophy statement yet.'}"
+                                        "${m.philosophy || '...'}"
                                     </p>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     `;
                     container.innerHTML += card;
                 });
             }
 
-            // ★ ボタンのアクティブ表示切替（ここを修正）
+            // ボタン表示切替
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                // data-filter属性を使って厳密に比較する
                 if (btn.dataset.filter === filterType) {
                     btn.classList.remove('text-gray-500', 'border-transparent');
                     btn.classList.add('text-white', 'border-white');
@@ -150,12 +165,11 @@
                 }
             });
             
-            // アイコン再描画
             lucide.createIcons();
         }
 
-        // 初期表示
-        window.onload = () => renderMembers('All');
+        // 開始
+        window.onload = fetchMembers;
     </script>
 </body>
 </html>
