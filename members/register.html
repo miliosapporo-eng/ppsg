@@ -2,6 +2,24 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+<script>
+        (function() {
+            // 合言葉を決める（推測されにくい文字列にしてください）
+            const SECRET_KEY = "may_you_are_goodman"; 
+
+            // URLの ?auth=... を取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const authCode = urlParams.get('auth');
+
+            // 合言葉が合わない場合、強制的に料金ページへ飛ばす
+            if (authCode !== SECRET_KEY) {
+                // ローカル環境(file://)でのテスト時は作動させない（開発用）
+                if (window.location.protocol !== 'file:') {
+                    window.location.href = "/pricing.html"; 
+                }
+            }
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Your Role | 見つめる写真のはじめ型</title>
     <script src="https://cdn.tailwindcss.com"></script>
