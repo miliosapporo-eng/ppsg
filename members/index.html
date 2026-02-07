@@ -57,6 +57,7 @@
 
     <main class="p-6 flex-1">
         <div id="members-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Loading Spinner -->
             <div class="col-span-full text-center py-20 text-gray-500">
                 <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-4"></i>
                 <p class="text-xs tracking-widest">LOADING MEMBERS DATA...</p>
@@ -99,23 +100,6 @@
             }
         }
 
-        // ★★★ 画像URL処理（アイコン対応版） ★★★
-        function processImageUrl(url) {
-            if (!url) return 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
-            
-            // ★ Base64データ（アイコン）の場合、そのまま返す
-            if (url.startsWith('data:image')) {
-                return url;
-            }
-
-            // Google Drive URLの場合 (後方互換性)
-            const idMatch = url.match(/id=([^&]+)/);
-            if (idMatch && idMatch[1]) {
-                return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
-            }
-            return url;
-        }
-
         function filterMembers(filterType) {
             const container = document.getElementById('members-grid');
             container.innerHTML = '';
@@ -128,14 +112,14 @@
                     </div>`;
             } else {
                 filtered.forEach(m => {
-                    const imgUrl = processImageUrl(m.image);
-                    
-                    // アイコンの場合、少しパディングを持たせると綺麗に見えるかもしれません
-                    // ここでは object-cover で統一していますが、必要に応じて調整可能です
+                    // ★ 画像パス処理: 変換せずそのまま使う
+                    // (スプレッドシートのF列に書かれたパスをそのままsrcに入れる)
+                    const imgUrl = m.image ? m.image : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
                     
                     const card = `
                         <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
-                            <div class="aspect-[4/5] overflow-hidden bg-black relative flex items-center justify-center">
+                            <!-- アスペクト比 4:5 (ポートレート比率) -->
+                            <div class="aspect-[4/5] overflow-hidden bg-black relative">
                                 <img src="${imgUrl}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100" 
                                      referrerpolicy="no-referrer"
