@@ -66,10 +66,7 @@
 
     <script>
         lucide.createIcons();
-
-        // ★★★ GAS URL (統合版) ★★★
         const API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
-
         let allMembers = [];
 
         function logout() {
@@ -91,10 +88,8 @@
                         </div>`;
                     return;
                 }
-
                 allMembers = data; 
                 filterMembers('All'); 
-
             } catch (error) {
                 console.error("Fetch Error:", error);
                 document.getElementById('members-grid').innerHTML = `
@@ -104,44 +99,22 @@
             }
         }
 
-        // ★★★ 画像URL生成（基本はlh3） ★★★
-        function getInitialImageUrl(url) {
+        // ★★★ 画像URL処理（アイコン対応版） ★★★
+        function processImageUrl(url) {
             if (!url) return 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
+            
+            // ★ Base64データ（アイコン）の場合、そのまま返す
+            if (url.startsWith('data:image')) {
+                return url;
+            }
+
+            // Google Drive URLの場合 (後方互換性)
             const idMatch = url.match(/id=([^&]+)/);
             if (idMatch && idMatch[1]) {
-                // Plan A: lh3 (CDN)
                 return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
             }
             return url;
         }
-
-        // ★★★ 画像読み込みエラー時のリトライ処理（粘り強く表示させる） ★★★
-        window.handleImageError = function(img) {
-            const originalSrc = img.src;
-            const currentTry = parseInt(img.dataset.try || "0");
-            const fileIdMatch = originalSrc.match(/\/d\/([^/]+)|id=([^&]+)/);
-            const fileId = fileIdMatch ? (fileIdMatch[1] || fileIdMatch[2]) : null;
-
-            if (!fileId) {
-                // IDがないなら諦める
-                img.src = 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
-                return;
-            }
-
-            if (currentTry === 0) {
-                // Plan B: uc?export=view (Standard)
-                img.dataset.try = "1";
-                img.src = `https://drive.google.com/uc?export=view&id=${fileId}`;
-            } else if (currentTry === 1) {
-                // Plan C: thumbnail API (Fallback)
-                img.dataset.try = "2";
-                img.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
-            } else {
-                // Give up
-                img.onerror = null;
-                img.src = 'https://via.placeholder.com/400x500/1f2937/4b5563?text=LOAD+ERROR';
-            }
-        };
 
         function filterMembers(filterType) {
             const container = document.getElementById('members-grid');
@@ -155,16 +128,18 @@
                     </div>`;
             } else {
                 filtered.forEach(m => {
-                    const imgUrl = getInitialImageUrl(m.image);
+                    const imgUrl = processImageUrl(m.image);
+                    
+                    // アイコンの場合、少しパディングを持たせると綺麗に見えるかもしれません
+                    // ここでは object-cover で統一していますが、必要に応じて調整可能です
                     
                     const card = `
                         <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
-                            <div class="aspect-[4/5] overflow-hidden bg-black relative">
-                                <!-- onerror でリトライ関数を呼ぶ -->
+                            <div class="aspect-[4/5] overflow-hidden bg-black relative flex items-center justify-center">
                                 <img src="${imgUrl}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100" 
                                      referrerpolicy="no-referrer"
-                                     onerror="handleImageError(this)">
+                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';">
                                 
                                 <div class="absolute top-2 right-2">
                                     <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
@@ -210,9 +185,3 @@
     </script>
 </body>
 </html>
-```
-
-`profile.html` の方は、`img` タグの `onerror` 部分を以下のように書き換えてください（または同様に `handleImageError` 関数を移植すれば確実です）。
-
-```html
-<img id="p-image" src="" ... onerror="handleImageError(this)">
