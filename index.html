@@ -399,8 +399,8 @@
         // ★ AUTHENTICATION LOGIC (GAS Compatible)
         // ==========================================
 
-        // TODO: ここに発行したGASのWebアプリURLを貼り付けます
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz2L6t2njTJ9DVNKno8_OlWCwlLeZngV--cAJMq_ZmmBaRZ2vC6Wua85ojjw70bbqiQ/exec"; 
+        // ★ Updated Login GAS URL
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec"; 
 
         // Check Login Status on Load
         document.addEventListener('DOMContentLoaded', () => {
@@ -456,7 +456,6 @@
             lucide.createIcons();
 
             try {
-                // ▼ もしGASのURLが設定されていればGASに問い合わせる
                 if (GAS_API_URL) {
                     const response = await fetch(GAS_API_URL, {
                         method: 'POST',
@@ -471,9 +470,8 @@
                         throw new Error('Invalid Email or Password');
                     }
                 } 
-                // ▼ GAS未設定時は「旧パスワード」で簡易チェック (移行期間用)
                 else {
-                    // 1秒待って擬似ロード
+                    // 1秒待って擬似ロード (Fallback)
                     await new Promise(r => setTimeout(r, 1000));
                     
                     if (pass === "photo2025") {
