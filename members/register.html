@@ -412,7 +412,6 @@
             }
         });
 
-        // ★ Correct GAS Endpoint
         const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
         const areaOptions = ["札幌市内", "札幌市近郊", "東京周辺", "名古屋周辺", "大阪周辺", "福岡周辺", "その他"];
         
@@ -445,16 +444,42 @@
             document.getElementById('modal-title').innerText = role;
             document.getElementById('entry-role').value = role;
             
+            // ★ START: FORM RESET LOGIC ★
+            // 1. Reset standard inputs
+            const form = document.getElementById('custom-form');
+            form.reset();
+
+            // 2. Reset Photo Preview UI
+            const img = document.getElementById('photo-preview');
+            const placeholder = document.getElementById('upload-placeholder');
+            const photoContainer = document.getElementById('photo-container');
+            
+            if (img && placeholder) {
+                img.classList.add('hidden');
+                img.src = ""; // Clear src
+                placeholder.classList.remove('hidden');
+            }
+            if(photoContainer) photoContainer.classList.remove('border-red-500');
+
+            // 3. Clear Validation Errors
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+            // 4. Reset Slider Displays (Example values)
+            ['en-level-val', 'ph-budget-val', 'mo-budget-val', 'hm-budget-val'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.innerText = "5";
+            });
+            const loScore = document.getElementById('lo-score-val');
+            if(loScore) loScore.innerText = "75";
+
+            // 5. Restore hidden role input (because reset() might have cleared it)
+            document.getElementById('entry-role').value = role;
+            // ★ END: FORM RESET LOGIC ★
+
             document.querySelectorAll('.role-fields').forEach(el => el.classList.add('hidden'));
             const fields = document.getElementById(`fields-${role}`);
             if(fields) fields.classList.remove('hidden');
 
-            const img = document.getElementById('photo-preview');
-            const placeholder = document.getElementById('upload-placeholder');
-            if (img && placeholder) {
-                img.classList.add('hidden');
-                placeholder.classList.remove('hidden');
-            }
             document.getElementById('custom-form').classList.remove('hidden');
             document.getElementById('success-msg').classList.add('hidden');
             modal.showModal();
