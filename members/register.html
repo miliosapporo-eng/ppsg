@@ -2,21 +2,20 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Role | 見つめる写真のはじめ型</title>
+    
     <script>
         (function() {
-            // ★ 合言葉を設定
             const SECRET_KEY = "may_you_are_goodman"; 
-            
             const urlParams = new URLSearchParams(window.location.search);
             const authCode = urlParams.get('auth');
-            // ローカルファイル(file://)以外で、かつ合言葉が一致しない場合はリダイレクト
             if (window.location.protocol !== 'file:' && authCode !== SECRET_KEY) {
                 window.location.href = "/pricing.html"; 
             }
         })();
     </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Your Role | 見つめる写真のはじめ型</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
@@ -35,27 +34,22 @@
         dialog::backdrop { background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(5px); animation: fadeIn 0.3s forwards; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        /* Card Hover */
         .role-card:hover .card-bg { transform: scale(1.05); opacity: 0.4; }
         .role-card:hover .card-border { border-color: rgba(255,255,255,0.8); }
         
-        /* Custom Form Inputs */
         .form-input { 
             background: transparent; border-bottom: 1px solid #475569; color: white; width: 100%; padding: 0.8rem 0; outline: none; transition: border-color 0.3s; border-radius: 0;
         }
         .form-input:focus { border-color: #fbbf24; }
         
-        /* Range Slider Styling */
         input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; height: 24px; cursor: pointer; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: #475569; border-radius: 2px; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #ffffff; margin-top: -7px; box-shadow: 0 0 10px rgba(255,255,255,0.5); transition: transform 0.1s; }
         input[type=range]:active::-webkit-slider-thumb { transform: scale(1.2); }
         
-        /* Hidden Scrollbar for Modal */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Button Style for Radio/Checkbox */
         .check-btn { cursor: pointer; border: 1px solid #475569; padding: 0.5rem 1rem; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; transition: all 0.2s; display: inline-block; margin-bottom: 0.5rem; margin-right: 0.5rem; }
         .peer:checked + .check-btn { background: white; color: black; border-color: white; }
     </style>
@@ -137,7 +131,7 @@
                         <div class="w-12 h-[1px] bg-gray-700 mx-auto"></div>
                     </div>
 
-                    <form id="custom-form" onsubmit="handleGasSubmit(event)" class="space-y-12 text-left">
+                    <form id="custom-form" onsubmit="return handleGasSubmit(event)" class="space-y-12 text-left">
                         <input type="hidden" id="entry-role">
 
                         <div class="space-y-8">
@@ -400,13 +394,12 @@
     <script>
         lucide.createIcons();
         
-        // ★★★ GAS URL ★★★
-        // 登録機能用のGAS URL（前回ご提示いただいたURL）
+        // GAS URL
         const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwLGxCxXdMH_ZzrxTdhXzh56SblKD5vYWsqptaH6xMbApQIYJFcpmNZY4cqlJHcYJsO/exec";
 
         const areaOptions = ["札幌市内", "札幌市近郊", "東京周辺", "名古屋周辺", "大阪周辺", "福岡周辺", "その他"];
         
-        // ★ Styled Button Generator
+        // Button Styles
         const btnStyle = "cursor-pointer block border border-gray-600 px-4 py-2 text-[10px] text-gray-400 tracking-widest uppercase transition-all hover:border-white peer-checked:bg-white peer-checked:text-black peer-checked:border-white";
 
         function createRadios(containerId, name, options) {
@@ -457,8 +450,12 @@
             if(fields) fields.classList.remove('hidden');
 
             // Reset File Preview
-            document.getElementById('photo-preview').classList.add('hidden');
-            document.getElementById('upload-placeholder').classList.remove('hidden');
+            const img = document.getElementById('photo-preview');
+            const placeholder = document.getElementById('upload-placeholder');
+            if (img && placeholder) {
+                img.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
             
             // Reset Success State
             document.getElementById('custom-form').classList.remove('hidden');
@@ -486,7 +483,7 @@
             }
         }
 
-        // --- Data Gathering Helpers ---
+        // --- Data Helpers ---
         function getChecked(name) {
             return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value).join(', ');
         }
@@ -512,106 +509,115 @@
             });
         }
 
-        // --- Submit Handler ---
+        // --- Main Submit Logic ---
         async function handleGasSubmit(e) {
+            // Prevent default form submission
             e.preventDefault();
+            console.log("Submit triggered");
+
             const btn = document.getElementById('submit-btn');
             const originalText = btn.innerHTML;
+            
+            // Loading State
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline mr-2"></i> SENDING...';
             btn.disabled = true;
+            lucide.createIcons();
 
-            const role = getVal('entry-role');
-            
-            const payload = {
-                role: role,
-                name: getVal('entry-name'),
-                email: getVal('entry-email'),
-                // ★ Added Password Payload
-                password: getVal('entry-password'),
-                profilePhotoName: "", profilePhotoData: "",
-                extraFileName: "", extraFileData: ""
-            };
+            try {
+                const role = getVal('entry-role');
+                
+                const payload = {
+                    role: role,
+                    name: getVal('entry-name'),
+                    email: getVal('entry-email'),
+                    password: getVal('entry-password'),
+                    profilePhotoName: "", profilePhotoData: "",
+                    extraFileName: "", extraFileData: ""
+                };
 
-            // Gather Role Specific Data
-            if (role === 'Enthusiast') {
-                payload.area = getRadio('en_area');
-                payload.purpose = getChecked('en_purpose');
-                payload.level = getVal('en-level');
-                payload.memorable = getVal('en-memorable');
-                payload.favorite = getVal('en-favorite');
-                payload.intro = getVal('en-intro');
-            } else if (role === 'Photographer') {
-                payload.area = getRadio('ph_area');
-                payload.portfolio = getVal('ph-portfolio');
-                payload.bio = getVal('ph-bio');
-                payload.motto = getVal('ph-motto');
-                payload.budget = getVal('ph-budget');
-                payload.genres = getChecked('ph_genre');
-                payload.future = getVal('ph-future');
-            } else if (role === 'Model') {
-                payload.area = getRadio('mo_area');
-                payload.portfolio = getVal('mo-portfolio');
-                payload.bio = getVal('mo-bio');
-                payload.wish = getVal('mo-wish');
-                payload.budget = getVal('mo-budget');
-                payload.future = getVal('mo-future');
-            } else if (role === 'HairMakeup') {
-                payload.area = getRadio('hm_area');
-                payload.portfolio = getVal('hm-portfolio');
-                payload.bio = getVal('hm-bio');
-                payload.motto = getVal('hm-motto');
-                payload.value = getVal('hm-value');
-                payload.budget = getVal('hm-budget');
-                payload.styles = getVal('hm-styles');
-                payload.future = getVal('hm-future');
-            } else if (role === 'Location') {
-                payload.types = getChecked('lo_type');
-                payload.address = getVal('lo-address');
-                payload.web_url = getVal('lo-web');
-                payload.history = getVal('lo-history');
-                payload.exp = getRadio('lo_exp');
-                payload.score = getVal('lo-score');
-            } else if (role === 'Gallery') {
-                payload.g_name = getVal('ga-name');
-                payload.address = getVal('ga-address');
-                payload.web_url = getVal('ga-web');
-                payload.concept = getVal('ga-concept');
-                payload.meeting = getVal('ga-meeting');
-            }
+                // Role-specific Data Gathering
+                if (role === 'Enthusiast') {
+                    payload.area = getRadio('en_area');
+                    payload.purpose = getChecked('en_purpose');
+                    payload.level = getVal('en-level');
+                    payload.memorable = getVal('en-memorable');
+                    payload.favorite = getVal('en-favorite');
+                    payload.intro = getVal('en-intro');
+                } else if (role === 'Photographer') {
+                    payload.area = getRadio('ph_area');
+                    payload.portfolio = getVal('ph-portfolio');
+                    payload.bio = getVal('ph-bio');
+                    payload.motto = getVal('ph-motto');
+                    payload.budget = getVal('ph-budget');
+                    payload.genres = getChecked('ph_genre');
+                    payload.future = getVal('ph-future');
+                } else if (role === 'Model') {
+                    payload.area = getRadio('mo_area');
+                    payload.portfolio = getVal('mo-portfolio');
+                    payload.bio = getVal('mo-bio');
+                    payload.wish = getVal('mo-wish');
+                    payload.budget = getVal('mo-budget');
+                    payload.future = getVal('mo-future');
+                } else if (role === 'HairMakeup') {
+                    payload.area = getRadio('hm_area');
+                    payload.portfolio = getVal('hm-portfolio');
+                    payload.bio = getVal('hm-bio');
+                    payload.motto = getVal('hm-motto');
+                    payload.value = getVal('hm-value');
+                    payload.budget = getVal('hm-budget');
+                    payload.styles = getVal('hm-styles');
+                    payload.future = getVal('hm-future');
+                } else if (role === 'Location') {
+                    payload.types = getChecked('lo_type');
+                    payload.address = getVal('lo-address');
+                    payload.web_url = getVal('lo-web');
+                    payload.history = getVal('lo-history');
+                    payload.exp = getRadio('lo_exp');
+                    payload.score = getVal('lo-score');
+                } else if (role === 'Gallery') {
+                    payload.g_name = getVal('ga-name');
+                    payload.address = getVal('ga-address');
+                    payload.web_url = getVal('ga-web');
+                    payload.concept = getVal('ga-concept');
+                    payload.meeting = getVal('ga-meeting');
+                }
 
-            // Read Files
-            const profileFile = await readFile('entry-photo');
-            payload.profilePhotoName = profileFile.name;
-            payload.profilePhotoData = profileFile.data;
+                // File Handling
+                const profileFile = await readFile('entry-photo');
+                payload.profilePhotoName = profileFile.name;
+                payload.profilePhotoData = profileFile.data;
 
-            if (role === 'Location') {
-                const extraFile = await readFile('lo-file');
-                payload.extraFileName = extraFile.name;
-                payload.extraFileData = extraFile.data;
-            } else if (role === 'Gallery') {
-                const extraFile = await readFile('ga-file');
-                payload.extraFileName = extraFile.name;
-                payload.extraFileData = extraFile.data;
-            }
+                if (role === 'Location') {
+                    const extraFile = await readFile('lo-file');
+                    payload.extraFileName = extraFile.name;
+                    payload.extraFileData = extraFile.data;
+                } else if (role === 'Gallery') {
+                    const extraFile = await readFile('ga-file');
+                    payload.extraFileName = extraFile.name;
+                    payload.extraFileData = extraFile.data;
+                }
 
-            console.log("Sending Payload:", payload); // Debug
+                console.log("Sending Payload:", payload);
 
-            // Post to GAS
-            fetch(GAS_ENDPOINT, {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                mode: 'no-cors'
-            }).then(() => {
+                // Send to GAS
+                await fetch(GAS_ENDPOINT, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    mode: 'no-cors'
+                });
+
+                // Success
                 document.getElementById('custom-form').classList.add('hidden');
                 document.getElementById('success-msg').classList.remove('hidden');
-                // Scroll to top of modal
                 document.querySelector('#role-modal > div').scrollTo(0,0);
-            }).catch(err => {
+
+            } catch (err) {
                 console.error(err);
                 alert('送信エラーが発生しました。コンソールを確認してください。');
                 btn.disabled = false;
                 btn.innerHTML = originalText;
-            });
+            }
+            return false;
         }
     </script>
 </body>
