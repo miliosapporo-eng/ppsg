@@ -2,64 +2,93 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | 見つめる写真のはじめ型</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>if (localStorage.getItem('isMember') !== 'true') window.location.href = 'login.html';</script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        // 認証チェック
+        if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
+            window.location.href = '/';
+        }
+    </script>
+
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; }
+        body { font-family: sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 pb-20">
+<body class="min-h-screen pb-20">
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center">
+        <div class="text-center">
+            <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-4 text-white"></i>
+            <p class="text-xs tracking-widest text-gray-500">LOADING PROFILE...</p>
+        </div>
+    </div>
 
     <div class="max-w-4xl mx-auto bg-gray-900 min-h-screen relative">
-        <a href="index.html" class="absolute top-6 left-6 z-10 text-xs font-bold tracking-widest bg-black/50 px-4 py-2 rounded-full hover:bg-black transition-colors">← BACK</a>
+        <a href="index.html" class="absolute top-6 left-6 z-10 text-xs font-bold tracking-widest bg-black/50 px-4 py-2 rounded-full hover:bg-black transition-colors text-white backdrop-blur">
+            ← BACK TO LIST
+        </a>
 
-        <div class="h-[50vh] w-full overflow-hidden">
-            <img id="p-image" src="" class="w-full h-full object-cover">
+        <!-- Main Image -->
+        <div class="h-[50vh] w-full overflow-hidden bg-black">
+            <img id="p-image" src="" class="w-full h-full object-cover opacity-0 transition-opacity duration-700">
         </div>
 
         <div class="px-6 py-12 md:px-12 -mt-20 relative z-20">
             <div class="bg-gray-800 p-8 md:p-12 border border-gray-700 shadow-2xl">
+                <!-- Profile Header -->
                 <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-12 border-b border-gray-700 pb-8">
                     <div>
                         <span id="p-type" class="text-xs font-bold tracking-[0.2em] text-amber-500 uppercase mb-2 block">Type</span>
                         <h1 id="p-name" class="text-3xl md:text-4xl font-serif text-white mb-4">Name</h1>
-                        <p id="p-location" class="text-sm text-gray-400 flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Location</p>
+                        <p id="p-location" class="text-sm text-gray-400 flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i> <span id="p-location-text">Location</span>
+                        </p>
                     </div>
+                    
+                    <!-- Contact / Status Area -->
                     <div id="p-contact-area">
-                        </div>
-                </div>
-
-                <div class="mb-12">
-                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Philosophy</h3>
-                    <p id="p-philosophy" class="text-lg font-serif leading-loose text-gray-200">
-                        </p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Specs & Gear</h3>
-                        <ul id="p-specs" class="space-y-4 text-sm text-gray-300">
-                            </ul>
+                        <!-- JSでボタンを注入 -->
                     </div>
+                </div>
+
+                <!-- Philosophy / Bio -->
+                <div class="mb-12">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Introduction</h3>
+                    <p id="p-philosophy" class="text-lg font-serif leading-loose text-gray-200 whitespace-pre-wrap">
+                        <!-- テキスト -->
+                    </p>
+                </div>
+
+                <!-- Terms & Rules -->
+                <div class="grid md:grid-cols-1 gap-8">
                     <div>
-                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Terms</h3>
-                        <p class="text-sm text-gray-300 leading-relaxed bg-gray-900 p-4 border border-gray-700">
-                            【コミュニティ・ルール】<br>
-                            マッチング時は必ず以下の「申請フォーマット」を使用してください。<br>
-                            挨拶だけのDMや、条件未記入の依頼は返信されない場合があります。
-                        </p>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Request Rules</h3>
+                        <div class="bg-gray-900 p-6 border border-gray-700 text-sm text-gray-400 leading-relaxed">
+                            <p class="mb-2"><strong class="text-white">【コミュニティ・ルール】</strong></p>
+                            <p>
+                                マッチング時は必ず以下の「申請フォーマット」を使用してください。<br>
+                                挨拶だけのDMや、条件未記入の依頼は返信されない場合があります。
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Request Modal -->
     <div id="request-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white text-gray-900 w-full max-w-lg p-8 rounded-sm shadow-2xl relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900"><i data-lucide="x" class="w-6 h-6"></i></button>
+        <div class="bg-white text-gray-900 w-full max-w-lg p-8 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
             
             <h3 class="text-xl font-serif mb-2">Request Format</h3>
             <p class="text-xs text-gray-500 mb-6">以下の項目を埋めてコピーし、相手のDM/メールに送信してください。</p>
@@ -91,56 +120,100 @@
 
             <div class="mt-6 pt-6 border-t border-gray-200">
                 <button onclick="copyRequest()" class="w-full bg-gray-900 text-white py-4 font-bold tracking-widest hover:bg-gray-700 transition-colors flex justify-center items-center gap-2">
-                    <i data-lucide="copy" class="w-4 h-4"></i> COPY TEXT & OPEN DM
+                    <i data-lucide="copy" class="w-4 h-4"></i> COPY TEXT
                 </button>
-                <p id="copy-msg" class="text-center text-green-600 text-xs mt-2 font-bold opacity-0 transition-opacity">COPIED!</p>
+                <p id="copy-msg" class="text-center text-green-600 text-xs mt-2 font-bold opacity-0 transition-opacity">COPIED TO CLIPBOARD!</p>
+                <p class="text-center text-[10px] text-gray-400 mt-1">※コピー後、相手のSNS等へ手動で貼り付けてください</p>
             </div>
         </div>
     </div>
 
-    <script src="../js/members.js"></script>
+    <!-- Logic -->
     <script>
         lucide.createIcons();
 
-        // URLからID取得
-        const params = new URLSearchParams(window.location.search);
-        const memberId = params.get('id');
-        const member = membersData.find(m => m.id === memberId);
+        // ★ GAS URL (統合版)
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec"; 
 
-        if (!member) {
-            alert('Member not found');
-            window.location.href = 'index.html';
+        async function fetchMemberDetail() {
+            // URLパラメータからIDを取得 (例: ?id=Photographer-2)
+            const params = new URLSearchParams(window.location.search);
+            const memberId = params.get('id');
+
+            if (!memberId) {
+                alert("Invalid Member ID");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                // GASから全データを取得
+                // ※本来はID指定で1件だけ取るAPIにするのがベストですが、
+                // 簡易実装として全件取得してからJSで検索します
+                const response = await fetch(GAS_API_URL);
+                const data = await response.json();
+                
+                // IDで検索
+                const member = data.find(m => m.id === memberId);
+
+                if (!member) {
+                    alert("Member Not Found");
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                renderProfile(member);
+
+            } catch (error) {
+                console.error(error);
+                alert("データの読み込みに失敗しました");
+            }
         }
 
-        // データ反映
-        document.getElementById('p-image').src = member.images[0];
-        document.getElementById('p-type').innerText = member.type;
-        document.getElementById('p-name').innerText = member.name;
-        document.getElementById('p-location').innerHTML = `<i data-lucide="map-pin" class="w-4 h-4"></i> ${member.location}`;
-        document.getElementById('p-philosophy').innerText = member.philosophy;
-
-        // Specsリスト生成
-        const specsList = document.getElementById('p-specs');
-        for (const [key, value] of Object.entries(member.specs)) {
-            const li = document.createElement('li');
-            li.innerHTML = `<span class="text-gray-500 mr-2 capitalize">${key}:</span> ${value}`;
-            specsList.appendChild(li);
+        // 画像URL変換
+        function convertDriveLink(url) {
+            if (!url) return 'https://via.placeholder.com/800x600/1f2937/4b5563?text=NO+IMAGE';
+            if (url.includes("drive.google.com") && url.includes("id=")) {
+                const idMatch = url.match(/id=([^&]+)/);
+                if (idMatch && idMatch[1]) {
+                    // プロフィール画像用に少し大きめを取得
+                    return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1600`;
+                }
+            }
+            return url;
         }
 
-        // Contact Button生成
-        const contactArea = document.getElementById('p-contact-area');
-        if (member.status === 'Active') {
-            contactArea.innerHTML = `
-                <button onclick="openModal()" class="bg-white text-gray-900 px-8 py-3 text-xs font-bold tracking-widest hover:bg-gray-200 transition-colors shadow-lg">
-                    REQUEST SHOOT
-                </button>
-            `;
-        } else {
-            contactArea.innerHTML = `
-                <span class="bg-gray-700 text-gray-400 px-6 py-2 text-xs font-bold tracking-widest cursor-not-allowed">
-                    NOT ACCEPTING
-                </span>
-            `;
+        function renderProfile(member) {
+            // 画像
+            const imgEl = document.getElementById('p-image');
+            imgEl.src = convertDriveLink(member.image);
+            imgEl.onload = () => imgEl.classList.remove('opacity-0');
+
+            // テキスト情報
+            document.getElementById('p-type').innerText = member.type;
+            document.getElementById('p-name').innerText = member.name;
+            document.getElementById('p-location-text').innerText = member.location || 'Unknown';
+            document.getElementById('p-philosophy').innerText = member.philosophy || 'No introduction provided.';
+
+            // コンタクトボタン
+            const contactArea = document.getElementById('p-contact-area');
+            if (member.status === 'Active') {
+                contactArea.innerHTML = `
+                    <button onclick="openModal()" class="bg-white text-gray-900 px-8 py-3 text-xs font-bold tracking-widest hover:bg-gray-200 transition-colors shadow-lg flex items-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i> REQUEST SHOOT
+                    </button>
+                `;
+            } else {
+                contactArea.innerHTML = `
+                    <span class="bg-gray-700 text-gray-400 px-6 py-2 text-xs font-bold tracking-widest cursor-not-allowed">
+                        NOT ACCEPTING
+                    </span>
+                `;
+            }
+
+            // ローディング消去
+            document.getElementById('loading').classList.add('hidden');
+            lucide.createIcons();
         }
 
         // Modal Logic
@@ -149,7 +222,6 @@
         function closeModal() { modal.classList.add('hidden'); }
 
         function copyRequest() {
-            // テキスト生成
             const text = `
 【撮影依頼: 見つめる写真のはじめ型より】
 
@@ -162,19 +234,13 @@ Message:
 ${document.getElementById('req-msg').value}
             `.trim();
 
-            // クリップボードにコピー
             navigator.clipboard.writeText(text).then(() => {
                 document.getElementById('copy-msg').style.opacity = '1';
-                setTimeout(() => {
-                    // Instagramなどが設定されていれば開く
-                    if (member.contact.instagram) {
-                        window.open(member.contact.instagram, '_blank');
-                    } else if (member.contact.email) {
-                        window.location.href = member.contact.email;
-                    }
-                }, 1000);
             });
         }
+
+        // Init
+        window.onload = fetchMemberDetail;
     </script>
 </body>
 </html>
