@@ -9,52 +9,69 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
     
     <script>
-        // 難読化キーによる認証チェック
-        // キーが一致しなければ、ログイン画面へ強制リダイレクト
+        // ★ 認証チェック (Access Guard)
+        // トークンがない場合、警告を出してトップページへ強制送還
         if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
-            window.location.href = 'login.html';
+            alert("会員専用エリアです。トップページからログインしてください。");
+            window.location.href = '/';
         }
     </script>
     
     <style>
-        body { font-family: sans-serif; }
+        body { font-family: sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 min-h-screen">
+<body class="min-h-screen flex flex-col">
 
     <header class="p-6 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-gray-900/95 backdrop-blur z-50">
         <div class="flex items-center gap-4">
-            <a href="/" class="text-xs text-gray-500 hover:text-white transition-colors tracking-widest">← HOME</a>
-            <h1 class="text-xl font-serif font-bold tracking-widest text-white">MEMBERS LIST</h1>
+            <a href="/" class="text-xs text-gray-500 hover:text-white transition-colors tracking-widest flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-3 h-3"></i> HOME
+            </a>
+            <h1 class="text-xl font-serif font-bold tracking-widest text-white border-l border-gray-700 pl-4 ml-4">
+                MEMBERS LIST
+            </h1>
         </div>
-        <button onclick="logout()" class="text-xs font-bold tracking-widest text-gray-500 hover:text-red-500 transition-colors">
-            LOGOUT
-        </button>
+        <div class="flex items-center gap-6">
+            <span class="text-[10px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in as Member</span>
+            <button onclick="logout()" class="text-xs font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-4 py-2 rounded">
+                LOGOUT
+            </button>
+        </div>
     </header>
 
-    <div class="p-6 border-b border-gray-800 overflow-x-auto">
-        <div class="flex gap-6 text-xs font-bold tracking-widest whitespace-nowrap">
-            <button onclick="renderMembers('All')" class="filter-btn text-white border-b border-white pb-1 transition-colors">ALL</button>
-            <button onclick="renderMembers('Photographer')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1">PHOTOGRAPHERS</button>
-            <button onclick="renderMembers('Model')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1">MODELS</button>
-            <button onclick="renderMembers('Owner')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1">OWNERS</button>
+    <div class="p-6 border-b border-gray-800 overflow-x-auto bg-gray-900">
+        <div class="flex gap-8 text-xs font-bold tracking-widest whitespace-nowrap min-w-max">
+            <button onclick="renderMembers('All')" class="filter-btn text-white border-b-2 border-white pb-1 transition-colors">ALL MEMBERS</button>
+            <button onclick="renderMembers('Photographer')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">PHOTOGRAPHERS</button>
+            <button onclick="renderMembers('Model')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">MODELS</button>
+            <button onclick="renderMembers('HairMakeup')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">HAIR & MAKE</button>
+            <button onclick="renderMembers('Location')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">LOCATIONS</button>
+            <button onclick="renderMembers('Gallery')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">GALLERIES</button>
+            <button onclick="renderMembers('Enthusiast')" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">ENTHUSIASTS</button>
         </div>
     </div>
 
-    <main class="p-6">
+    <main class="p-6 flex-1">
         <div id="members-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             </div>
     </main>
 
     <script src="/js/members.js"></script>
+    
     <script>
         lucide.createIcons();
 
         // ログアウト処理
         function logout() {
             if(confirm('ログアウトしますか？')) {
-                // 正しい認証キーを削除する
                 localStorage.removeItem('pt_auth_token_v1');
                 window.location.href = '/';
             }
@@ -67,47 +84,77 @@
 
             // データ読み込みエラー回避
             if (typeof membersData === 'undefined') {
-                container.innerHTML = '<p class="text-gray-500">Loading members data...</p>';
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-20 text-gray-500">
+                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-4"></i>
+                        <p class="text-xs tracking-widest">LOADING MEMBERS DATA...</p>
+                    </div>`;
+                lucide.createIcons();
                 return;
             }
 
             // フィルタリング
             const filtered = filterType === 'All' ? membersData : membersData.filter(m => m.type === filterType);
 
+            // 該当なしの場合
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-20 text-gray-600">
+                        <p class="text-xs tracking-widest">NO MEMBERS FOUND IN THIS CATEGORY.</p>
+                    </div>`;
+                return;
+            }
+
             // ボタンのアクティブ表示切替
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.innerText === filterType.toUpperCase() || (filterType === 'All' && btn.innerText === 'ALL')) {
+                // テキスト比較で判定（Allの場合は特殊処理）
+                const btnText = btn.innerText;
+                const isMatch = (filterType === 'All' && btnText === 'ALL MEMBERS') || btnText.includes(filterType.toUpperCase());
+                
+                if (isMatch) {
                     btn.classList.remove('text-gray-500', 'border-transparent');
-                    btn.classList.add('text-white', 'border-b', 'border-white');
+                    btn.classList.add('text-white', 'border-white');
                 } else {
                     btn.classList.add('text-gray-500', 'border-transparent');
-                    btn.classList.remove('text-white', 'border-b', 'border-white');
+                    btn.classList.remove('text-white', 'border-white');
                 }
             });
 
             // カード生成
             filtered.forEach(m => {
+                // 画像がない場合のフォールバック
+                const imgUrl = (m.images && m.images.length > 0) ? m.images[0] : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
+                
                 const card = `
-                    <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-colors group relative">
+                    <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
                         <div class="aspect-[4/5] overflow-hidden bg-black relative">
-                            <img src="${m.images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                            <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                            
                             <div class="absolute top-2 right-2">
-                                <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider ${m.status === 'Active' ? 'bg-green-900/80 text-green-300' : 'bg-red-900/80 text-red-300'}">
-                                    ${m.status}
+                                <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
+                                    ${m.status || 'Active'}
+                                </span>
+                            </div>
+                            
+                            <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent">
+                                <span class="text-[10px] bg-white/10 backdrop-blur px-2 py-1 text-white border border-white/20 uppercase tracking-wider">
+                                    ${m.type}
                                 </span>
                             </div>
                         </div>
+                        
                         <div class="p-5">
-                            <div class="mb-2">
-                                <span class="text-[10px] bg-gray-700 px-2 py-1 text-gray-300 uppercase tracking-wider">${m.type}</span>
+                            <h3 class="text-lg font-serif text-white mb-2 tracking-wide group-hover:text-amber-400 transition-colors">${m.name}</h3>
+                            
+                            <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1 uppercase tracking-widest">
+                                <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || 'Unknown'}
+                            </p>
+                            
+                            <div class="border-t border-gray-700 pt-3">
+                                <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">
+                                    "${m.philosophy || 'No philosophy statement yet.'}"
+                                </p>
                             </div>
-                            <h3 class="text-lg font-serif text-white mb-1 tracking-wide">${m.name}</h3>
-                            <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1">
-                                <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location}
-                            </p>
-                            <p class="text-xs text-gray-500 line-clamp-2 italic border-t border-gray-700 pt-3 leading-relaxed">
-                                "${m.philosophy}"
-                            </p>
                         </div>
                     </a>
                 `;
