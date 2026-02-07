@@ -10,6 +10,7 @@
             const SECRET_KEY = "may_you_are_goodman"; 
             const urlParams = new URLSearchParams(window.location.search);
             const authCode = urlParams.get('auth');
+            // ローカル環境(file:)以外で合言葉がない場合は弾く
             if (window.location.protocol !== 'file:' && authCode !== SECRET_KEY) {
                 window.location.href = "/pricing.html"; 
             }
@@ -24,7 +25,6 @@
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         
-        /* Animations */
         .fade-in { animation: fadeIn 1.2s ease-out forwards; opacity: 0; }
         .slide-up { animation: slideUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
         @keyframes fadeIn { to { opacity: 1; } }
@@ -131,7 +131,7 @@
                         <div class="w-12 h-[1px] bg-gray-700 mx-auto"></div>
                     </div>
 
-                    <form id="custom-form" onsubmit="return handleGasSubmit(event)" class="space-y-12 text-left">
+                    <form id="custom-form" class="space-y-12 text-left">
                         <input type="hidden" id="entry-role">
 
                         <div class="space-y-8">
@@ -392,14 +392,28 @@
     </dialog>
 
     <script>
-        lucide.createIcons();
-        
-        // GAS URL
-        const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwLGxCxXdMH_ZzrxTdhXzh56SblKD5vYWsqptaH6xMbApQIYJFcpmNZY4cqlJHcYJsO/exec";
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            
+            // ★ 初期化処理
+            createRadios('enthusiast-area-options', 'en_area', areaOptions);
+            createChecks('enthusiast-purpose-options', 'en_purpose', ["語り合いたい", "学びたい", "知り合いたい", "情報収集", "その他"]);
+            createRadios('ph-area-options', 'ph_area', areaOptions);
+            createChecks('ph-genre-options', 'ph_genre', ["Portrait", "Landscape", "Food", "Animal", "Vehicle", "Abstract", "Snap"]);
+            createRadios('mo-area-options', 'mo_area', areaOptions);
+            createRadios('hm-area-options', 'hm_area', areaOptions);
+            createChecks('lo-type-options', 'lo_type', ["更地", "農地", "原野", "戸建て", "マンション", "スタジオ", "飲食店", "大型施設", "クルーザー", "ガレージ"]);
 
+            // ★ フォーム送信イベントをJS側で登録 (これで確実に動きます)
+            const form = document.getElementById('custom-form');
+            if (form) {
+                form.addEventListener('submit', handleGasSubmit);
+            }
+        });
+
+        const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwLGxCxXdMH_ZzrxTdhXzh56SblKD5vYWsqptaH6xMbApQIYJFcpmNZY4cqlJHcYJsO/exec";
         const areaOptions = ["札幌市内", "札幌市近郊", "東京周辺", "名古屋周辺", "大阪周辺", "福岡周辺", "その他"];
         
-        // Button Styles
         const btnStyle = "cursor-pointer block border border-gray-600 px-4 py-2 text-[10px] text-gray-400 tracking-widest uppercase transition-all hover:border-white peer-checked:bg-white peer-checked:text-black peer-checked:border-white";
 
         function createRadios(containerId, name, options) {
@@ -424,43 +438,23 @@
             `).join('');
         }
 
-        // Initialize Options
-        createRadios('enthusiast-area-options', 'en_area', areaOptions);
-        createChecks('enthusiast-purpose-options', 'en_purpose', ["語り合いたい", "学びたい", "知り合いたい", "情報収集", "その他"]);
-        
-        createRadios('ph-area-options', 'ph_area', areaOptions);
-        createChecks('ph-genre-options', 'ph_genre', ["Portrait", "Landscape", "Food", "Animal", "Vehicle", "Abstract", "Snap"]);
-
-        createRadios('mo-area-options', 'mo_area', areaOptions);
-        createRadios('hm-area-options', 'hm_area', areaOptions);
-        
-        createChecks('lo-type-options', 'lo_type', ["更地", "農地", "原野", "戸建て", "マンション", "スタジオ", "飲食店", "大型施設", "クルーザー", "ガレージ"]);
-
         // Modal Logic
         const modal = document.getElementById('role-modal');
         function openModal(role) {
             document.getElementById('modal-title').innerText = role;
             document.getElementById('entry-role').value = role;
-            
-            // Hide all fields
             document.querySelectorAll('.role-fields').forEach(el => el.classList.add('hidden'));
-            
-            // Show specific fields
             const fields = document.getElementById(`fields-${role}`);
             if(fields) fields.classList.remove('hidden');
 
-            // Reset File Preview
             const img = document.getElementById('photo-preview');
             const placeholder = document.getElementById('upload-placeholder');
             if (img && placeholder) {
                 img.classList.add('hidden');
                 placeholder.classList.remove('hidden');
             }
-            
-            // Reset Success State
             document.getElementById('custom-form').classList.remove('hidden');
             document.getElementById('success-msg').classList.add('hidden');
-
             modal.showModal();
         }
         
@@ -483,7 +477,6 @@
             }
         }
 
-        // --- Data Helpers ---
         function getChecked(name) {
             return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value).join(', ');
         }
@@ -511,21 +504,18 @@
 
         // --- Main Submit Logic ---
         async function handleGasSubmit(e) {
-            // Prevent default form submission
             e.preventDefault();
-            console.log("Submit triggered");
+            console.log("Submit triggered"); // Debug check
 
             const btn = document.getElementById('submit-btn');
             const originalText = btn.innerHTML;
             
-            // Loading State
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline mr-2"></i> SENDING...';
             btn.disabled = true;
             lucide.createIcons();
 
             try {
                 const role = getVal('entry-role');
-                
                 const payload = {
                     role: role,
                     name: getVal('entry-name'),
@@ -535,7 +525,7 @@
                     extraFileName: "", extraFileData: ""
                 };
 
-                // Role-specific Data Gathering
+                // Role Data
                 if (role === 'Enthusiast') {
                     payload.area = getRadio('en_area');
                     payload.purpose = getChecked('en_purpose');
@@ -582,7 +572,7 @@
                     payload.meeting = getVal('ga-meeting');
                 }
 
-                // File Handling
+                // File
                 const profileFile = await readFile('entry-photo');
                 payload.profilePhotoName = profileFile.name;
                 payload.profilePhotoData = profileFile.data;
@@ -599,7 +589,6 @@
 
                 console.log("Sending Payload:", payload);
 
-                // Send to GAS
                 await fetch(GAS_ENDPOINT, {
                     method: 'POST',
                     body: JSON.stringify(payload),
@@ -613,11 +602,10 @@
 
             } catch (err) {
                 console.error(err);
-                alert('送信エラーが発生しました。コンソールを確認してください。');
+                alert('送信エラーが発生しました。');
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
-            return false;
         }
     </script>
 </body>
