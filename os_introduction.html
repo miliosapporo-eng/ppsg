@@ -12,10 +12,14 @@
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         
-        /* Modal Animation */
-        dialog[open] { animation: modalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        dialog::backdrop { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); animation: fadeIn 0.4s forwards; }
-        @keyframes modalIn { from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        /* Modal Animation - Fixed for centering */
+        dialog[open] { animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(12px); animation: fadeIn 0.4s forwards; }
+        
+        @keyframes modalIn { 
+            from { opacity: 0; transform: scale(0.95) translateY(10px); } 
+            to { opacity: 1; transform: scale(1) translateY(0); } 
+        }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Custom Scrollbar */
@@ -23,7 +27,6 @@
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         
-        /* Image Hover */
         .os-card:hover img { transform: scale(1.05); filter: brightness(1.1); }
         .os-card:hover .card-border { border-color: rgba(245, 158, 11, 0.5); background-color: rgba(255,255,255,0.02); }
     </style>
@@ -62,7 +65,6 @@
                 <p class="text-[10px] text-gray-500 mb-12 uppercase tracking-widest">The Observer</p>
                 
                 <div class="grid grid-cols-1 gap-12 max-w-lg mx-auto">
-                    <!-- Items -->
                     <button onclick="openModal('owl')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/owl.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -70,7 +72,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">ARTIST</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('wolf')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/wolf.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -78,7 +79,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">DOCUMENTALIST</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('eagle')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/eagle.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -86,7 +86,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">TECHNICIAN</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('dolphin')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/dolphin.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -94,7 +93,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">COMMUNICATOR</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('migratorybird')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/migratorybird.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -102,7 +100,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">ADVENTURER</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('pigeon')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/pigeon.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -126,7 +123,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">EDITORIAL</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('giraffe')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/giraffe.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -134,7 +130,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">RUNWAY</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('goldenretriever')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/goldenretriever.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -142,7 +137,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">COMMERCIAL</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('lion')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/lion.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -150,7 +144,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">FITNESS</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('swan')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/swan.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -158,7 +151,6 @@
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">PARTS</span>
                         </div>
                     </button>
-
                     <button onclick="openModal('jellyfish')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
                         <img src="images/members/os/jellyfish.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
@@ -180,38 +172,39 @@
                 </div>
             </a>
         </div>
-
     </main>
 
-    <!-- Modal (Remains basically the same, image size slightly adjusted) -->
-    <dialog id="info-modal" class="bg-transparent p-0 w-full h-full max-w-none max-h-none m-0">
-        <button onclick="closeModal()" class="fixed top-8 right-8 text-gray-400 hover:text-white transition-colors z-50 bg-black/20 rounded-full p-2">
-            <i data-lucide="x" class="w-8 h-8"></i>
-        </button>
-
-        <div class="w-full h-full flex flex-col items-center justify-center p-6" onclick="if(event.target === this) closeModal()">
-            <div class="max-w-2xl w-full bg-gray-900 border border-gray-700 p-8 md:p-12 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+    <!-- Modal (Centered Structure) -->
+    <dialog id="info-modal" class="bg-transparent p-0 w-full h-full max-w-none max-h-none m-0 overflow-hidden outline-none">
+        <div class="w-full h-full flex flex-col items-center justify-center p-4 md:p-8" onclick="if(event.target === this) closeModal()">
+            
+            <div class="max-w-2xl w-full bg-gray-900 border border-gray-700 relative shadow-2xl max-h-[85vh] overflow-y-auto flex flex-col">
+                <!-- Sticky Close Button for better UX -->
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors z-50 p-2">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
                 
-                <div class="text-center mb-8">
-                    <img id="m-img" src="" class="w-full aspect-video object-cover mx-auto mb-6 opacity-90 border border-gray-800">
-                    <h2 id="m-title" class="text-2xl md:text-3xl font-serif text-white mb-2"></h2>
-                    <p id="m-animal" class="text-xs text-amber-500 tracking-widest uppercase"></p>
-                </div>
-
-                <div class="space-y-8 text-justify font-serif leading-loose text-sm text-gray-300">
-                    <div id="m-desc"></div>
-                    
-                    <div class="border-t border-gray-800 pt-6">
-                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Strength / Genre</h4>
-                        <p id="m-genre" class="text-white"></p>
+                <div class="p-8 md:p-12">
+                    <div class="text-center mb-10">
+                        <img id="m-img" src="" class="w-full aspect-video object-cover mx-auto mb-8 opacity-90 border border-gray-800 shadow-inner">
+                        <h2 id="m-title" class="text-2xl md:text-3xl font-serif text-white mb-2 tracking-widest"></h2>
+                        <p id="m-animal" class="text-xs text-amber-500 tracking-widest uppercase"></p>
                     </div>
 
-                    <div class="bg-gray-800/50 p-6 border-l-2 border-amber-600">
-                        <h4 class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-2">Advice</h4>
-                        <p id="m-advice" class="text-gray-400"></p>
+                    <div class="space-y-8 text-justify font-serif leading-loose text-sm text-gray-300">
+                        <div id="m-desc"></div>
+                        
+                        <div class="border-t border-gray-800 pt-8">
+                            <h4 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Strength / Genre</h4>
+                            <p id="m-genre" class="text-white tracking-wider"></p>
+                        </div>
+
+                        <div class="bg-gray-800/30 p-6 border-l-2 border-amber-600/50">
+                            <h4 class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-3">Advice</h4>
+                            <p id="m-advice" class="text-gray-400 leading-relaxed"></p>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </dialog>
@@ -246,6 +239,7 @@
             document.getElementById('m-genre').innerText = data.genre;
             document.getElementById('m-advice').innerText = data.advice;
             modal.showModal();
+            lucide.createIcons(); // Re-render icon in sticky button
         }
         function closeModal() { modal.close(); }
     </script>
