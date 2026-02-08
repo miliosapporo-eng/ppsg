@@ -22,6 +22,16 @@
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* OS Badge Style */
+        .os-badge {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            font-size: 9px;
+            padding: 2px 6px;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -70,6 +80,17 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
         let allMembers = [];
 
+        // OSタイプに応じた絵文字とラベルを返すヘルパー
+        function getOSInfo(osName) {
+            const osMap = {
+                'OWL': '🦉 OWL', 'WOLF': '🐺 WOLF', 'EAGLE': '🦅 EAGLE',
+                'DOLPHIN': '🐬 DOLPHIN', 'CROW': '🐦‍⬛ CROW', 'DOVE': '🕊️ DOVE',
+                'LIZARD': '🦎 LIZARD', 'GIRAFFE': '🦒 GIRAFFE', 'DOG': '🐕 DOG',
+                'LION': '🦁 LION', 'SWAN': '🦢 SWAN', 'JELLY': '🪼 JELLY'
+            };
+            return osMap[osName] || null;
+        }
+
         function logout() {
             if(confirm('ログアウトしますか？')) {
                 localStorage.removeItem('pt_auth_token_v1');
@@ -112,13 +133,11 @@
                     </div>`;
             } else {
                 filtered.forEach(m => {
-                    // ★ 画像パス処理: 変換せずそのまま使う
-                    // (スプレッドシートのF列に書かれたパスをそのままsrcに入れる)
                     const imgUrl = m.image ? m.image : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
+                    const osInfo = m.os_type ? getOSInfo(m.os_type) : null;
                     
                     const card = `
                         <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
-                            <!-- アスペクト比 4:5 (ポートレート比率) -->
                             <div class="aspect-[4/5] overflow-hidden bg-black relative">
                                 <img src="${imgUrl}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100" 
@@ -130,10 +149,11 @@
                                         ${m.status || 'Active'}
                                     </span>
                                 </div>
-                                <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent">
+                                <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent flex flex-wrap gap-2">
                                     <span class="text-[10px] bg-white/10 backdrop-blur px-2 py-1 text-white border border-white/20 uppercase tracking-wider">
                                         ${m.type}
                                     </span>
+                                    ${osInfo ? `<span class="os-badge backdrop-blur uppercase tracking-wider font-bold">${osInfo}</span>` : ''}
                                 </div>
                             </div>
                             <div class="p-5">
