@@ -12,7 +12,7 @@
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         
-        /* Modal Animation - Fixed for centering */
+        /* Modal Animation */
         dialog[open] { animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         dialog::backdrop { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(12px); animation: fadeIn 0.4s forwards; }
         
@@ -27,8 +27,21 @@
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         
-        .os-card:hover img { transform: scale(1.05); filter: brightness(1.1); }
-        .os-card:hover .card-border { border-color: rgba(245, 158, 11, 0.5); background-color: rgba(255,255,255,0.02); }
+        /* 透かしを隠すための基本設定 (Scaleアップで端をカット) */
+        .hide-watermark {
+            transform: scale(1.1); /* 1.1倍に拡大して端の透かしを追い出す */
+            transform-origin: center;
+        }
+
+        .os-card:hover .hide-watermark { 
+            transform: scale(1.15); /* ホバー時はさらに拡大 */
+            filter: brightness(1.1); 
+        }
+        
+        .os-card:hover .card-border { 
+            border-color: rgba(245, 158, 11, 0.5); 
+            background-color: rgba(255,255,255,0.02); 
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -56,7 +69,7 @@
     <main class="flex-1 container mx-auto px-4 max-w-6xl pb-24">
         
         <div class="grid md:grid-cols-2 gap-16 md:gap-24 relative">
-            <!-- Vertical Divider (Desktop) -->
+            <!-- Vertical Divider -->
             <div class="hidden md:block absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-transparent via-gray-700 to-transparent"></div>
 
             <!-- Left: Photographer -->
@@ -65,44 +78,45 @@
                 <p class="text-[10px] text-gray-500 mb-12 uppercase tracking-widest">The Observer</p>
                 
                 <div class="grid grid-cols-1 gap-12 max-w-lg mx-auto">
+                    <!-- Item Loop (All items now have hide-watermark class) -->
                     <button onclick="openModal('owl')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/owl.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/owl.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">ARTIST</span>
                         </div>
                     </button>
                     <button onclick="openModal('wolf')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/wolf.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/wolf.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">DOCUMENTALIST</span>
                         </div>
                     </button>
                     <button onclick="openModal('eagle')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/eagle.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/eagle.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">TECHNICIAN</span>
                         </div>
                     </button>
                     <button onclick="openModal('dolphin')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/dolphin.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/dolphin.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">COMMUNICATOR</span>
                         </div>
                     </button>
                     <button onclick="openModal('migratorybird')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/migratorybird.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/migratorybird.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">ADVENTURER</span>
                         </div>
                     </button>
                     <button onclick="openModal('pigeon')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/pigeon.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/pigeon.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">REACTOR</span>
                         </div>
@@ -118,42 +132,42 @@
                 <div class="grid grid-cols-1 gap-12 max-w-lg mx-auto">
                     <button onclick="openModal('chameleon')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/chameleon.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/chameleon.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">EDITORIAL</span>
                         </div>
                     </button>
                     <button onclick="openModal('giraffe')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/giraffe.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/giraffe.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">RUNWAY</span>
                         </div>
                     </button>
                     <button onclick="openModal('goldenretriever')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/goldenretriever.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/goldenretriever.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">COMMERCIAL</span>
                         </div>
                     </button>
                     <button onclick="openModal('lion')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/lion.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/lion.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">FITNESS</span>
                         </div>
                     </button>
                     <button onclick="openModal('swan')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/swan.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/swan.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">PARTS</span>
                         </div>
                     </button>
                     <button onclick="openModal('jellyfish')" class="os-card group relative aspect-video overflow-hidden">
                         <div class="card-border absolute inset-0 border border-gray-800 transition-all duration-500 z-10"></div>
-                        <img src="images/members/os/jellyfish.png" class="w-full h-full object-cover transition-transform duration-700 opacity-90 group-hover:opacity-100">
+                        <img src="images/members/os/jellyfish.png" class="hide-watermark w-full h-full object-cover transition-all duration-700 opacity-90 group-hover:opacity-100">
                         <div class="absolute bottom-4 left-4 z-20">
                             <span class="text-[10px] text-white bg-black/50 px-3 py-1 tracking-widest uppercase backdrop-blur-sm">AMBIENT</span>
                         </div>
@@ -174,19 +188,21 @@
         </div>
     </main>
 
-    <!-- Modal (Centered Structure) -->
+    <!-- Modal -->
     <dialog id="info-modal" class="bg-transparent p-0 w-full h-full max-w-none max-h-none m-0 overflow-hidden outline-none">
         <div class="w-full h-full flex flex-col items-center justify-center p-4 md:p-8" onclick="if(event.target === this) closeModal()">
             
             <div class="max-w-2xl w-full bg-gray-900 border border-gray-700 relative shadow-2xl max-h-[85vh] overflow-y-auto flex flex-col">
-                <!-- Sticky Close Button for better UX -->
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors z-50 p-2">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
                 
                 <div class="p-8 md:p-12">
                     <div class="text-center mb-10">
-                        <img id="m-img" src="" class="w-full aspect-video object-cover mx-auto mb-8 opacity-90 border border-gray-800 shadow-inner">
+                        <!-- Modal Image also cropped -->
+                        <div class="w-full aspect-video overflow-hidden border border-gray-800 shadow-inner mb-8">
+                            <img id="m-img" src="" class="hide-watermark w-full h-full object-cover opacity-90">
+                        </div>
                         <h2 id="m-title" class="text-2xl md:text-3xl font-serif text-white mb-2 tracking-widest"></h2>
                         <p id="m-animal" class="text-xs text-amber-500 tracking-widest uppercase"></p>
                     </div>
@@ -213,7 +229,6 @@
         lucide.createIcons();
         const modal = document.getElementById('info-modal');
 
-        // Data Definition (same as before)
         const osData = {
             owl: { title: "孤高のアーティスト", animal: "Owl (フクロウ)", img: "images/members/os/owl.png", desc: "闇を見通す目と、静寂の中で獲物を捕らえる鋭い感性を持つため。世俗から離れ、独自の哲学で世界を解釈する賢者の象徴です。<br><br>「記録」よりも「記憶」や「感情」を重視し、光と影の使い方がうまく、ポエティックな作品を好みます。", genre: "アートフォト、抽象写真、心象風景", advice: "自分の感性を信じて突き進むのが吉ですが、独りよがりになりすぎないよう客観的な視点も大切に。" },
             wolf: { title: "真実のドキュメンタリスト", animal: "Wolf (オオカミ)", img: "images/members/os/wolf.png", desc: "群れの動きや社会の現実を追う粘り強さと、飾らない「生の事実」を嗅ぎ分ける鋭い嗅覚を持つため。<br><br>目の前の出来事をありのままに捉えることに重きを置くタイプです。その場の空気感や被写体の自然な表情を愛します。", genre: "ストリートスナップ、ドキュメンタリー、ファミリーフォト", advice: "時には「引き算」を意識して構図を作ると、伝えたい主題がより明確になります。" },
@@ -226,7 +241,7 @@
             goldenretriever: { title: "コマーシャル・モデル", animal: "Golden Retriever (ゴールデンレトリバー)", img: "images/members/os/goldenretriever.png", desc: "親しみやすさと信頼を兼ね備えた市場の架け橋です。商品の価値をリアルに、かつポジティブに伝えることができます。", genre: "社交性、適応力、好感度の高い笑顔", advice: "プロとしての清潔感を維持しつつ、説得力のある「親しみやすさ」を大切にしてください。" },
             lion: { title: "フィットネス・モデル", animal: "Lion (ライオン)", img: "images/members/os/lion.png", desc: "強靭な意志を持つライフスタイルの象徴です。筋肉の美しさだけでなく、その背景にある「努力」という物語で人を惹きつけます。", genre: "ストイックな精神、高い身体能力、ポジティブなエネルギー", advice: "トレーニングに加え、ウェルネスの知識を深めると仕事の幅がさらに広がります。" },
             swan: { title: "パーツ・モデル", animal: "Swan (ハクチョウ)", img: "images/members/os/swan.png", desc: "細部に神を宿らせるスペシャリストです。特定の部位の美しさを保つための徹底した管理能力は、他の追随を許しません。", genre: "驚異的な忍耐力、細部へのこだわり、集中力", advice: "日常生活でのリスク管理を徹底し、パーツごとのポートフォリオを充実させましょう。" },
-            jellyfish: { title: "アンビエント・モデル", animal: "Jellyfish (クラゲ)", img: "images/members/os/jellyfish.png", desc: "「無」の状態を表現に変える天才です。エゴを捨て、その場の光や背景に完全に同化することで、作品に深い静寂をもたらします。", genre: "自我を消す集中力、高い受容性、透明感", advice: "自分自身を「純粋な素材」として現場に預けるスタイルを極めてください。" }
+            jellyfish: { title: "アンビエント・モデル", animal: "Jellyfish (クラゲ)", img: "images/members/os/jellyfish.png", desc: "「無」の状態を表現に変える天才です。エゴを捨て、その場の光や空気、背景に完全に同化することで、作品に深い静寂をもたらします。", genre: "自我を消す集中力、高い受容性、透明感", advice: "自分自身を「純粋な素材」として現場に預けるスタイルを極めてください。" }
         };
 
         function openModal(key) {
@@ -239,7 +254,7 @@
             document.getElementById('m-genre').innerText = data.genre;
             document.getElementById('m-advice').innerText = data.advice;
             modal.showModal();
-            lucide.createIcons(); // Re-render icon in sticky button
+            lucide.createIcons();
         }
         function closeModal() { modal.close(); }
     </script>
