@@ -143,13 +143,12 @@
             <div class="flex flex-col md:flex-row gap-16 items-start">
                 <div class="md:w-1/3">
                     <h3 class="text-sm font-bold tracking-[0.2em] border-l-2 border-gray-900 pl-4 uppercase mb-2">Our Philosophy</h3>
-                    <!-- Removed: <p class="text-4xl font-serif text-gray-200">01</p> -->
                 </div>
                 <div class="md:w-2/3">
                     <h4 class="text-2xl md:text-3xl font-serif mb-8 leading-relaxed">暴走する消費から、<br/>蓄積する思考へ。</h4>
                     <div class="grid md:grid-cols-2 gap-12 text-gray-600 leading-7 text-sm text-justify">
                         <p>SNSのマッチング機能は便利ですが、リテラシーの欠如によるトラブルや、表面的な「映え」だけの繋がりが量産されています。私たちが目指すのは、単なるカメラマンとモデルのマッチングではありません。</p>
-                        <p>「なぜ撮るのか」「何を伝えたいのか」。その問いを共有できる人々が集うコミュニティです。互いの哲学に共鳴し、敬意を持って作品を創り上げる。本来あるべき写真の関係性を取り戻すためのプラットフォームです。</p>
+                        <p>「なぜ撮るのか」「何を伝えたいのか」。その問いを共有できる人々が集うコミュニティです。互いの哲学に共鳴し、敬意を持って作品を創り上げる。本来あるべき写真の関係性を取り戻すための、学びと出会いのプラットフォームです。</p>
                     </div>
                 </div>
             </div>
@@ -221,7 +220,7 @@
         </div>
     </section>
 
-    <!-- Join US CTA -->
+    <!-- Join US Section -->
     <section id="join-cta" class="py-20 bg-gray-50 border-t border-b border-gray-100">
         <div class="container mx-auto px-6 text-center">
             <h3 class="text-xs font-bold tracking-[0.4em] text-gray-400 uppercase mb-12">Join the Philosophy</h3>
@@ -237,9 +236,10 @@
         </div>
     </section>
 
-    <!-- Diagnosis Section -->
+    <!-- ★ OS DIAGNOSIS SECTION (Optimized Spacing) ★ -->
     <section id="community" class="relative py-24 bg-gray-900 text-gray-100 overflow-hidden">
         <div id="comm-content" class="container mx-auto px-6 transition-all duration-700">
+            <!-- 1. Diagnosis Banner Header (Top Balance) -->
             <div class="text-center mb-10 flex justify-center">
                 <img src="/images/members/os/testbanner.png" alt="Identity Diagnosis" class="w-full max-w-3xl h-auto shadow-2xl" onerror="this.src='https://placehold.co/800x200/111827/ffffff?text=Identity+Diagnosis'">
             </div>
@@ -306,14 +306,15 @@
                 </div>
             </div>
 
-            <!-- OS Explanation -->
-            <div class="mt-12 text-center flex justify-center fade-in">
+            <!-- ★ 2. Explanation Banner (Sized down & Bottom Balanced) ★ -->
+            <!-- Adjusted: Removed mt-12, sizing set to max-w-xl, ensured it's the last element before section padding -->
+            <div class="text-center flex justify-center fade-in pt-16">
                 <a href="os_introduction.html" class="group block transition-transform hover:scale-[1.01]">
-                    <img src="/images/members/os/explanation.png" alt="OS Explanation" class="w-full max-w-3xl h-auto shadow-xl" onerror="this.src='https://placehold.co/800x150/2d3748/cbd5e0?text=OS+Identity+Explanation'">
+                    <img src="/images/members/os/explanation.png" alt="OS Explanation" class="w-full max-w-xl h-auto shadow-xl" onerror="this.src='https://placehold.co/600x120/2d3748/cbd5e0?text=OS+Identity+Explanation'">
                 </a>
             </div>
         </div>
-    </dialog>
+    </section>
 
     <!-- Footer -->
     <footer class="bg-white py-16 text-gray-900 border-t border-gray-100 text-[10px] tracking-widest uppercase font-bold">
@@ -448,7 +449,7 @@
                 { q: "被写体が身構えているとき、どうする？", opts: [{ t: "表情を引き出す対話", v: "D" }, { t: "緊張感すら真実だと捉える", v: "B" }, { t: "特に何もしない", v: "F" }] },
                 { q: "シャッターを切る瞬間とは？", opts: [{ t: "美学が世界とリンクした時", v: "A" }, { t: "現象をパッケージする時", v: "E" }, { t: "指が動く", v: "F" }] },
                 { q: "レタッチの役割は？", opts: [{ t: "作品へと昇華させる工程", v: "A" }, { t: "空気感を伝える調整", v: "B" }, { t: "その時の気分", v: "F" }] },
-                { q: "他者の評価は気になりますか？", opts: [{ t: "感性を信じているので左右されない", v: "A" }, { t: "指標。喜ぶ姿を見るのは嬉しい", v: "D" }, { t: "見ていない", v: "F" }] },
+                { q: "他者の評価は気になりますか？", opts: [{ t: "感性を信じているので左右されない", v: "A" }, { t: "誰かが喜ぶ姿を見るのは嬉しい", v: "D" }, { t: "見ていない", v: "F" }] },
                 { q: "雨が降ってきた場合。", opts: [{ t: "雨の質感が撮れるチャンスと捉える", v: "B" }, { t: "理想の光が作れないので中断検討", v: "C" }, { t: "そのまま撮る", v: "F" }] },
                 { q: "タイトルをつけるなら？", opts: [{ t: "抽象的にする", v: "A" }, { t: "場所や出来事を明確に記す", v: "B" }, { t: "無題", v: "F" }] },
                 { q: "良い写真の定義は？", opts: [{ t: "技術に裏打ちされた完成度", v: "C" }, { t: "言葉にできない余韻", v: "A" }, { t: "好きかどうか", v: "F" }] },
