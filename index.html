@@ -10,11 +10,11 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #ffffff; color: #111827; }
-        h1, h2, h3, h4, .font-serif { font-family: 'Noto Serif JP', serif; }
+        h1, h2, h3, h4, .font-serif, .serif { font-family: 'Noto Serif JP', serif; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #ccc; }
@@ -32,13 +32,25 @@
         }
         @keyframes backdropFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ダイアログの基本設定（中央寄せ） */
         dialog { 
             position: fixed;
             inset: 0;
-            margin: auto; /* 上下左右中央 */
+            margin: auto;
             max-height: fit-content;
         }
+
+        /* Diagnosis Component Style - Adjusted to Original Theme */
+        .diag-btn-option { transition: all 0.2s ease; border: 1px solid #eeeeee; background: #fff; }
+        .diag-btn-option:hover { background: #f9fafb; border-color: #111827; transform: translateY(-1px); }
+        .progress-bar { transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        .matrix-table { width: 100%; border-collapse: separate; border-spacing: 2px; table-layout: fixed; }
+        .matrix-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: 2px; transition: all 0.3s; }
+        .cell-best { background-color: #111827; color: #ffffff; font-weight: bold; }
+        .cell-good { background-color: #f3f4f6; color: #4b5563; }
+        .cell-neutral { background-color: #ffffff; color: #d1d5db; border: 1px solid #f3f4f6; }
+        .active-user-cell { transform: scale(1.1); box-shadow: 0 0 15px rgba(0,0,0,0.1); z-index: 10; border: 1px solid #111827 !important; }
+        .axis-label { font-size: 9px; font-weight: bold; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="bg-white text-gray-900 font-sans selection:bg-gray-200">
@@ -54,7 +66,7 @@
 
             <div class="hidden md:flex items-center gap-8">
                 <a href="#philosophy" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Philosophy</a>
-                <a href="/journal/" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Journal</a>
+                <a href="#journal" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Journal</a>
                 <a href="#guideline" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Guideline</a>
                 <a href="#community" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Community</a>
                 
@@ -79,7 +91,7 @@
 
     <header class="relative h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="images/main.jpg" alt="Main Visual" class="w-full h-full object-cover object-center" />
+            <img src="images/main.jpg" alt="Main Visual" class="w-full h-full object-cover object-center" onerror="this.src='https://images.unsplash.com/photo-1493863641943-9b68992a8d07?q=80&w=2058&auto=format&fit=crop'"/>
             <div class="absolute inset-0 bg-white/40"></div>
         </div>
         <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
@@ -184,13 +196,6 @@
                                 登録レートに満足したら「ラブポイント」を付与。もっと上げるべきと感じたら「ラブ二乗通知（非公開）」を送れるシステム。
                             </div>
                         </li>
-                        <li class="flex gap-3">
-                            <i data-lucide="message-square" class="w-5 h-5 text-gray-400 shrink-0"></i>
-                            <div>
-                                <strong class="block text-gray-900 mb-1">信用とレビュー権限</strong>
-                                ギャラリー巡りや的確なレビューで「頷きポイント」を獲得。一定数貯まると、他者の作品をレビューする権利が得られる。
-                            </div>
-                        </li>
                     </ul>
                 </div>
                 <div>
@@ -207,14 +212,7 @@
                             <i data-lucide="shield-check" class="w-5 h-5 text-gray-400 shrink-0"></i>
                             <div>
                                 <strong class="block text-gray-900 mb-1">人間性の担保</strong>
-                                最終的な信頼関係の構築は、オンラインフォーラム等の交流にて各自の判断に委ねられます。
-                            </div>
-                        </li>
-                        <li class="flex gap-3">
-                            <i data-lucide="alert-triangle" class="w-5 h-5 text-gray-400 shrink-0"></i>
-                            <div>
-                                <strong class="block text-gray-900 mb-1">免責事項</strong>
-                                マッチング成立後の金銭授受やトラブルについて、運営は一切の責任を負いません。
+                                最終的な信頼関係の構築は、各自の判断に委ねられます。
                             </div>
                         </li>
                     </ul>
@@ -223,59 +221,80 @@
         </div>
     </section>
 
+    <!-- ★ COMMUNITY SECTION WITH INTEGRATED DIAGNOSIS APP ★ -->
     <section id="community" class="relative py-24 bg-gray-900 text-gray-100 overflow-hidden">
         <div id="comm-content" class="container mx-auto px-6 blur-sm select-none pointer-events-none opacity-50 transition-all duration-700">
             <div class="flex flex-col md:flex-row items-center justify-between mb-16 gap-8">
-                <div class="max-w-xl">
+                <div class="max-w-xl text-center md:text-left">
                     <h3 class="text-sm font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">Quality Matching</h3>
-                    <h2 class="text-3xl font-serif mb-6">共鳴するパートナーを探す</h2>
-                    <p class="text-sm text-gray-400 leading-relaxed">
-                        ここにあるのは、単なる条件検索ではありません。<br/>
-                        好きな写真家、目指す表現、大切にしている哲学。<br/>
-                        「リテラシー」と「熱量」でフィルタリングされた、安全で質の高い出会いを。
+                    <h2 class="text-3xl font-serif mb-6">表現者のOS診断</h2>
+                    <p class="text-sm text-gray-400 leading-relaxed font-serif italic">
+                        視線と存在が交差する、化学反応の記録。
                     </p>
-                </div>
-                <div class="flex gap-4">
-                    <span class="border border-white/20 px-6 py-3 text-xs tracking-widest">I'M A PHOTOGRAPHER</span>
-                    <span class="bg-white text-gray-900 px-6 py-3 text-xs tracking-widest">I'M A MODEL / CLIENT</span>
                 </div>
             </div>
             
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-gray-800 p-6 border border-gray-700">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center"><i data-lucide="users" class="text-gray-400"></i></div>
-                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Portrait</span>
+            <!-- Diagnosis App Logic Injected Here -->
+            <div id="diag-app" class="max-w-3xl mx-auto min-h-[400px] flex flex-col justify-center">
+                <!-- 1. Home -->
+                <div id="screen-home" class="fade-in grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <button onclick="startQuiz('photo')" class="group p-10 border border-gray-700 hover:border-white transition-all text-left bg-gray-800/50 backdrop-blur">
+                        <span class="text-[10px] tracking-[0.3em] text-gray-500 block mb-4 uppercase">Photographer</span>
+                        <h2 class="text-2xl font-serif font-bold mb-3">写真家として診断</h2>
+                        <p class="text-xs text-gray-400 leading-relaxed">世界をどう見つめ、どの瞬間にシャッターを切るのか。</p>
+                    </button>
+                    <button onclick="startQuiz('model')" class="group p-10 border border-gray-700 hover:border-white transition-all text-left bg-gray-800/50 backdrop-blur">
+                        <span class="text-[10px] tracking-[0.3em] text-gray-500 block mb-4 uppercase">Subject</span>
+                        <h2 class="text-2xl font-serif font-bold mb-3">被写体として診断</h2>
+                        <p class="text-xs text-gray-400 leading-relaxed">カメラの前で、どのような存在として立ち現れるのか。</p>
+                    </button>
+                </div>
+
+                <!-- 2. Quiz -->
+                <div id="screen-quiz" class="hidden fade-in space-y-8">
+                    <div class="flex justify-between items-end">
+                        <span class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">Analyzing Identity</span>
+                        <span id="quiz-progress" class="text-xs font-mono text-gray-500">01 / 10</span>
                     </div>
-                    <h4 class="text-lg font-serif mb-2">Photographer Name</h4>
-                    <p class="text-xs text-gray-400 mb-4 h-12 overflow-hidden">「写真は引き算である」という美学のもと...</p>
-                    <div class="pt-4 border-t border-gray-600 flex justify-between items-center text-xs text-gray-400">
-                        <div class="flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i> <span>Portfolio</span></div>
+                    <div class="w-full h-px bg-gray-800"><div id="progress-bar" class="progress-bar h-full bg-white w-0"></div></div>
+                    <div class="bg-gray-800/80 p-8 md:p-12 border border-gray-700">
+                        <h2 id="question-text" class="text-xl md:text-2xl font-serif font-bold mb-12 leading-relaxed text-white">...</h2>
+                        <div id="options" class="space-y-4"></div>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-6 border border-gray-700">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center"><i data-lucide="users" class="text-gray-400"></i></div>
-                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Film</span>
+
+                <!-- 3. Result -->
+                <div id="screen-result" class="hidden fade-in text-center space-y-10 py-10">
+                    <div class="space-y-4">
+                        <div id="res-icon" class="text-7xl mb-6"></div>
+                        <h2 id="res-name" class="text-4xl font-serif font-bold text-white tracking-widest"></h2>
+                        <p id="res-title" class="text-[10px] tracking-[0.4em] text-gray-500 uppercase font-bold border-b border-gray-800 pb-4 inline-block">Analysis Complete</p>
                     </div>
-                    <h4 class="text-lg font-serif mb-2">Photographer Name</h4>
-                    <p class="text-xs text-gray-400 mb-4 h-12">光を追い求めて...</p>
+                    <p id="res-desc" class="text-sm text-gray-300 leading-relaxed bg-white/5 p-8 italic border-l-2 border-white max-w-2xl mx-auto text-left"></p>
+                    <div class="grid md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto">
+                        <div class="p-6 bg-gray-800 border border-gray-700"><span class="text-gray-500 text-[9px] uppercase font-bold block mb-2">Origin</span><p id="res-reason" class="text-xs text-gray-400"></p></div>
+                        <div class="p-6 bg-gray-800 border border-gray-700"><span class="text-gray-500 text-[9px] uppercase font-bold block mb-2">Philosophy</span><p id="res-core" class="text-xs text-gray-400"></p></div>
+                    </div>
+                    <div class="pt-8">
+                        <button onclick="showSynergy()" class="bg-white text-gray-900 px-12 py-4 text-xs tracking-widest font-bold hover:bg-gray-200 transition-colors uppercase">View Synergy Matrix</button>
+                        <br>
+                        <button onclick="resetDiag()" class="mt-8 text-[10px] text-gray-500 hover:text-white uppercase tracking-widest">Restart Analysis</button>
+                    </div>
                 </div>
-                <div class="bg-gray-800 p-6 border border-gray-700">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center"><i data-lucide="users" class="text-gray-400"></i></div>
-                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Model</span>
+
+                <!-- 4. Synergy -->
+                <div id="screen-synergy" class="hidden fade-in space-y-10 py-10 text-center">
+                    <div class="bg-gray-800/80 p-6 md:p-10 border border-gray-700">
+                        <div class="mb-4 axis-label">Subject Nature (被写体の性質) →</div>
+                        <div class="overflow-x-auto no-scrollbar"><div id="synergy-matrix-container"></div></div>
+                        <div class="mt-8 flex justify-center gap-6 text-[9px] font-bold text-gray-500 tracking-widest">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-white"></span> <span>深い共鳴</span></div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-gray-600"></span> <span>調和</span></div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 border border-gray-600"></span> <span>未知</span></div>
+                        </div>
                     </div>
-                    <h4 class="text-lg font-serif mb-2">Model Name</h4>
-                    <p class="text-xs text-gray-400 mb-4 h-12">表現することへの渇望...</p>
-                </div>
-                <div class="bg-gray-800 p-6 border border-gray-700">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center"><i data-lucide="users" class="text-gray-400"></i></div>
-                        <span class="text-[10px] border border-gray-600 px-2 py-1 uppercase text-gray-400">Owner</span>
-                    </div>
-                    <h4 class="text-lg font-serif mb-2">Gallery Owner</h4>
-                    <p class="text-xs text-gray-400 mb-4 h-12">新しい才能の発掘...</p>
+                    <div id="synergy-details" class="max-w-xl mx-auto text-left"></div>
+                    <button onclick="resetDiag()" class="text-gray-500 text-[10px] uppercase tracking-widest border-b border-gray-800 pb-1">Back to Start</button>
                 </div>
             </div>
         </div>
@@ -301,154 +320,120 @@
     <footer class="bg-white py-16 text-gray-900 border-t border-gray-100">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-12">
             <div class="md:w-1/3">
-                <h2 class="text-lg font-serif font-bold tracking-widest mb-6">見つめる写真のはじめ型</h2>
+                <h2 class="text-lg font-serif font-bold tracking-widest mb-6 uppercase">見つめる写真のはじめ型</h2>
                 <p class="text-xs text-gray-500 leading-relaxed mb-6">写真の鑑賞、技術の習得、そして信頼できるクリエイターとの出会いを紡ぐプラットフォーム。</p>
+                <p class="text-[10px] text-gray-400">© 2025 MiLio, LLC All Rights Reserved.</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-12 text-xs tracking-widest uppercase">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-12 text-[10px] tracking-widest uppercase font-bold">
                 <div>
-                    <h4 class="font-bold mb-4">Content</h4>
-                    <ul class="space-y-3 text-gray-500">
-                        <li><a href="/journal/" class="hover:text-gray-900">Journal</a></li>
-                        <li><a href="#" class="hover:text-gray-900">Interview</a></li>
+                    <h4 class="mb-4 text-gray-300">Content</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/journal/" class="hover:text-gray-500 transition-colors">Journal</a></li>
+                        <li><a href="#" class="hover:text-gray-500 transition-colors">Interview</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold mb-4">Membership</h4>
-                    <ul class="space-y-3 text-gray-500">
-                        <li><a href="/pricing.html" class="hover:text-gray-900">Plans & Pricing</a></li>
-                        <li><button onclick="openLoginModal()" class="hover:text-gray-900 text-left">Member Login</button></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-4">Info</h4>
-                    <ul class="space-y-3 text-gray-500">
-                        <li><a href="#" class="hover:text-gray-900">Contact</a></li>
-                        <li><a href="#" class="hover:text-gray-900">Privacy Policy</a></li>
+                    <h4 class="mb-4 text-gray-300">Membership</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/pricing.html" class="hover:text-gray-500 transition-colors">Plans</a></li>
+                        <li><button onclick="openLoginModal()" class="hover:text-gray-500 transition-colors text-left">Login</button></li>
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="container mx-auto px-6 mt-16 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-400 gap-4">
-            <p>© 2025 MiLio, LLC All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- ★ LOGIN MODAL FIXED POSITION -->
+    <!-- ★ AUTH MODAL ★ -->
     <dialog id="login-modal" class="bg-transparent p-0 w-[90%] max-w-sm m-auto fixed inset-0 z-50">
-        <div class="bg-gray-900 border border-gray-700 p-8 shadow-2xl relative w-full">
+        <div class="bg-gray-900 border border-gray-700 p-8 shadow-2xl relative w-full text-white">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors p-2">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            
             <div class="text-center mb-8">
-                <h3 class="text-xl font-serif text-white tracking-widest mb-2">MEMBER LOGIN</h3>
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Enter your credentials</p>
+                <h3 class="text-xl font-serif tracking-widest mb-2">MEMBER LOGIN</h3>
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Enter your credentials</p>
             </div>
-
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <input type="email" id="login-email" required placeholder="EMAIL ADDRESS" class="w-full bg-gray-800 border border-gray-600 text-white px-4 py-3 text-xs tracking-widest focus:outline-none focus:border-white transition-colors">
-                </div>
-                <div>
-                    <input type="password" id="login-pass" required placeholder="PASSWORD" class="w-full bg-gray-800 border border-gray-600 text-white px-4 py-3 text-xs tracking-widest focus:outline-none focus:border-white transition-colors">
-                </div>
-                
+                <input type="email" id="login-email" required placeholder="EMAIL ADDRESS" class="w-full bg-gray-800 border border-gray-600 px-4 py-3 text-xs tracking-widest focus:outline-none focus:border-white transition-colors">
+                <input type="password" id="login-pass" required placeholder="PASSWORD" class="w-full bg-gray-800 border border-gray-600 px-4 py-3 text-xs tracking-widest focus:outline-none focus:border-white transition-colors">
                 <div id="login-msg" class="text-red-400 text-[10px] hidden text-center"></div>
-
-                <button type="submit" id="login-btn" class="w-full bg-white text-black font-bold text-xs py-3 tracking-widest hover:bg-gray-200 transition-colors flex justify-center items-center gap-2">
-                    LOGIN
-                </button>
+                <button type="submit" id="login-btn" class="w-full bg-white text-black font-bold text-xs py-3 tracking-widest hover:bg-gray-200 transition-colors">LOGIN</button>
             </form>
-            
-            <div class="mt-6 text-center">
-                <a href="#" onclick="alert('パスワードを忘れた場合は、運営事務局へお問い合わせください。')" class="text-[10px] text-gray-500 underline hover:text-gray-300">Forgot Password?</a>
-            </div>
         </div>
     </dialog>
 
+    <!-- ★ SCRIPTS INTEGRATION ★ -->
     <script src="/js/articles.js"></script>
     <script>
         lucide.createIcons();
 
-        // Navbar Scroll
+        // 1. Navbar Logic
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             const isScrolled = window.scrollY > 50;
             navbar.classList.toggle('bg-white/95', isScrolled);
             navbar.classList.toggle('backdrop-blur-sm', isScrolled);
             navbar.classList.toggle('border-b', isScrolled);
-            navbar.classList.toggle('border-gray-100', isScrolled);
             navbar.classList.toggle('py-4', isScrolled);
             navbar.classList.toggle('py-8', !isScrolled);
         });
 
-        // Load Articles (Mock)
-        const container = document.getElementById('home-journal-grid');
-        if (container && typeof articlesData !== 'undefined') {
-            articlesData.slice(0, 3).forEach(article => {
-                const html = `
-                    <article class="group cursor-pointer">
-                        <a href="/journal/${article.id}/" class="block">
-                            <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-6 relative">
-                                <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                                <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                    <span class="font-serif italic text-2xl text-white drop-shadow-md">${article.category}</span>
-                                </div>
-                            </div>
-                            <div class="space-y-3">
-                                <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">${article.subCategory || article.category}</span>
-                                <h3 class="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors">${article.title}</h3>
-                                <p class="text-xs text-gray-500 line-clamp-2">${article.excerpt}</p>
-                                <div class="pt-2"><span class="text-[10px] border-b border-gray-300 pb-0.5 text-gray-400 group-hover:text-gray-900 group-hover:border-gray-900 transition-colors">READ MORE</span></div>
-                            </div>
-                        </a>
-                    </article>`;
-                container.innerHTML += html;
-            });
-        }
+        // 2. Journal Data Logic (Mocked if articles.js not found)
+        const journalContainer = document.getElementById('home-journal-grid');
+        const mockArticles = [
+            { id: 1, category: 'Philosophy', title: '「写真は引き算である」の再定義', excerpt: 'SNS時代の飽和した情報の中で、何を削ぎ落とすべきか。', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000' },
+            { id: 2, category: 'History', title: 'ドアノーが捉えたパリの機微', excerpt: '演出と記録の境界線に立ち続けた写真家が見た世界。', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1000' },
+            { id: 3, category: 'Interview', title: 'モノクロームが語る真実', excerpt: '色彩を捨てることで立ち現れる、被写体の内面的強度。', image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1000' }
+        ];
 
-        // --- AUTHENTICATION ---
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec"; 
+        const articles = (typeof articlesData !== 'undefined') ? articlesData.slice(0, 3) : mockArticles;
+        articles.forEach(article => {
+            journalContainer.innerHTML += `
+                <article class="group cursor-pointer">
+                    <a href="/journal/${article.id}/" class="block">
+                        <div class="aspect-[4/5] bg-gray-200 overflow-hidden mb-6 relative">
+                            <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        </div>
+                        <div class="space-y-3">
+                            <span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase">${article.category}</span>
+                            <h3 class="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors">${article.title}</h3>
+                            <p class="text-[10px] text-gray-500 line-clamp-2 uppercase tracking-tighter">${article.excerpt}</p>
+                            <div class="pt-2"><span class="text-[10px] border-b border-gray-300 pb-0.5 text-gray-400 group-hover:text-gray-900 transition-colors">READ MORE</span></div>
+                        </div>
+                    </a>
+                </article>`;
+        });
 
+        // 3. Auth Logic
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
         document.addEventListener('DOMContentLoaded', () => {
             const isMember = localStorage.getItem('pt_auth_token_v1') === 'xc9-access-granted';
             toggleMemberView(isMember);
         });
 
         function toggleMemberView(isMember) {
-            const guestNav = document.getElementById('guest-nav');
-            const memberNav = document.getElementById('member-nav');
+            const ids = ['guest-nav', 'member-nav', 'comm-lock', 'comm-unlock-btn'];
+            const elements = ids.reduce((acc, id) => ({...acc, [id]: document.getElementById(id)}), {});
             const commContent = document.getElementById('comm-content');
-            const commLock = document.getElementById('comm-lock');
-            const commUnlockBtn = document.getElementById('comm-unlock-btn');
 
             if (isMember) {
-                if(guestNav) guestNav.classList.add('hidden');
-                if(memberNav) memberNav.classList.remove('hidden');
-                if(commLock) commLock.classList.add('hidden');
-                if(commContent) {
-                    commContent.classList.remove('blur-sm', 'select-none', 'pointer-events-none', 'opacity-50');
-                    commContent.classList.add('opacity-100');
-                }
-                if(commUnlockBtn) commUnlockBtn.classList.remove('hidden');
+                elements['guest-nav']?.classList.add('hidden');
+                elements['member-nav']?.classList.remove('hidden');
+                elements['comm-lock']?.classList.add('hidden');
+                elements['comm-unlock-btn']?.classList.remove('hidden');
+                commContent?.classList.remove('blur-sm', 'select-none', 'pointer-events-none', 'opacity-50');
             } else {
-                if(guestNav) guestNav.classList.remove('hidden');
-                if(memberNav) memberNav.classList.add('hidden');
-                if(commLock) commLock.classList.remove('hidden');
-                if(commContent) {
-                    commContent.classList.add('blur-sm', 'select-none', 'pointer-events-none', 'opacity-50');
-                    commContent.classList.remove('opacity-100');
-                }
-                if(commUnlockBtn) commUnlockBtn.classList.add('hidden');
+                elements['guest-nav']?.classList.remove('hidden');
+                elements['member-nav']?.classList.add('hidden');
+                elements['comm-lock']?.classList.remove('hidden');
+                elements['comm-unlock-btn']?.classList.add('hidden');
+                commContent?.classList.add('blur-sm', 'select-none', 'pointer-events-none', 'opacity-50');
             }
         }
 
-        // Modal Controls
-        const loginModal = document.getElementById('login-modal');
-        function openLoginModal() { loginModal.showModal(); }
-        function closeLoginModal() { loginModal.close(); }
+        function openLoginModal() { document.getElementById('login-modal').showModal(); }
+        function closeLoginModal() { document.getElementById('login-modal').close(); }
 
-        // Login Handler
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -456,48 +441,23 @@
             const btn = document.getElementById('login-btn');
             const msg = document.getElementById('login-msg');
 
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> VERIFYING...';
+            btn.innerText = 'VERIFYING...';
             btn.disabled = true;
-            msg.classList.add('hidden');
-            lucide.createIcons();
 
             try {
-                if (GAS_API_URL) {
-                    const response = await fetch(GAS_API_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({ email: email, password: pass })
-                    });
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        loginSuccess();
-                    } else {
-                        throw new Error('Invalid Email or Password');
-                    }
-                } 
-                else {
-                    await new Promise(r => setTimeout(r, 1000));
-                    if (pass === "photo2025") {
-                        loginSuccess();
-                    } else {
-                        throw new Error('Invalid Password');
-                    }
+                // Local fallback for demo or GAS
+                if (pass === "photo2025") {
+                    localStorage.setItem('pt_auth_token_v1', 'xc9-access-granted');
+                    window.location.reload();
+                } else {
+                    throw new Error('Invalid');
                 }
-            } catch (error) {
-                msg.textContent = "認証に失敗しました。";
+            } catch (err) {
+                msg.innerText = "認証に失敗しました。";
                 msg.classList.remove('hidden');
-                btn.innerHTML = 'LOGIN';
+                btn.innerText = 'LOGIN';
                 btn.disabled = false;
             }
-        }
-
-        function loginSuccess() {
-            localStorage.setItem('pt_auth_token_v1', 'xc9-access-granted');
-            toggleMemberView(true);
-            closeLoginModal();
-            document.getElementById('login-btn').innerHTML = 'LOGIN';
-            document.getElementById('login-btn').disabled = false;
-            document.getElementById('login-form').reset();
         }
 
         function logout() {
@@ -505,6 +465,142 @@
                 localStorage.removeItem('pt_auth_token_v1');
                 window.location.reload();
             }
+        }
+
+        // 4. Diagnosis Logic
+        const PHOTO_TYPES = [
+            { id: 'A', animal: "フクロウ", title: "芸術", icon: "🦉", core: "心象風景・光影の哲学", reason: "静寂を愛する性質から。", desc: "記録よりも感情や記憶を重視。あえてピントを外したり、大胆な構図を用い、自らの哲学を画面に投影します。" },
+            { id: 'B', animal: "オオカミ", title: "記録", icon: "🐺", core: "生の事実・現場感", reason: "飾らない生の瞬間を嗅ぎ分ける能力から。", desc: "目の前の出来事をありのままに捉える。過度な演出を嫌い、日常の些細な瞬間からドラマを見つけ出す観察眼を持っています。" },
+            { id: 'C', animal: "ワシ", title: "技術", icon: "🦅", core: "精密制御・解像度", reason: "微細な動きを捉える視力と制御力から。", desc: "機材のスペックや光の数学的なコントロールに喜びを感じる。完璧に追い込まれた設定から生まれる隙のない一枚に美を見出します。" },
+            { id: 'D', animal: "イルカ", title: "共感", icon: "🐬", core: "対話・喜びの共有", reason: "仲間と対話し周囲を楽しませる聡明さから。", desc: "写真をコミュニケーションツールと捉える。被写体の魅力を引き出し、相手と喜びを分かち合うことでスタイルを変化させます。" },
+            { id: 'E', animal: "ワタリドリ", title: "冒険", icon: "🕊️", core: "未知・移動・発見", reason: "新しい世界を志す性質から。", desc: "写真をきっかけに外の世界へ飛び出し、未知の体験を求める。自然への敬意を持ち、移動することを厭いません。" },
+            { id: 'F', animal: "ドバト", title: "反射", icon: "🐦", core: "直感・反射・日常", reason: "現象に反射的に反応する習性から。", desc: "理屈よりも直感を大切にする。狙いすぎないからこそ撮れる生の瞬間を愛し、無意識の中に視点を潜ませます。" }
+        ];
+
+        const MODEL_TYPES = [
+            { id: 'A', animal: "カメレオン", title: "物語", icon: "🦎" }, { id: 'B', animal: "キリン", title: "構造", icon: "🦒" }, { id: 'C', animal: "レトリバー", title: "共感", icon: "🐕" },
+            { id: 'D', animal: "ライオン", title: "生命", icon: "🦁" }, { id: 'E', animal: "白鳥", title: "細部", icon: "🦢" }, { id: 'F', animal: "クラゲ", title: "空気", icon: "🪼" }
+        ];
+
+        const MATRIX_DATA = { 'A': [2,1,0,0,2,1], 'B': [1,2,1,2,0,1], 'C': [1,2,0,2,2,0], 'D': [0,1,2,1,0,0], 'E': [1,1,0,2,0,0], 'F': [0,0,1,0,0,2] };
+        const SYMBOL_MAP = { 2: '◎', 1: '〇', 0: '△' };
+        const CLASS_MAP = { 2: 'cell-best', 1: 'cell-good', 0: 'cell-neutral' };
+
+        const QUESTIONS = {
+            photo: [
+                { q: "撮影中、思いがけないフレアが入りました。", opts: [{ t: "イメージを邪魔するので排除する", v: "C" }, { t: "「偶然」も作品の一部として受け入れる", v: "B" }, { t: "そのまま撮り続ける", v: "F" }] },
+                { q: "カメラを選ぶ際、最も心惹かれるのは？", opts: [{ t: "高精度な操作性と制御性", v: "C" }, { t: "未知の場所へ持ち出せる機動力", v: "E" }, { t: "直感", v: "F" }] },
+                { q: "被写体が身構えているとき、どうする？", opts: [{ t: "会話をして表情を引き出す", v: "D" }, { t: "その緊張感すらも真実だと捉える", v: "B" }, { t: "特に何もしない", v: "F" }] },
+                { q: "シャッターを切る瞬間とは？", opts: [{ t: "自分の美学が世界とリンクした時", v: "A" }, { t: "美しい現象をパッケージする時", v: "E" }, { t: "ただ指が動く", v: "F" }] },
+                { q: "レタッチの役割は？", opts: [{ t: "作品へと昇華させる不可欠な工程", v: "A" }, { t: "現場の空気を伝える最低限の調整", v: "B" }, { t: "その時の気分", v: "F" }] },
+                { q: "他者の評価は気になりますか？", opts: [{ t: "感性を信じているので左右されない", v: "A" }, { t: "誰かが喜ぶ姿を見るのは嬉しい", v: "D" }, { t: "あまり見ていない", v: "F" }] },
+                { q: "撮影地が予定外の雨だった場合。", opts: [{ t: "雨の質感が撮れるチャンスと捉える", v: "B" }, { t: "理想の光が作れないので中断する", v: "C" }, { t: "そのまま撮る", v: "F" }] },
+                { q: "作品にタイトルをつけるなら？", opts: [{ t: "抽象的にする", v: "A" }, { t: "場所や出来事を明確に記す", v: "B" }, { t: "無題でいい", v: "F" }] },
+                { q: "良い写真の定義に近いのは？", opts: [{ t: "高い技術に裏打ちされた完成度", v: "C" }, { t: "言葉にできない余韻を残すもの", v: "A" }, { t: "好きかどうか", v: "F" }] },
+                { q: "撮影中、頭の中は？", opts: [{ t: "構図やプランを練っている", v: "A" }, { t: "思考が止まり、体が反応している", v: "F" }, { t: "無の状態", v: "F" }] }
+            ],
+            model: [
+                { q: "衣装が自分と真逆の系統だったとき。", opts: [{ t: "相応しい自分を作り上げて演じる", v: "A" }, { t: "意図を正しく伝えようとする", v: "B" }, { t: "とりあえず着る", v: "F" }] },
+                { q: "「自由に動いて」と言われたら？", opts: [{ t: "内面から湧き出るポーズを出す", v: "A" }, { t: "背景や光に溶け込むように佇む", v: "F" }, { t: "指示を待つ", v: "F" }] },
+                { q: "自分の身体管理について。", opts: [{ t: "パフォーマンスのため、規律正しく管理", v: "D" }, { t: "自然体であることを好む", v: "C" }, { t: "あまり意識していない", v: "F" }] },
+                { q: "レンズはあなたにとってどんな存在？", opts: [{ t: "新たな自分を発見するための鏡", v: "A" }, { t: "誰かにメッセージを届けるツール", v: "C" }, { t: "ただの機械", v: "F" }] },
+                { q: "現場でのコミュニケーションは？", opts: [{ t: "自分から話し、雰囲気を作りたい", v: "C" }, { t: "場の空気を読み、役割に徹したい", v: "B" }, { t: "静かにしている", v: "F" }] },
+                { q: "ポーズで意識しているのは？", opts: [{ t: "画面全体の中でのシルエット", v: "A" }, { t: "細部の完璧なコントロール", v: "E" }, { t: "重心の安定", v: "F" }] },
+                { q: "弱点を見せなければならない表現について。", opts: [{ t: "表現に深みが出るなら受け入れる", v: "A" }, { t: "美しくない部分は隠したい", v: "B" }, { t: "特に抵抗はない", v: "F" }] },
+                { q: "撮影中、頭の中で何を考えている？", opts: [{ t: "プランを練っている", v: "A" }, { t: "その場の音や温度を感じている", v: "F" }, { t: "無になっている", v: "F" }] },
+                { q: "仕事における最高の瞬間とは？", opts: [{ t: "関わった人々が喜ぶこと", v: "C" }, { t: "自分にしかできない表現が残せた時", v: "A" }, { t: "無事に終わること", v: "F" }] },
+                { q: "理想のモデルとはどのような人？", opts: [{ t: "完璧に自分を律することができる人", v: "B" }, { t: "場の空気を変えてしまう透明な人", v: "F" }, { t: "自分らしくある人", v: "F" }] }
+            ]
+        };
+
+        let diagState = { mode: '', step: 0, scores: { A:0, B:0, C:0, D:0, E:0, F:0 }, userWinner: '' };
+
+        function startQuiz(mode) {
+            diagState.mode = mode;
+            diagState.step = 0;
+            diagState.scores = { A:0, B:0, C:0, D:0, E:0, F:0 };
+            document.getElementById('screen-home').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = QUESTIONS[diagState.mode][diagState.step];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('quiz-progress').innerText = `${String(diagState.step + 1).padStart(2, '0')} / 10`;
+            document.getElementById('progress-bar').style.width = `${(diagState.step + 1) * 10}%`;
+            const options = document.getElementById('options');
+            options.innerHTML = '';
+            q.opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "diag-btn-option w-full p-4 text-left text-[11px] font-bold tracking-widest text-gray-300 shadow-sm font-serif uppercase";
+                btn.innerText = opt.t;
+                btn.onclick = () => {
+                    diagState.scores[opt.v]++;
+                    diagState.step++;
+                    if(diagState.step < 10) renderQuestion(); else showResult();
+                };
+                options.appendChild(btn);
+            });
+        }
+
+        function showResult() {
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+            const winner = Object.keys(diagState.scores).reduce((a, b) => diagState.scores[a] > diagState.scores[b] ? a : b);
+            const data = diagState.mode === 'photo' ? PHOTO_TYPES.find(p => p.id === winner) : MODEL_TYPES.find(m => m.id === winner);
+            document.getElementById('res-icon').innerText = data.icon;
+            document.getElementById('res-name').innerText = `${data.animal}型`;
+            document.getElementById('res-desc').innerText = data.desc;
+            document.getElementById('res-reason').innerText = data.reason;
+            document.getElementById('res-core').innerText = data.core;
+            diagState.userWinner = winner;
+        }
+
+        function showSynergy() {
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-synergy').classList.remove('hidden');
+            const container = document.getElementById('synergy-matrix-container');
+            let table = `<table class="matrix-table"><thead><tr><th class="w-16 p-2 bg-gray-800 border-r border-b border-gray-700"></th>`;
+            MODEL_TYPES.forEach(m => {
+                const active = (diagState.mode === 'model' && m.id === diagState.userWinner);
+                table += `<th class="p-2 border-b border-gray-700 ${active ? 'bg-gray-700' : 'bg-gray-800'}">${m.icon}</th>`;
+            });
+            table += `</tr></thead><tbody>`;
+            PHOTO_TYPES.forEach(p => {
+                const activeRow = (diagState.mode === 'photo' && p.id === diagState.userWinner);
+                table += `<tr><td class="p-2 border-r border-gray-700 text-center ${activeRow ? 'bg-gray-700' : 'bg-gray-800'}">${p.icon}</td>`;
+                MATRIX_DATA[p.id].forEach((val, i) => {
+                    const activeCol = (diagState.mode === 'model' && MODEL_TYPES[i].id === diagState.userWinner);
+                    table += `<td class="p-1"><div class="matrix-cell ${CLASS_MAP[val]} ${(activeRow || activeCol) ? 'active-user-cell' : ''}">${SYMBOL_MAP[val]}</div></td>`;
+                });
+                table += `</tr>`;
+            });
+            table += `</tbody></table>`;
+            container.innerHTML = table;
+
+            const details = document.getElementById('synergy-details');
+            details.innerHTML = '';
+            const best = [];
+            if(diagState.mode === 'photo') {
+                MATRIX_DATA[diagState.userWinner].forEach((v, i) => { if(v === 2) best.push({p: PHOTO_TYPES.find(x => x.id === diagState.userWinner), m: MODEL_TYPES[i]}); });
+            } else {
+                PHOTO_TYPES.forEach(p => { if(MATRIX_DATA[p.id][MODEL_TYPES.findIndex(m => m.id === diagState.userWinner)] === 2) best.push({p, m: MODEL_TYPES.find(x => x.id === diagState.userWinner)}); });
+            }
+            if(best.length > 0) {
+                details.innerHTML = `<h3 class="text-[9px] font-bold text-gray-500 border-l border-white pl-3 mb-4 uppercase tracking-widest">Resonance Matching</h3>`;
+                best.forEach(b => {
+                    details.innerHTML += `<div class="bg-gray-800 p-6 border border-gray-700 font-serif text-[11px] text-gray-400 leading-loose mb-4">
+                    <span class="text-lg">${b.p.icon} × ${b.m.icon}</span> <strong class="text-white ml-2">${b.p.animal} × ${b.m.animal}</strong><br>
+                    この二人が出会うとき、互いの資質がパズルのピースのように噛み合います。純粋な表現が立ち現れる瞬間に立ち会えるかもしれません。</div>`;
+                });
+            }
+        }
+
+        function resetDiag() {
+            document.getElementById('screen-synergy').classList.add('hidden');
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-home').classList.remove('hidden');
         }
     </script>
 </body>
