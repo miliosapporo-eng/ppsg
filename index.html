@@ -68,9 +68,9 @@
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-8">
-                <a href="#philosophy" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Philosophy</a>
-                <a href="#journal" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Journal</a>
-                <a href="#guideline" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Guideline</a>
+                <a href="#philosophy" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors font-bold">Philosophy</a>
+                <a href="#journal" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors font-bold">Journal</a>
+                <a href="#guideline" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors font-bold">Guideline</a>
                 <a href="#community" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors font-bold border-b border-gray-900">Diagnosis</a>
                 
                 <div id="guest-nav-desktop" class="flex items-center gap-6">
@@ -81,14 +81,14 @@
                 </div>
 
                 <div id="member-nav-desktop" class="hidden flex items-center gap-4">
-                    <a href="/members/" class="text-xs font-bold border border-gray-900 px-4 py-2 hover:bg-gray-900 hover:text-white transition-colors">MEMBERS AREA</a>
-                    <button onclick="logout()" class="text-xs text-gray-400 hover:text-red-500 uppercase">Logout</button>
+                    <a href="/members/" class="text-xs font-bold border border-gray-900 px-4 py-2 hover:bg-gray-900 hover:text-white transition-colors font-bold">MEMBERS AREA</a>
+                    <button onclick="logout()" class="text-xs text-gray-400 hover:text-red-500 uppercase font-bold">Logout</button>
                 </div>
             </div>
 
             <!-- Hamburger Button (Mobile Only) -->
             <button id="menu-toggle" class="md:hidden z-50 p-2" aria-label="Toggle Menu">
-                <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+                <i data-lucide="menu" id="menu-icon" class="w-6 h-6 text-gray-900"></i>
             </button>
         </div>
     </nav>
@@ -97,9 +97,9 @@
     <div id="mobile-menu-overlay" class="fixed inset-0 bg-white z-[55] flex flex-col justify-center items-center md:hidden">
         <div class="flex flex-col items-center gap-10 text-center">
             <div class="flex flex-col gap-6 text-sm uppercase tracking-[0.3em] font-serif">
-                <a href="#philosophy" onclick="toggleMobileMenu()" class="hover:text-gray-400 transition-colors">Philosophy</a>
-                <a href="#journal" onclick="toggleMobileMenu()" class="hover:text-gray-400 transition-colors">Journal</a>
-                <a href="#guideline" onclick="toggleMobileMenu()" class="hover:text-gray-400 transition-colors">Guideline</a>
+                <a href="#philosophy" onclick="toggleMobileMenu()" class="hover:text-gray-400 transition-colors font-bold">Philosophy</a>
+                <a href="#journal" onclick="toggleMobileMenu()" class="hover:text-gray-400 transition-colors font-bold">Journal</a>
+                <a href="#guideline" onclick="toggleMobileMenu()" class="hover:text-gray-400 transition-colors font-bold">Guideline</a>
                 <a href="#community" onclick="toggleMobileMenu()" class="hover:text-gray-400 transition-colors font-bold">Diagnosis</a>
             </div>
             
@@ -112,7 +112,7 @@
 
             <div id="member-nav-mobile" class="hidden flex flex-col gap-6 items-center">
                 <a href="/members/" onclick="toggleMobileMenu()" class="text-xs font-bold tracking-widest border border-gray-900 px-8 py-3 uppercase">Members Area</a>
-                <button onclick="toggleMobileMenu(); logout()" class="text-[10px] text-gray-400 uppercase tracking-widest">Logout</button>
+                <button onclick="toggleMobileMenu(); logout()" class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Logout</button>
             </div>
         </div>
     </div>
@@ -143,7 +143,7 @@
             <div class="flex flex-col md:flex-row gap-16 items-start">
                 <div class="md:w-1/3">
                     <h3 class="text-sm font-bold tracking-[0.2em] border-l-2 border-gray-900 pl-4 uppercase mb-2">Our Philosophy</h3>
-                    <p class="text-4xl font-serif text-gray-200">01</p>
+                    <!-- Removed: <p class="text-4xl font-serif text-gray-200">01</p> -->
                 </div>
                 <div class="md:w-2/3">
                     <h4 class="text-2xl md:text-3xl font-serif mb-8 leading-relaxed">暴走する消費から、<br/>蓄積する思考へ。</h4>
@@ -161,7 +161,7 @@
         <div class="container mx-auto px-6">
             <div class="flex justify-between items-end mb-16">
                 <div>
-                    <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-4 text-gray-500">Journal & Columns</h3>
+                    <h3 class="text-sm font-bold tracking-[0.2em] uppercase mb-4 text-gray-500 font-bold">Journal & Columns</h3>
                     <h2 class="text-3xl font-serif">知性を磨く、視点を養う</h2>
                 </div>
                 <a href="/journal/" class="hidden md:flex items-center text-xs tracking-widest hover:text-gray-600 transition-colors font-bold uppercase">
@@ -181,20 +181,19 @@
     <section id="guideline" class="py-24 bg-white border-t border-gray-100 text-gray-900">
         <div class="container mx-auto px-6 max-w-4xl">
             <div class="text-center mb-16">
-                <h3 class="text-sm font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">Manifesto</h3>
+                <h3 class="text-sm font-bold tracking-[0.2em] text-gray-400 uppercase mb-4 font-bold">Manifesto</h3>
                 <h2 class="text-3xl font-serif mb-8">概念の書き換え</h2>
-                <!-- ★ Updated: Detailed Manifesto Preamble ★ -->
                 <div class="text-sm leading-loose text-gray-600 font-serif text-justify space-y-6">
                     <p>写真という大きな世界の中で、最も難易度が高い課題の一つが「誰と作るか」ではないでしょうか。特にポートレートとなると、昨今のオープンSNSの界隈では「相互無償」なる謎の造語が飛び交い、有象無象の中から人探しをする投稿をよく見かけます。果たして、そのような環境、そのような手法で心を揺さぶる新たなワンカットを切り取ることはできるのでしょうか。</p>
                     <p>このコミュニティは、「無料」という底抜けな利便さの中に埋まりたくない方々への、概念の書き換え提案型コミュニティです。</p>
                     <p>「相互無償」が悪いとは言いません。が、しかしそれは互いの価値を提示し合い、互いの観念とクリエイティブを尊重し合い、かつそれが見事に相殺した結果な筈であり、コミュニケーションを取った事もない相手に対してそれが前提にあがってくることは全くおかしな話ではないでしょうか。それはプロもアマも関係ありません。</p>
-                    <p class="font-bold text-gray-900 border-l-4 border-gray-900 pl-6">当コミュニティでは、シビアな相互評価を取り入れて、より良いマッチングを実現させることを目指しております。高次元を目指したい人同士で相乗していきたい方々の参加をお待ちしております。</p>
+                    <p class="font-bold text-gray-900 border-l-4 border-gray-900 pl-6 py-2">当コミュニティでは、シビアな相互評価を取り入れて、より良いマッチングを実現させることを目指しております。高次元を目指したい人同士で相乗していきたい方々の参加をお待ちしております。</p>
                 </div>
             </div>
 
             <div class="bg-gray-900 text-white p-8 md:p-12 mb-16 relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="scale" class="w-32 h-32"></i></div>
-                <h3 class="text-lg font-serif tracking-widest border-b border-gray-700 pb-4 mb-6 inline-block uppercase font-bold">ABSOLUTE RULES</h3>
+                <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="scale" class="w-32 h-32 text-gray-700"></i></div>
+                <h3 class="text-lg font-serif tracking-widest border-b border-gray-700 pb-4 mb-6 inline-block uppercase font-bold tracking-[0.2em]">ABSOLUTE RULES</h3>
                 <ul class="space-y-4 font-serif text-sm md:text-base leading-relaxed">
                     <li class="flex items-start gap-4"><span class="text-amber-500 font-bold">01.</span><span>批評と批判をわきまえること。批判自慢は無用。</span></li>
                     <li class="flex items-start gap-4"><span class="text-amber-500 font-bold">02.</span><span>批評を受ける前に、作者側自身の意図をしっかり持つこと。</span></li>
@@ -203,26 +202,26 @@
 
             <div class="grid md:grid-cols-2 gap-x-12 gap-y-12 mb-12">
                 <div>
-                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-6 uppercase tracking-widest">SYSTEM & FEATURES</h4>
+                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-6 uppercase tracking-widest text-gray-900">SYSTEM & FEATURES</h4>
                     <ul class="space-y-8 text-sm text-gray-600 font-serif">
                         <li class="flex gap-4"><i data-lucide="users" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">明確なポジション登録</strong>愛好家・撮影者・被写体・メイクアップ・ロケーションオーナー・ギャラリーオーナーの属性を定義。</div></li>
                         <li class="flex gap-4"><i data-lucide="trending-up" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">レートと評価システム</strong>登録レートに満足したら「ラブポイント」を付与。もっと上げるべきと感じたら「ラブ二乗通知（非公開）」を送れるシステム。</div></li>
-                        <li class="flex gap-4"><i data-lucide="message-square" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">信用とレビュー権限</strong>ギャラリー巡りや的確なレビューで「頷きポイント」を獲得。一定数貯まると、他者の作品をレビューする権利が得られる。</div></li>
+                        <li class="flex gap-4"><i data-lucide="message-square" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">信用とレビュー権限</strong>ギャラリー巡りや的確なレビューで「頷きポイント」を獲得。一定数貯まると、レビュー権利が得られる。</div></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-6 uppercase tracking-widest">OPERATION</h4>
+                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-6 uppercase tracking-widest text-gray-900">OPERATION</h4>
                     <ul class="space-y-8 text-sm text-gray-600 font-serif">
                         <li class="flex gap-4"><i data-lucide="clipboard-list" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">定型フォーマット募集</strong>案件募集は厳格な形式で掲示板に掲載されます。</div></li>
-                        <li class="flex gap-4"><i data-lucide="shield-check" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">人間性の担保</strong>最終的な信頼関係の構築は、オンラインフォーラム等の交流にて各自の判断に委ねられます。</div></li>
-                        <li class="flex gap-4"><i data-lucide="alert-triangle" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">免責事項</strong>マッチング成立後の金銭授受やトラブルについて、運営は一切の責任を負いません。</div></li>
+                        <li class="flex gap-4"><i data-lucide="shield-check" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">人間性の担保</strong>オンラインフォーラム等での交流を通じ、各自の判断で信頼関係を構築。</div></li>
+                        <li class="flex gap-4"><i data-lucide="alert-triangle" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-2">免責事項</strong>金銭授受やトラブルについて、運営は一切の責任を負いません。</div></li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Join US Section -->
+    <!-- Join US CTA -->
     <section id="join-cta" class="py-20 bg-gray-50 border-t border-b border-gray-100">
         <div class="container mx-auto px-6 text-center">
             <h3 class="text-xs font-bold tracking-[0.4em] text-gray-400 uppercase mb-12">Join the Philosophy</h3>
@@ -232,7 +231,7 @@
                         <i data-lucide="user-plus" class="w-8 h-8"></i>
                     </div>
                     <span class="text-base font-serif font-bold tracking-widest uppercase">Join to Us</span>
-                    <p class="text-[10px] text-gray-400 mt-2 uppercase tracking-[0.2em]">Start Membership</p>
+                    <p class="text-[10px] text-gray-400 mt-2 uppercase tracking-[0.2em] font-bold">Start Membership</p>
                 </a>
             </div>
         </div>
@@ -297,33 +296,33 @@
                     
                     <div class="pt-12 border-t border-gray-800">
                         <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-8 font-bold">Ready to Connect</p>
-                        <a href="pricing.html" class="inline-flex items-center gap-4 bg-white text-gray-900 px-12 py-5 text-sm font-bold tracking-[0.3em] hover:bg-gray-200 transition-all group uppercase font-serif">
+                        <a href="/pricing.html" class="inline-flex items-center gap-4 bg-white text-gray-900 px-12 py-5 text-sm font-bold tracking-[0.3em] hover:bg-gray-200 transition-all group uppercase font-serif">
                             共鳴する仲間を探す
                             <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </a>
                         <br>
-                        <button onclick="resetDiag()" class="mt-12 text-[10px] text-gray-600 hover:text-white uppercase tracking-widest border-b border-transparent hover:border-gray-600 font-bold tracking-widest">Restart Analysis</button>
+                        <button onclick="resetDiag()" class="mt-12 text-[10px] text-gray-600 hover:text-white uppercase tracking-widest border-b border-transparent hover:border-gray-600 font-bold">Restart Analysis</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Explanation Banner -->
+            <!-- OS Explanation -->
             <div class="mt-12 text-center flex justify-center fade-in">
                 <a href="os_introduction.html" class="group block transition-transform hover:scale-[1.01]">
                     <img src="/images/members/os/explanation.png" alt="OS Explanation" class="w-full max-w-3xl h-auto shadow-xl" onerror="this.src='https://placehold.co/800x150/2d3748/cbd5e0?text=OS+Identity+Explanation'">
                 </a>
             </div>
         </div>
-    </section>
+    </dialog>
 
     <!-- Footer -->
     <footer class="bg-white py-16 text-gray-900 border-t border-gray-100 text-[10px] tracking-widest uppercase font-bold">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-12 text-center md:text-left">
             <div>
-                <h2 class="text-lg font-serif mb-6 uppercase">見つめる写真のはじめ型</h2>
+                <h2 class="text-lg font-serif mb-6 uppercase font-bold">見つめる写真のはじめ型</h2>
                 <p class="text-gray-400 font-normal leading-relaxed font-serif">© 2025 MiLio, LLC All Rights Reserved.</p>
             </div>
-            <div class="flex gap-12 text-gray-300 uppercase justify-center md:justify-start">
+            <div class="flex gap-12 text-gray-300 uppercase justify-center md:justify-start font-bold">
                 <a href="#philosophy" class="hover:text-gray-900">Philosophy</a>
                 <a href="#journal" class="hover:text-gray-900">Journal</a>
                 <a href="#guideline" class="hover:text-gray-900">Guideline</a>
@@ -348,21 +347,20 @@
     <script>
         lucide.createIcons();
 
-        // Mobile Menu Toggle
+        // Mobile Menu Interaction
         const menuToggle = document.getElementById('menu-toggle');
-        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const mobileOverlay = document.getElementById('mobile-menu-overlay');
         const menuIcon = document.getElementById('menu-icon');
 
         function toggleMobileMenu() {
-            const isActive = mobileMenuOverlay.classList.toggle('active');
+            const isActive = mobileOverlay.classList.toggle('active');
             menuIcon.setAttribute('data-lucide', isActive ? 'x' : 'menu');
             lucide.createIcons();
             document.body.style.overflow = isActive ? 'hidden' : '';
         }
+        menuToggle?.addEventListener('click', toggleMobileMenu);
 
-        menuToggle.addEventListener('click', toggleMobileMenu);
-
-        // Navbar Interaction
+        // Navbar Scroll Effect
         window.addEventListener('scroll', () => {
             const isScrolled = window.scrollY > 50;
             const navbar = document.getElementById('navbar');
@@ -372,7 +370,7 @@
             navbar.classList.toggle('py-8', !isScrolled);
         });
 
-        // Journal Loader (Mocked logic)
+        // Journal Loader
         const journalContainer = document.getElementById('home-journal-grid');
         const defaultArticles = [
             { id: 1, category: 'Theory', title: '「写真は引き算である」の再定義', excerpt: '情報の飽和した現代において、一枚の写真から何を削ぎ落とすべきか。', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000' },
@@ -391,7 +389,7 @@
                             <div class="space-y-3">
                                 <span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase tracking-[0.2em]">${article.category}</span>
                                 <h3 class="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors font-bold">${article.title}</h3>
-                                <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed font-serif italic uppercase">${article.excerpt}</p>
+                                <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed font-serif italic uppercase tracking-tighter">${article.excerpt}</p>
                                 <div class="pt-4"><span class="text-[10px] border-b border-gray-300 pb-1 text-gray-400 group-hover:text-gray-900 transition-colors uppercase tracking-widest font-bold font-sans">Read More</span></div>
                             </div>
                         </a>
@@ -399,35 +397,30 @@
             }
         });
 
-        // Auth Logic & Mobile Nav Sync
-        document.addEventListener('DOMContentLoaded', () => {
-            const isMember = localStorage.getItem('pt_auth_token_v1') === 'xc9-access-granted';
-            syncNavStates(isMember);
-        });
-
-        function syncNavStates(isMember) {
-            const guestDesktop = document.getElementById('guest-nav-desktop');
-            const memberDesktop = document.getElementById('member-nav-desktop');
-            const guestMobile = document.getElementById('guest-nav-mobile');
-            const memberMobile = document.getElementById('member-nav-mobile');
-
+        // Auth Logic Sync
+        function syncNav(isMember) {
+            const guestD = document.getElementById('guest-nav-desktop');
+            const memberD = document.getElementById('member-nav-desktop');
+            const guestM = document.getElementById('guest-nav-mobile');
+            const memberM = document.getElementById('member-nav-mobile');
             if (isMember) {
-                guestDesktop?.classList.add('hidden');
-                guestMobile?.classList.add('hidden');
-                memberDesktop?.classList.remove('hidden');
-                memberMobile?.classList.remove('hidden');
+                [guestD, guestM].forEach(el => el?.classList.add('hidden'));
+                [memberD, memberM].forEach(el => el?.classList.remove('hidden'));
             } else {
-                guestDesktop?.classList.remove('hidden');
-                guestMobile?.classList.remove('hidden');
-                memberDesktop?.classList.add('hidden');
-                memberMobile?.classList.add('hidden');
+                [guestD, guestM].forEach(el => el?.classList.remove('hidden'));
+                [memberD, memberM].forEach(el => el?.classList.add('hidden'));
             }
         }
 
-        function openLoginModal() { document.getElementById('login-modal').showModal(); }
-        function logout() { localStorage.removeItem('pt_auth_token_v1'); window.location.reload(); }
+        document.addEventListener('DOMContentLoaded', () => {
+            const isMember = localStorage.getItem('pt_auth_token_v1') === 'xc9-access-granted';
+            syncNav(isMember);
+        });
 
-        // Diagnosis Data
+        function openLoginModal() { document.getElementById('login-modal').showModal(); }
+        function logout() { if(confirm('Logout?')) { localStorage.removeItem('pt_auth_token_v1'); window.location.reload(); } }
+
+        // Diagnosis
         const PHOTO_TYPES = [
             { id: 'A', animal: "フクロウ", title: "芸術", emoji: "🦉", img: "/images/members/os/owl.png", core: "心象風景", reason: "独自の静寂を愛する性質から。", desc: "記録よりも感情や記憶を重視。自らの哲学を画面に投影します。" },
             { id: 'B', animal: "オオカミ", title: "記録", emoji: "🐺", img: "/images/members/os/wolf.png", core: "現場感", reason: "飾らない生の瞬間を嗅ぎ分ける能力から。", desc: "目の前の出来事をありのままに捉える。日常からドラマを見つけ出します。" },
@@ -444,7 +437,6 @@
             { id: 'E', animal: "白鳥", title: "細部", emoji: "🦢", img: "/images/members/os/swan.png" },
             { id: 'F', animal: "クラゲ", title: "空気", emoji: "🪼", img: "/images/members/os/jellyfish.png" }
         ];
-        
         const MATRIX_DATA = { 'A': [2,1,0,0,2,1], 'B': [1,2,1,2,0,1], 'C': [1,2,0,2,2,0], 'D': [0,1,2,1,0,0], 'E': [1,1,0,2,0,0], 'F': [0,0,1,0,0,2] };
         const SYMBOL_MAP = { 2: '◎', 1: '〇', 0: '△' };
         const CLASS_MAP = { 2: 'cell-best', 1: 'cell-good', 0: 'cell-neutral' };
@@ -456,7 +448,7 @@
                 { q: "被写体が身構えているとき、どうする？", opts: [{ t: "表情を引き出す対話", v: "D" }, { t: "緊張感すら真実だと捉える", v: "B" }, { t: "特に何もしない", v: "F" }] },
                 { q: "シャッターを切る瞬間とは？", opts: [{ t: "美学が世界とリンクした時", v: "A" }, { t: "現象をパッケージする時", v: "E" }, { t: "指が動く", v: "F" }] },
                 { q: "レタッチの役割は？", opts: [{ t: "作品へと昇華させる工程", v: "A" }, { t: "空気感を伝える調整", v: "B" }, { t: "その時の気分", v: "F" }] },
-                { q: "他者の評価は気になりますか？", opts: [{ t: "感性を信じているので左右されない", v: "A" }, { t: "誰かが喜ぶ姿を見るのは嬉しい", v: "D" }, { t: "見ていない", v: "F" }] },
+                { q: "他者の評価は気になりますか？", opts: [{ t: "感性を信じているので左右されない", v: "A" }, { t: "指標。喜ぶ姿を見るのは嬉しい", v: "D" }, { t: "見ていない", v: "F" }] },
                 { q: "雨が降ってきた場合。", opts: [{ t: "雨の質感が撮れるチャンスと捉える", v: "B" }, { t: "理想の光が作れないので中断検討", v: "C" }, { t: "そのまま撮る", v: "F" }] },
                 { q: "タイトルをつけるなら？", opts: [{ t: "抽象的にする", v: "A" }, { t: "場所や出来事を明確に記す", v: "B" }, { t: "無題", v: "F" }] },
                 { q: "良い写真の定義は？", opts: [{ t: "技術に裏打ちされた完成度", v: "C" }, { t: "言葉にできない余韻", v: "A" }, { t: "好きかどうか", v: "F" }] },
@@ -464,7 +456,7 @@
             ],
             model: [
                 { q: "衣装が自分と真逆だったとき。", opts: [{ t: "演じてみる", v: "A" }, { t: "意図を正しく伝えようとする", v: "B" }, { t: "とりあえず着る", v: "F" }] },
-                { q: "「自由に動いて」と言われたら？", opts: [{ t: "内面からポーズを出す", v: "A" }, { t: "背景に溶け込むように佇む", v: "F" }, { t: "指示を待つ", v: "F" }] },
+                { q: "「自由に動いて」と言われたら？", opts: [{ t: "内面からポーズを出す", v: "A" }, { t: "光に溶け込むように佇む", v: "F" }, { t: "指示を待つ", v: "F" }] },
                 { q: "身体管理について。", opts: [{ t: "規律正しく管理", v: "D" }, { t: "自然体", v: "C" }, { t: "意識していない", v: "F" }] },
                 { q: "レンズはあなたにとって？", opts: [{ t: "自分を発見する鏡", v: "A" }, { t: "メッセージを届けるツール", v: "C" }, { t: "機械", v: "F" }] },
                 { q: "現場でのコミュニケーションは？", opts: [{ t: "雰囲気を作りたい", v: "C" }, { t: "役割に徹したい", v: "B" }, { t: "静かにしている", v: "F" }] },
@@ -522,15 +514,7 @@
             document.getElementById('screen-result').classList.add('hidden');
             document.getElementById('screen-synergy').classList.remove('hidden');
             const container = document.getElementById('synergy-matrix-container');
-            
-            let table = `<table class="matrix-table">
-                <thead>
-                    <tr>
-                        <th class="w-20 p-2 bg-gray-800 border-r border-b border-gray-700 relative overflow-hidden">
-                            <div class="absolute top-1 right-1 axis-label text-[7px] text-gray-500">被写体 →</div>
-                            <div class="absolute bottom-1 left-1 axis-label text-[7px] text-gray-500">↓ 写真家</div>
-                            <div class="w-full h-px bg-gray-700 absolute top-1/2 left-0 -rotate-[22deg]"></div>
-                        </th>`;
+            let table = `<table class="matrix-table"><thead><tr><th class="w-20 p-2 bg-gray-800 border-r border-b border-gray-700 relative overflow-hidden"><div class="absolute top-1 right-1 axis-label text-[7px] text-gray-500">被写体 →</div><div class="absolute bottom-1 left-1 axis-label text-[7px] text-gray-500">↓ 写真家</div><div class="w-full h-px bg-gray-700 absolute top-1/2 left-0 -rotate-[22deg]"></div></th>`;
             MODEL_TYPES.forEach(m => {
                 const active = (diagState.mode === 'model' && m.id === diagState.userWinner);
                 table += `<th class="p-2 border-b border-gray-700 ${active ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-500'}"><div class="text-[calc(0.875rem+3pt)]">${m.emoji}</div></th>`;
@@ -547,7 +531,6 @@
             });
             table += `</tbody></table>`;
             container.innerHTML = table;
-
             const details = document.getElementById('synergy-details');
             details.innerHTML = '';
             const best = [];
@@ -557,11 +540,9 @@
                 PHOTO_TYPES.forEach(p => { if(MATRIX_DATA[p.id][MODEL_TYPES.findIndex(m => m.id === diagState.userWinner)] === 2) best.push({p, m: MODEL_TYPES.find(x => x.id === diagState.userWinner)}); });
             }
             if(best.length > 0) {
-                details.innerHTML = `<h3 class="text-[9px] font-bold text-gray-500 border-l border-white pl-3 mb-4 uppercase tracking-[0.2em]">Resonance Matching</h3>`;
+                details.innerHTML = `<h3 class="text-[9px] font-bold text-gray-500 border-l border-white pl-3 mb-4 uppercase tracking-[0.2em] font-sans">Resonance Matching</h3>`;
                 best.forEach(b => {
-                    details.innerHTML += `<div class="bg-gray-800 p-6 border border-gray-700 font-serif text-[11px] text-gray-400 leading-loose mb-4">
-                    <span class="text-[calc(1.125rem+3pt)]">${b.p.emoji} × ${b.m.emoji}</span> <strong class="text-white ml-2 uppercase font-bold">${b.p.animal} × ${b.m.animal}</strong><br>
-                    深い共鳴の予感。対話から新しい表現が生まれます。</div>`;
+                    details.innerHTML += `<div class="bg-gray-800 p-6 border border-gray-700 font-serif text-[11px] text-gray-400 leading-loose mb-4"><span class="text-[calc(1.125rem+3pt)]">${b.p.emoji} × ${b.m.emoji}</span> <strong class="text-white ml-2 uppercase font-bold">${b.p.animal} × ${b.m.animal}</strong><br>深い共鳴の予感。対話から新しい表現が生まれます。</div>`;
                 });
             }
             lucide.createIcons();
