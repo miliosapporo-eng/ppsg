@@ -39,7 +39,7 @@
         .diag-btn-option:hover { background: #f9fafb; border-color: #111827; transform: translateY(-1px); }
         .progress-bar { transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
         .matrix-table { width: 100%; border-collapse: separate; border-spacing: 2px; table-layout: fixed; }
-        .matrix-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 2px; transition: all 0.3s; }
+        .matrix-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: 2px; transition: all 0.3s; }
         .cell-best { background-color: #111827; color: #ffffff; font-weight: bold; }
         .cell-good { background-color: #f3f4f6; color: #4b5563; }
         .cell-neutral { background-color: #ffffff; color: #d1d5db; border: 1px solid #f3f4f6; }
@@ -49,7 +49,6 @@
 
         /* Image sizing for icons */
         .diag-icon-img { width: 100%; height: 100%; object-fit: contain; }
-        .diag-icon-sm { width: 24px; height: 24px; object-fit: contain; }
     </style>
 </head>
 <body class="bg-white text-gray-900 font-sans selection:bg-gray-200">
@@ -167,44 +166,81 @@
 
             <div class="grid md:grid-cols-2 gap-x-12 gap-y-12 mb-12">
                 <div>
-                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-4 uppercase tracking-widest">System & Features</h4>
-                    <ul class="space-y-6 text-sm text-gray-600">
-                        <li class="flex gap-3"><i data-lucide="users" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-1">明確なポジション登録</strong>愛好家・撮影者・被写体等の属性を定義。</div></li>
-                        <li class="flex gap-3"><i data-lucide="trending-up" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-1">自己申告レートと妥当性評価</strong>満足度をラブポイントで可視化するシステム。</div></li>
+                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-6 uppercase tracking-widest">SYSTEM & FEATURES</h4>
+                    <ul class="space-y-8 text-sm text-gray-600 font-serif">
+                        <li class="flex gap-4">
+                            <i data-lucide="users" class="w-5 h-5 text-gray-400 shrink-0"></i>
+                            <div>
+                                <strong class="block text-gray-900 mb-2">明確なポジション登録</strong>
+                                愛好家・撮影者・被写体・メイクアップ・ロケーションオーナー・ギャラリーオーナーの属性を定義。
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-gray-400 shrink-0"></i>
+                            <div>
+                                <strong class="block text-gray-900 mb-2">自己申告レートと妥当性評価</strong>
+                                登録レートに満足したら「ラブポイント」を付与。もっと上げるべきと感じたら「ラブ二乗通知（非公開）」を送れるシステム。
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="message-square" class="w-5 h-5 text-gray-400 shrink-0"></i>
+                            <div>
+                                <strong class="block text-gray-900 mb-2">信用とレビュー権限</strong>
+                                ギャラリー巡りや的確なレビューで「頷きポイント」を獲得。一定数貯まると、他者の作品をレビューする権利が得られる。
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-4 uppercase tracking-widest">Operation</h4>
-                    <ul class="space-y-6 text-sm text-gray-600">
-                        <li class="flex gap-3"><i data-lucide="clipboard-list" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-1">定型フォーマットによる募集</strong>掲示板には厳格な形式で掲載されます。</div></li>
-                        <li class="flex gap-3"><i data-lucide="shield-check" class="w-5 h-5 text-gray-400 shrink-0"></i><div><strong class="block text-gray-900 mb-1">人間性の担保</strong>各自の判断に基づく信頼関係構築。</div></li>
+                    <h4 class="text-sm font-bold border-l-2 border-gray-900 pl-3 mb-6 uppercase tracking-widest">OPERATION</h4>
+                    <ul class="space-y-8 text-sm text-gray-600 font-serif">
+                        <li class="flex gap-4">
+                            <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-400 shrink-0"></i>
+                            <div>
+                                <strong class="block text-gray-900 mb-2">定型フォーマットによる募集</strong>
+                                案件募集は厳格なフォーマットを使用し、掲示板に掲載されます。
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-gray-400 shrink-0"></i>
+                            <div>
+                                <strong class="block text-gray-900 mb-2">人間性の担保</strong>
+                                最終的な信頼関係の構築は、オンラインフォーラム等の交流にて各自の判断に委ねられます。
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="alert-triangle" class="w-5 h-5 text-gray-400 shrink-0"></i>
+                            <div>
+                                <strong class="block text-gray-900 mb-2">免責事項</strong>
+                                マッチング成立後の金銭授受やトラブルについて、運営は一切の責任を負いません。
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ★ JOIN TO US NAVIGATOR (Removed Banner) ★ -->
+    <!-- ★ JOIN TO US NAVIGATOR ★ -->
     <section id="join-cta" class="py-20 bg-gray-50 border-t border-b border-gray-100">
         <div class="container mx-auto px-6 text-center">
             <h3 class="text-xs font-bold tracking-[0.4em] text-gray-400 uppercase mb-12">Join the Philosophy</h3>
             <div class="flex justify-center items-center">
-                <!-- Registration -->
                 <a href="/pricing.html" class="group flex flex-col items-center shrink-0">
                     <div class="w-20 h-20 rounded-full border border-gray-900 flex items-center justify-center mb-6 group-hover:bg-gray-900 group-hover:text-white transition-all">
                         <i data-lucide="user-plus" class="w-8 h-8"></i>
                     </div>
-                    <span class="text-base font-serif font-bold tracking-widest">JOIN TO US</span>
+                    <span class="text-base font-serif font-bold tracking-widest uppercase">Join to Us</span>
                     <p class="text-[10px] text-gray-400 mt-2 uppercase tracking-[0.2em]">Start Membership</p>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- ★ OS DIAGNOSIS SECTION (Community Launch / Free Content) ★ -->
+    <!-- ★ OS DIAGNOSIS SECTION ★ -->
     <section id="community" class="relative py-24 bg-gray-900 text-gray-100 overflow-hidden">
         <div id="comm-content" class="container mx-auto px-6 transition-all duration-700">
-            <!-- Diagnosis Banner (Dedicated Positioning) -->
+            <!-- Diagnosis Banner -->
             <div class="text-center mb-16 flex justify-center">
                 <img src="/images/members/os/testbanner.png" alt="Identity Diagnosis" class="w-full max-w-3xl h-auto shadow-2xl" onerror="this.src='https://placehold.co/800x200/111827/ffffff?text=Identity+Diagnosis'">
             </div>
@@ -244,12 +280,13 @@
                         <h2 id="res-name" class="text-4xl font-serif font-bold text-white uppercase tracking-widest"></h2>
                     </div>
                     <p id="res-desc" class="text-sm text-gray-300 leading-relaxed bg-white/5 p-8 italic border-l-2 border-white text-left max-w-2xl mx-auto font-serif"></p>
-                    <button onclick="showSynergy()" class="bg-white text-gray-900 px-12 py-4 text-xs font-bold tracking-[0.3em] uppercase hover:bg-gray-200 transition-colors">View Synergy Matrix</button>
+                    <button onclick="showSynergy()" class="bg-white text-gray-900 px-12 py-4 text-xs font-bold tracking-[0.3em] uppercase hover:bg-gray-200 transition-colors font-serif">View Synergy Matrix</button>
                 </div>
 
                 <!-- Screen: Synergy -->
                 <div id="screen-synergy" class="hidden fade-in space-y-10 text-center pb-12">
                     <div class="bg-gray-800/80 p-6 md:p-10 border border-gray-700">
+                        <!-- Matrix Container (JS updates content) -->
                         <div class="overflow-x-auto no-scrollbar"><div id="synergy-matrix-container"></div></div>
                         <div class="mt-8 flex justify-center gap-6 text-[9px] font-bold text-gray-500 tracking-widest uppercase">
                             <div class="flex items-center gap-2"><span class="w-3 h-3 bg-white"></span> <span>◎ 深い共鳴</span></div>
@@ -259,12 +296,12 @@
                     </div>
                     <div id="synergy-details" class="max-w-xl mx-auto text-left"></div>
                     
-                    <!-- FINAL NAVIGATION: Partner Connect -->
+                    <!-- FINAL NAVIGATION: Optimized to pricing.html -->
                     <div class="pt-12 border-t border-gray-800">
                         <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-8 font-bold">Ready to Connect</p>
-                        <a href="/members/search.html" class="inline-flex items-center gap-4 bg-white text-gray-900 px-12 py-5 text-sm font-bold tracking-[0.3em] hover:bg-gray-200 transition-all group uppercase font-serif">
+                        <a href="pricing.html" class="inline-flex items-center gap-4 bg-white text-gray-900 px-12 py-5 text-sm font-bold tracking-[0.3em] hover:bg-gray-200 transition-all group uppercase font-serif">
                             共鳴する仲間を探す
-                            <i data-lucide="search" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </a>
                         <br>
                         <button onclick="resetDiag()" class="mt-12 text-[10px] text-gray-600 hover:text-white uppercase tracking-widest border-b border-transparent hover:border-gray-600">Restart Analysis</button>
@@ -279,7 +316,7 @@
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-12">
             <div>
                 <h2 class="text-lg font-serif mb-6 uppercase">見つめる写真のはじめ型</h2>
-                <p class="text-gray-400 font-normal leading-relaxed">© 2025 MiLio, LLC All Rights Reserved.</p>
+                <p class="text-gray-400 font-normal leading-relaxed font-serif">© 2025 MiLio, LLC All Rights Reserved.</p>
             </div>
             <div class="flex gap-12 text-gray-300 uppercase">
                 <a href="#philosophy" class="hover:text-gray-900">Philosophy</a>
@@ -293,7 +330,7 @@
     <dialog id="login-modal" class="bg-transparent p-0 w-[90%] max-w-sm m-auto fixed inset-0 z-50">
         <div class="bg-gray-900 border border-gray-700 p-8 shadow-2xl relative w-full text-white">
             <button onclick="document.getElementById('login-modal').close()" class="absolute top-4 right-4 text-gray-500 hover:text-white p-2"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <h3 class="text-xl font-serif tracking-widest mb-10 text-center uppercase">Login</h3>
+            <h3 class="text-xl font-serif tracking-widest mb-10 text-center uppercase font-bold">Login</h3>
             <form onsubmit="event.preventDefault(); localStorage.setItem('pt_auth_token_v1', 'xc9-access-granted'); window.location.reload();" class="space-y-6">
                 <input type="email" required placeholder="EMAIL" class="w-full bg-gray-800 border-b border-gray-600 px-0 py-3 text-xs tracking-widest focus:outline-none focus:border-white transition-colors">
                 <input type="password" required placeholder="PASSWORD" class="w-full bg-gray-800 border-b border-gray-600 px-0 py-3 text-xs tracking-widest focus:outline-none focus:border-white transition-colors">
@@ -306,7 +343,7 @@
     <script>
         lucide.createIcons();
 
-        // 1. Scroll Effect
+        // Navbar Scroll
         window.addEventListener('scroll', () => {
             const isScrolled = window.scrollY > 50;
             const navbar = document.getElementById('navbar');
@@ -316,7 +353,7 @@
             navbar.classList.toggle('py-8', !isScrolled);
         });
 
-        // 2. Journal Content Loader
+        // Journal Loader
         const journalContainer = document.getElementById('home-journal-grid');
         const defaultArticles = [
             { id: 1, category: 'Theory', title: '「写真は引き算である」という思考の整理術', excerpt: '情報の飽和した現代において、一枚の写真から何を削ぎ落とすべきか。', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000' },
@@ -334,8 +371,8 @@
                             </div>
                             <div class="space-y-3">
                                 <span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase tracking-[0.2em]">${article.category}</span>
-                                <h3 class="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors">${article.title}</h3>
-                                <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed font-serif italic">${article.excerpt}</p>
+                                <h3 class="text-lg font-serif leading-snug group-hover:text-gray-600 transition-colors font-bold">${article.title}</h3>
+                                <p class="text-[11px] text-gray-500 line-clamp-2 leading-relaxed font-serif italic uppercase">${article.excerpt}</p>
                                 <div class="pt-4"><span class="text-[10px] border-b border-gray-300 pb-1 text-gray-400 group-hover:text-gray-900 transition-colors uppercase tracking-widest font-bold">Read More</span></div>
                             </div>
                         </a>
@@ -343,34 +380,22 @@
             }
         });
 
-        // 3. Auth Check
-        document.addEventListener('DOMContentLoaded', () => {
-            const isMember = localStorage.getItem('pt_auth_token_v1') === 'xc9-access-granted';
-            if (isMember) {
-                document.getElementById('guest-nav')?.classList.add('hidden');
-                document.getElementById('member-nav')?.classList.remove('hidden');
-            }
-        });
-
-        function openLoginModal() { document.getElementById('login-modal').showModal(); }
-        function logout() { localStorage.removeItem('pt_auth_token_v1'); window.location.reload(); }
-
-        // 4. Diagnosis Data (Images)
+        // Diagnosis Data
         const PHOTO_TYPES = [
-            { id: 'A', animal: "フクロウ", title: "芸術", icon: "/images/members/os/owl.png", core: "心象風景", reason: "独自の静寂を愛する性質から。", desc: "記録よりも感情や記憶を重視。自らの哲学を画面に投影します。" },
-            { id: 'B', animal: "オオカミ", title: "記録", icon: "/images/members/os/wolf.png", core: "現場感", reason: "飾らない生の瞬間を嗅ぎ分ける能力から。", desc: "目の前の出来事をありのままに捉える。日常からドラマを見つけ出します。" },
-            { id: 'C', animal: "ワシ", title: "技術", icon: "/images/members/os/eagle.png", core: "精密制御", reason: "微細な動きを捉える能力から。", desc: "機材のスペックや光のコントロールに喜びを感じる。隙のない一枚を追求。" },
-            { id: 'D', animal: "イルカ", title: "共感", icon: "/images/members/os/dolphin.png", core: "対話", reason: "周囲を楽しませる聡明さから。", desc: "写真をコミュニケーションと捉える。相手と喜びを分かち合います。" },
-            { id: 'E', animal: "ワタリドリ", title: "冒険", icon: "/images/members/os/migratorybird.png", core: "発見", reason: "理想の光を求めて移動し続ける持久力から。", desc: "未知の体験を求め移動を厭わない。自然への敬意を持ちます。" },
-            { id: 'F', animal: "ドバト", title: "反射", icon: "/images/members/os/pigeon.png", core: "直感", reason: "現象に反射的に反応する習性から。", desc: "理屈よりも直感を大切にする。無意識の中に視点を潜ませます。" }
+            { id: 'A', animal: "フクロウ", title: "芸術", emoji: "🦉", img: "/images/members/os/owl.png", core: "心象風景", reason: "独自の静寂を愛する性質から。", desc: "記録よりも感情や記憶を重視。自らの哲学を画面に投影します。" },
+            { id: 'B', animal: "オオカミ", title: "記録", emoji: "🐺", img: "/images/members/os/wolf.png", core: "現場感", reason: "飾らない生の瞬間を嗅ぎ分ける能力から。", desc: "目の前の出来事をありのままに捉える。日常からドラマを見つけ出します。" },
+            { id: 'C', animal: "ワシ", title: "技術", emoji: "🦅", img: "/images/members/os/eagle.png", core: "精密制御", reason: "微細な動きを捉える能力から。", desc: "機材のスペックや光のコントロールに喜びを感じる。隙のない一枚を追求。" },
+            { id: 'D', animal: "イルカ", title: "共感", emoji: "🐬", img: "/images/members/os/dolphin.png", core: "対話", reason: "周囲を楽しませる聡明さから。", desc: "写真をコミュニケーションと捉える。相手と喜びを分かち合います。" },
+            { id: 'E', animal: "ワタリドリ", title: "冒険", emoji: "🕊️", img: "/images/members/os/migratorybird.png", core: "発見", reason: "理想の光を求めて移動し続ける持久力から。", desc: "未知の体験を求め移動を厭わない。自然への敬意を持ちます。" },
+            { id: 'F', animal: "ドバト", title: "反射", emoji: "🐦", img: "/images/members/os/pigeon.png", core: "直感", reason: "現象に反射的に反応する習性から。", desc: "理屈よりも直感を大切にする。無意識の中に視点を潜ませます。" }
         ];
         const MODEL_TYPES = [
-            { id: 'A', animal: "カメレオン", title: "物語", icon: "/images/members/os/chameleon.png" },
-            { id: 'B', animal: "キリン", title: "構造", icon: "/images/members/os/giraffe.png" },
-            { id: 'C', animal: "レトリバー", title: "共感", icon: "/images/members/os/goldenretriever.png" },
-            { id: 'D', animal: "ライオン", title: "生命", icon: "/images/members/os/lion.png" },
-            { id: 'E', animal: "白鳥", title: "細部", icon: "/images/members/os/swan.png" },
-            { id: 'F', animal: "クラゲ", title: "空気", icon: "/images/members/os/jellyfish.png" }
+            { id: 'A', animal: "カメレオン", title: "物語", emoji: "🦎", img: "/images/members/os/chameleon.png" },
+            { id: 'B', animal: "キリン", title: "構造", emoji: "🦒", img: "/images/members/os/giraffe.png" },
+            { id: 'C', animal: "レトリバー", title: "共感", emoji: "🐕", img: "/images/members/os/goldenretriever.png" },
+            { id: 'D', animal: "ライオン", title: "生命", emoji: "🦁", img: "/images/members/os/lion.png" },
+            { id: 'E', animal: "白鳥", title: "細部", emoji: "🦢", img: "/images/members/os/swan.png" },
+            { id: 'F', animal: "クラゲ", title: "空気", emoji: "🪼", img: "/images/members/os/jellyfish.png" }
         ];
         
         const MATRIX_DATA = { 'A': [2,1,0,0,2,1], 'B': [1,2,1,2,0,1], 'C': [1,2,0,2,2,0], 'D': [0,1,2,1,0,0], 'E': [1,1,0,2,0,0], 'F': [0,0,1,0,0,2] };
@@ -381,21 +406,21 @@
             photo: [
                 { q: "撮影中、思いがけないフレアが入りました。", opts: [{ t: "イメージを邪魔するので排除する", v: "C" }, { t: "作品の一部として受け入れる", v: "B" }, { t: "そのまま撮り続ける", v: "F" }] },
                 { q: "カメラを選ぶ際、最も惹かれるのは？", opts: [{ t: "高精度な制御性", v: "C" }, { t: "機動力", v: "E" }, { t: "直感", v: "F" }] },
-                { q: "被写体が身構えているとき、どうする？", opts: [{ t: "会話をして表情を引き出す", v: "D" }, { t: "その緊張感すら真実だと捉える", v: "B" }, { t: "特に何もしない", v: "F" }] },
+                { q: "被写体が身構えているとき、どうする？", opts: [{ t: "表情を引き出す対話", v: "D" }, { t: "緊張感すら真実だと捉える", v: "B" }, { t: "特に何もしない", v: "F" }] },
                 { q: "シャッターを切る瞬間とは？", opts: [{ t: "美学が世界とリンクした時", v: "A" }, { t: "現象をパッケージする時", v: "E" }, { t: "指が動く", v: "F" }] },
                 { q: "レタッチの役割は？", opts: [{ t: "作品へと昇華させる工程", v: "A" }, { t: "空気感を伝える調整", v: "B" }, { t: "その時の気分", v: "F" }] },
-                { q: "他者の評価は気になりますか？", opts: [{ t: "感性を信じているので左右されない", v: "A" }, { t: "指標。喜ぶ姿を見るのは嬉しい", v: "D" }, { t: "見ていない", v: "F" }] },
-                { q: "撮影地が予定外の雨だった場合。", opts: [{ t: "雨の質感が撮れるチャンスと捉える", v: "B" }, { t: "理想の光が作れないので中断検討", v: "C" }, { t: "そのまま撮る", v: "F" }] },
+                { q: "他者の評価は気になりますか？", opts: [{ t: "感性を信じているので左右されない", v: "A" }, { t: "誰かが喜ぶ姿を見るのは嬉しい", v: "D" }, { t: "見ていない", v: "F" }] },
+                { q: "雨が降ってきた場合。", opts: [{ t: "雨の質感が撮れるチャンスと捉える", v: "B" }, { t: "理想の光が作れないので中断検討", v: "C" }, { t: "そのまま撮る", v: "F" }] },
                 { q: "タイトルをつけるなら？", opts: [{ t: "抽象的にする", v: "A" }, { t: "場所や出来事を明確に記す", v: "B" }, { t: "無題", v: "F" }] },
                 { q: "良い写真の定義は？", opts: [{ t: "技術に裏打ちされた完成度", v: "C" }, { t: "言葉にできない余韻", v: "A" }, { t: "好きかどうか", v: "F" }] },
                 { q: "撮影中、頭の中は？", opts: [{ t: "構図を練っている", v: "A" }, { t: "体が反応している", v: "F" }, { t: "無", v: "F" }] }
             ],
             model: [
                 { q: "衣装が自分と真逆だったとき。", opts: [{ t: "演じてみる", v: "A" }, { t: "意図を正しく伝えようとする", v: "B" }, { t: "とりあえず着る", v: "F" }] },
-                { q: "「自由に動いて」と言われたら？", opts: [{ t: "内面からポーズを出す", v: "A" }, { t: "背景に溶け込むように佇む", v: "F" }, { t: "指示を待つ", v: "F" }] },
+                { q: "「自由に動いて」と言われたら？", opts: [{ t: "内面からポーズを出す", v: "A" }, { t: "光に溶け込むように佇む", v: "F" }, { t: "指示を待つ", v: "F" }] },
                 { q: "身体管理について。", opts: [{ t: "規律正しく管理", v: "D" }, { t: "自然体", v: "C" }, { t: "意識していない", v: "F" }] },
                 { q: "レンズはあなたにとって？", opts: [{ t: "自分を発見する鏡", v: "A" }, { t: "メッセージを届けるツール", v: "C" }, { t: "機械", v: "F" }] },
-                { q: "コミュニケーションスタンスは？", opts: [{ t: "雰囲気を作りたい", v: "C" }, { t: "役割に徹したい", v: "B" }, { t: "静かにしている", v: "F" }] },
+                { q: "現場でのコミュニケーションは？", opts: [{ t: "雰囲気を作りたい", v: "C" }, { t: "役割に徹したい", v: "B" }, { t: "静かにしている", v: "F" }] },
                 { q: "ポーズで意識しているのは？", opts: [{ t: "全体のシルエット", v: "A" }, { t: "細部のコントロール", v: "E" }, { t: "重心", v: "F" }] },
                 { q: "弱点を見せる表現について。", opts: [{ t: "受け入れる", v: "A" }, { t: "隠したい", v: "B" }, { t: "抵抗はない", v: "F" }] },
                 { q: "撮影中、頭の中は？", opts: [{ t: "プランを練っている", v: "A" }, { t: "音や温度を感じている", v: "F" }, { t: "無", v: "F" }] },
@@ -440,7 +465,9 @@
             document.getElementById('screen-result').classList.remove('hidden');
             const winner = Object.keys(diagState.scores).reduce((a, b) => diagState.scores[a] > diagState.scores[b] ? a : b);
             const data = diagState.mode === 'photo' ? PHOTO_TYPES.find(p => p.id === winner) : MODEL_TYPES.find(m => m.id === winner);
-            document.getElementById('res-icon').innerHTML = `<img src="${data.icon}" alt="${data.animal}" class="diag-icon-img">`;
+            
+            // Result screen uses image for high quality
+            document.getElementById('res-icon').innerHTML = `<img src="${data.img}" alt="${data.animal}" class="diag-icon-img">`;
             document.getElementById('res-name').innerText = `${data.animal}型`;
             document.getElementById('res-desc').innerText = data.desc;
             diagState.userWinner = winner;
@@ -450,6 +477,8 @@
             document.getElementById('screen-result').classList.add('hidden');
             document.getElementById('screen-synergy').classList.remove('hidden');
             const container = document.getElementById('synergy-matrix-container');
+            
+            // ★ Matrix with Emojis for better legibility ★
             let table = `<table class="matrix-table">
                 <thead>
                     <tr>
@@ -458,14 +487,20 @@
                             <div class="absolute bottom-1 left-1 axis-label text-[7px] text-gray-500">↓ 写真家</div>
                             <div class="w-full h-px bg-gray-700 absolute top-1/2 left-0 -rotate-[22deg]"></div>
                         </th>`;
+            
             MODEL_TYPES.forEach(m => {
                 const active = (diagState.mode === 'model' && m.id === diagState.userWinner);
-                table += `<th class="p-2 border-b border-gray-700 ${active ? 'bg-gray-700' : 'bg-gray-800'}"><img src="${m.icon}" alt="${m.animal}" class="diag-icon-sm mx-auto"></th>`;
+                table += `<th class="p-2 border-b border-gray-700 ${active ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-500'}">
+                    <div class="text-sm">${m.emoji}</div>
+                </th>`;
             });
             table += `</tr></thead><tbody>`;
+            
             PHOTO_TYPES.forEach(p => {
                 const activeRow = (diagState.mode === 'photo' && p.id === diagState.userWinner);
-                table += `<tr><td class="p-2 border-r border-gray-700 text-center ${activeRow ? 'bg-gray-700' : 'bg-gray-800'}"><img src="${p.icon}" alt="${p.animal}" class="diag-icon-sm mx-auto"></td>`;
+                table += `<tr><td class="p-2 border-r border-gray-700 text-center ${activeRow ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-500'}">
+                    <div class="text-sm">${p.emoji}</div>
+                </td>`;
                 MATRIX_DATA[p.id].forEach((val, i) => {
                     const activeCol = (diagState.mode === 'model' && MODEL_TYPES[i].id === diagState.userWinner);
                     table += `<td class="p-1"><div class="matrix-cell ${CLASS_MAP[val]} ${(activeRow || activeCol) ? 'active-user-cell' : ''}">${SYMBOL_MAP[val]}</div></td>`;
@@ -486,10 +521,9 @@
             if(best.length > 0) {
                 details.innerHTML = `<h3 class="text-[9px] font-bold text-gray-500 border-l border-white pl-3 mb-4 uppercase tracking-[0.2em]">Resonance Matching</h3>`;
                 best.forEach(b => {
-                    details.innerHTML += `<div class="bg-gray-800 p-6 border border-gray-700 font-serif text-[11px] text-gray-400 leading-loose mb-4 flex items-start gap-4">
-                    <div class="flex shrink-0 gap-1"><img src="${b.p.icon}" class="w-8 h-8"><img src="${b.m.icon}" class="w-8 h-8"></div>
-                    <div><strong class="text-white uppercase">${b.p.animal} × ${b.m.animal}</strong><br>
-                    深い共鳴の予感。対話から新しい表現が生まれます。</div></div>`;
+                    details.innerHTML += `<div class="bg-gray-800 p-6 border border-gray-700 font-serif text-[11px] text-gray-400 leading-loose mb-4">
+                    <span class="text-lg">${b.p.emoji} × ${b.m.emoji}</span> <strong class="text-white ml-2 uppercase font-bold">${b.p.animal} × ${b.m.animal}</strong><br>
+                    深い共鳴の予感。対話から新しい表現が生まれます。</div>`;
                 });
             }
             lucide.createIcons();
@@ -500,6 +534,17 @@
             document.getElementById('screen-result').classList.add('hidden');
             document.getElementById('screen-home').classList.remove('hidden');
         }
+
+        function openLoginModal() { document.getElementById('login-modal').showModal(); }
+        function logout() { localStorage.removeItem('pt_auth_token_v1'); window.location.reload(); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const isMember = localStorage.getItem('pt_auth_token_v1') === 'xc9-access-granted';
+            if (isMember) {
+                document.getElementById('guest-nav')?.classList.add('hidden');
+                document.getElementById('member-nav')?.classList.remove('hidden');
+            }
+        });
     </script>
 </body>
 </html>
