@@ -38,7 +38,6 @@
         .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; }
         .modal.active { opacity: 1; visibility: visible; }
         
-        /* ローディングスピナー */
         .spinner { border: 2px solid rgba(255,255,255,0.1); border-left-color: #fbbf24; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -50,6 +49,7 @@
             <a href="/" class="text-[10px] text-gray-500 hover:text-white transition-colors tracking-widest flex items-center gap-1">
                 <i data-lucide="arrow-left" class="w-3 h-3"></i> HOME
             </a>
+
             <nav class="flex items-center gap-6 border-l border-gray-700 pl-4 ml-2">
                 <a href="index.html" class="relative py-1 group">
                     <span class="text-sm md:text-lg font-serif font-bold tracking-widest text-gray-600 group-hover:text-gray-400 transition-colors">
@@ -57,11 +57,19 @@
                     </span>
                     <div class="absolute bottom-[-2px] left-0 w-0 h-[1px] bg-gray-600 transition-all duration-300 group-hover:w-full"></div>
                 </a>
+
                 <div class="relative py-1">
                     <h1 class="nav-link-active text-sm md:text-lg font-serif font-bold tracking-widest text-white cursor-default">
                         BOARD
                     </h1>
                 </div>
+
+                <a href="profile.html" id="myPageLink" class="relative py-1 group">
+                    <span class="text-sm md:text-lg font-serif font-bold tracking-widest text-gray-600 group-hover:text-gray-400 transition-colors">
+                        MY PAGE
+                    </span>
+                    <div class="absolute bottom-[-2px] left-0 w-0 h-[1px] bg-gray-600 transition-all duration-300 group-hover:w-full"></div>
+                </a>
             </nav>
         </div>
 
@@ -160,10 +168,7 @@
         // =================================================================
         // API CONFIGURATION
         // =================================================================
-        // メンバー一覧取得用API
         const MEMBERS_API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
-        
-        // ★掲示板データ送受信用API (ユーザー指定URL)
         const JOB_API_URL = "https://script.google.com/macros/s/AKfycbz9Jq1zS-se_78VLdeXC9Vn2pzYwr3Pt6dCMn_TkfWGpCq_Q8wb6mS3hz27AKuimuV1cg/exec";
         // =================================================================
 
@@ -171,10 +176,7 @@
         let allJobs = [];
         let currentUser = null;
         
-        // テスト用: ログインしていると仮定するメンバーID
         const MY_MEMBER_ID = "2"; 
-        
-        // 管理者権限モード (trueにすると削除ボタンが常に出現)
         const IS_ADMIN_MODE = false; 
 
         const modal = document.getElementById('modalOverlay');
@@ -199,8 +201,6 @@
             }
         };
 
-        // 投稿の削除 (UIのみシミュレーション)
-        // ※GAS側での削除APIが実装されれば、ここでfetchでdeleteリクエストを送ります
         window.deletePost = function(buttonElement) {
             if(confirm('この投稿を削除しますか？\n(注意: 現在は画面上から消えるのみで、データは保持されます)')) {
                 const card = buttonElement.closest('.group'); 
@@ -208,9 +208,7 @@
             }
         };
 
-        // カードのHTML生成
         function createCardHTML(jobData, userData) {
-            // ユーザー情報が見つからない場合の対策
             const safeUserData = userData || { 
                 name: "Unknown Member", 
                 image: "https://via.placeholder.com/100x100?text=Unknown", 
@@ -218,7 +216,6 @@
             };
             const imgUrl = safeUserData.image ? safeUserData.image : 'https://via.placeholder.com/100x100?text=No+Img';
             
-            // 削除ボタン表示判定
             const isOwner = (String(safeUserData.id) === String(currentUser?.id));
             const canDelete = isOwner || IS_ADMIN_MODE;
 
@@ -228,7 +225,6 @@
                 </button>
             ` : '';
 
-            // 日付整形
             const dateStr = jobData.date ? new Date(jobData.date).toLocaleDateString() : 'Undecided';
 
             return `
@@ -280,10 +276,8 @@
             `;
         }
 
-        // 初期化：APIからデータを読み込む
         async function init() {
             try {
-                // メンバーリストとジョブリストを同時に取得
                 const [membersRes, jobsRes] = await Promise.all([
                     fetch(MEMBERS_API_URL),
                     fetch(JOB_API_URL)
@@ -292,23 +286,24 @@
                 allMembers = await membersRes.json();
                 allJobs = await jobsRes.json(); 
 
-                // ログインユーザーを特定
                 currentUser = allMembers.find(m => m.id == MY_MEMBER_ID) || allMembers[0];
                 
-                // ヘッダー情報の更新
+                // MY PAGEリンクのURLを更新 (自分のID付加)
+                if(currentUser) {
+                    document.getElementById('myPageLink').href = `profile.html?id=${currentUser.id}`;
+                }
+
                 const statusElem = document.getElementById('userStatus');
                 const roleElem = document.getElementById('userRoleDisplay');
                 statusElem.textContent = `Logged in as ${currentUser.name}`;
                 roleElem.textContent = IS_ADMIN_MODE ? "ADMINISTRATOR MODE" : "MEMBER MODE";
                 roleElem.className = IS_ADMIN_MODE ? "block text-[8px] text-red-400 uppercase tracking-widest font-bold" : "block text-[8px] text-gray-600 uppercase tracking-widest";
 
-                // カードの描画
                 let boardHTML = '';
                 if (!allJobs || allJobs.length === 0) {
                     boardHTML = '<div class="col-span-full text-center py-20 text-gray-600"><p class="text-[10px] tracking-widest">NO JOBS FOUND. BE THE FIRST TO POST!</p></div>';
                 } else {
                     allJobs.forEach(job => {
-                        // 投稿者のID (job.userId) と一致するメンバー情報を探す
                         const poster = allMembers.find(m => String(m.id) === String(job.userId));
                         boardHTML += createCardHTML(job, poster);
                     });
@@ -325,19 +320,16 @@
             }
         }
 
-        // 投稿フォームの送信
         document.getElementById('jobDate').valueAsDate = new Date();
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!currentUser) return;
 
-            // ボタンをローディング表示に変更
             const originalBtnContent = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<span class="spinner"></span> SENDING...`;
 
-            // 送信データ作成
             const postData = {
                 userId: currentUser.id,
                 type: document.getElementById('jobType').value,
@@ -350,16 +342,12 @@
             };
 
             try {
-                // GASにPOST送信 (text/plainでJSONを送るハック)
                 await fetch(JOB_API_URL, {
                     method: 'POST',
                     body: JSON.stringify(postData),
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 });
-
-                // 成功したらリロードして反映
                 location.reload();
-
             } catch (error) {
                 console.error("Post Error:", error);
                 alert("データの送信に失敗しました。");
@@ -369,7 +357,6 @@
         });
 
         init();
-
     </script>
 </body>
 </html>
