@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Board | Professional View</title>
+    <title>Job Board | Integrated Auth</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
     
     <script>
-        // 認証チェック (Members Listと同じロジック)
+        // 認証チェック
         if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
-            // 本番環境では以下のコメントアウトを外してリダイレクトを有効化してください
-            // window.location.href = '/'; 
-            console.log("Auth check: Token not found (Skipped for preview)");
+             console.log("Auth check: Token not found (Skipped for preview)");
         }
     </script>
     
@@ -21,13 +19,11 @@
         body { font-family: sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
         
-        /* スクロールバー設定 */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        /* ナビゲーションのアクティブ表示 (光る下線) */
         .nav-link-active::after {
             content: '';
             position: absolute;
@@ -35,11 +31,10 @@
             left: 0;
             width: 100%;
             height: 1px;
-            background-color: #fbbf24; /* amber-400 */
+            background-color: #fbbf24;
             box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
         }
 
-        /* モーダルのアニメーション */
         .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; }
         .modal.active { opacity: 1; visibility: visible; }
     </style>
@@ -51,7 +46,6 @@
             <a href="/" class="text-[10px] text-gray-500 hover:text-white transition-colors tracking-widest flex items-center gap-1">
                 <i data-lucide="arrow-left" class="w-3 h-3"></i> HOME
             </a>
-
             <nav class="flex items-center gap-6 border-l border-gray-700 pl-4 ml-2">
                 <a href="index.html" class="relative py-1 group">
                     <span class="text-sm md:text-lg font-serif font-bold tracking-widest text-gray-600 group-hover:text-gray-400 transition-colors">
@@ -59,7 +53,6 @@
                     </span>
                     <div class="absolute bottom-[-2px] left-0 w-0 h-[1px] bg-gray-600 transition-all duration-300 group-hover:w-full"></div>
                 </a>
-
                 <div class="relative py-1">
                     <h1 class="nav-link-active text-sm md:text-lg font-serif font-bold tracking-widest text-white cursor-default">
                         BOARD
@@ -72,9 +65,7 @@
             <button onclick="openModal()" class="text-[10px] font-bold tracking-widest text-amber-400 hover:text-amber-300 transition-colors border border-amber-900/50 hover:bg-amber-900/20 px-4 py-1.5 rounded flex items-center gap-2">
                 <i data-lucide="plus" class="w-3 h-3"></i> NEW POST
             </button>
-
-            <span class="text-[9px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in as Member</span>
-            
+            <span class="text-[9px] text-gray-500 uppercase tracking-widest hidden md:inline" id="userStatus">Loading User...</span>
             <button onclick="logout()" class="text-[10px] font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-3 py-1.5 rounded">
                 LOGOUT
             </button>
@@ -82,7 +73,12 @@
     </header>
 
     <main class="p-4 flex-1 max-w-7xl mx-auto w-full">
-        <div id="job-board" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div id="loading" class="text-center py-20 text-gray-500">
+            <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-3"></i>
+            <p class="text-[10px] tracking-widest">LOADING DATA...</p>
+        </div>
+        
+        <div id="job-board" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 hidden">
             </div>
     </main>
 
@@ -153,53 +149,183 @@
 
     <script>
         lucide.createIcons();
+        
+        // Members Listと同じAPI URL
+        const API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
+        
+        // グローバル変数
+        let allMembers = [];
+        let currentUser = null;
+        
+        // ダミーの「自分のID」 (これを変更するとログインユーザーが変わります)
+        // APIデータ内の誰かのIDを指定してください。
+        // 指定がない場合やIDが見つからない場合はリストの1人目が自動的に割り当てられます。
+        const MY_MEMBER_ID = "2"; 
 
-        // -------------------------------------------------------------------------
-        // 1. ログインユーザーの設定
-        // -------------------------------------------------------------------------
-        // 実際の運用では認証システムから取得した情報をここにセットします。
-        // ここでは「ログイン済みユーザー」として仮のデータを定義しています。
-        const currentUser = {
-            id: "user_12345",
-            name: "Rui Tachibana", // ログイン中のユーザー名
-            image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100",
-            role: "Model"
-        };
-
-        // -------------------------------------------------------------------------
-        // 2. ログアウト機能
-        // -------------------------------------------------------------------------
-        function logout() {
-            if(confirm('ログアウトしますか？')) {
-                localStorage.removeItem('pt_auth_token_v1');
-                window.location.href = '/'; // ログイン画面等のトップへ戻る
-            }
-        }
-
-        // -------------------------------------------------------------------------
-        // 3. モーダルと掲示板の機能
-        // -------------------------------------------------------------------------
         const modal = document.getElementById('modalOverlay');
         const form = document.getElementById('jobForm');
         const board = document.getElementById('job-board');
+        const loading = document.getElementById('loading');
+        const userStatus = document.getElementById('userStatus');
+
+        function logout() {
+            if(confirm('ログアウトしますか？')) {
+                localStorage.removeItem('pt_auth_token_v1');
+                window.location.href = '/';
+            }
+        }
 
         function openModal() { modal.classList.add('active'); }
         function closeModal() { modal.classList.remove('active'); }
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-        // リクエスト送信（シミュレーション）
         window.sendRequest = function(targetName) {
             if(confirm(`${targetName} さんにリクエストを送信しますか？`)) {
-                alert(`${targetName} さんにリクエストを送信しました！\n(デモ機能: 実際には送信されていません)`);
+                alert(`${targetName} さんにリクエストを送信しました！`);
             }
         };
 
-        // 日付の初期値を今日に設定
+        // -------------------------------------------------------------
+        // カード生成関数 (共通化)
+        // -------------------------------------------------------------
+        function createCardHTML(jobData, userData) {
+            const imgUrl = userData.image ? userData.image : 'https://via.placeholder.com/100x100?text=No+Img';
+            
+            return `
+                <div class="bg-gray-800 border border-gray-700 p-5 rounded-sm hover:border-gray-500 transition-all duration-300 flex flex-col h-full group relative animate-fade-in">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[9px] font-bold px-1.5 py-0.5 tracking-wider bg-gray-700 text-gray-300 border border-gray-600 rounded-sm">
+                            ${jobData.type}
+                        </span>
+                        <span class="text-[10px] text-gray-500 tracking-widest">
+                            ${jobData.date}
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-lg font-serif text-white mb-3 leading-tight group-hover:text-amber-400 transition-colors">
+                        ${jobData.title}
+                    </h3>
+                    
+                    <div class="flex flex-col gap-2 mb-4 text-[10px] uppercase tracking-widest border-l-2 border-gray-700 pl-3 py-1">
+                        <div class="flex items-center gap-2 text-gray-400">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-gray-500"></i> ${jobData.location}
+                        </div>
+                        <div class="flex items-center gap-2 text-amber-500 font-bold">
+                            <i data-lucide="banknote" class="w-3 h-3"></i> ${jobData.budget}
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-300">
+                            <i data-lucide="globe" class="w-3 h-3 text-gray-500"></i> ${jobData.publish}
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-gray-400 leading-relaxed mb-6 flex-1 whitespace-pre-wrap">
+                        ${jobData.detail}
+                    </p>
+
+                    <div class="mt-auto pt-4 border-t border-gray-700">
+                        <div class="flex items-center gap-3 mb-4">
+                            <img src="${imgUrl}" class="w-8 h-8 rounded-full object-cover border border-gray-600" onerror="this.src='https://via.placeholder.com/100x100?text=No+Img'">
+                            <div>
+                                <p class="text-[9px] text-gray-500 uppercase tracking-widest">Posted by</p>
+                                <p class="text-xs text-white font-serif">${userData.name}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <a href="profile.html?id=${userData.id}" class="text-center text-[9px] font-bold tracking-widest text-gray-400 hover:text-white border border-gray-600 hover:bg-gray-700 px-3 py-2 rounded transition-colors flex items-center justify-center gap-1">
+                                PROFILE
+                            </a>
+                            <button onclick="sendRequest('${userData.name}')" class="text-center text-[9px] font-bold tracking-widest text-white bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded transition-colors shadow-lg flex items-center justify-center gap-1">
+                                <i data-lucide="send" class="w-3 h-3"></i> REQUEST
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------
+        // 初期化処理: APIデータ取得
+        // -------------------------------------------------------------
+        async function init() {
+            try {
+                // 1. メンバーデータを取得
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                allMembers = data;
+
+                if (!allMembers || allMembers.length === 0) {
+                    throw new Error("No members data");
+                }
+
+                // 2. ログインユーザーを特定
+                // MY_MEMBER_ID と一致する人を探す、いなければ最初の1人
+                currentUser = allMembers.find(m => m.id == MY_MEMBER_ID) || allMembers[0];
+                
+                // ヘッダーにログイン名を表示
+                userStatus.textContent = `Logged in as ${currentUser.name}`;
+                console.log("Logged in as:", currentUser);
+
+                // 3. 初期表示用のダミー投稿生成（他のメンバーによる投稿をシミュレート）
+                // 自分以外のメンバーをランダムに選んで表示
+                const otherMembers = allMembers.filter(m => m.id !== currentUser.id);
+                
+                // サンプル投稿データ
+                const sampleJobs = [
+                    {
+                        type: 'カメラマン募集',
+                        title: 'Fashion Editorial Shooting',
+                        location: 'Tokyo, Aoyama',
+                        budget: '30,000 JPY',
+                        publish: 'Web Magazine',
+                        date: '2025-06-15',
+                        detail: 'Looking for a photographer for a high-end fashion editorial.'
+                    },
+                    {
+                        type: 'モデル募集',
+                        title: 'Cinematic Night Portrait',
+                        location: 'Shibuya',
+                        budget: '10,000 JPY + Transport',
+                        publish: 'SNS / Portfolio',
+                        date: '2025-05-20',
+                        detail: 'Shooting with neon lights. Cyberpunk style.'
+                    }
+                ];
+
+                // サンプル投稿を画面に追加
+                let initialHTML = '';
+                sampleJobs.forEach((job, index) => {
+                    // 投稿者をランダムに割り当て（いなければcurrentUserを使う回避策）
+                    const poster = otherMembers[index % otherMembers.length] || currentUser;
+                    initialHTML += createCardHTML(job, poster);
+                });
+                
+                board.innerHTML = initialHTML;
+
+                // 画面表示切り替え
+                loading.classList.add('hidden');
+                board.classList.remove('hidden');
+                lucide.createIcons();
+
+            } catch (error) {
+                console.error(error);
+                loading.innerHTML = `<p class="text-red-400">FAILED TO LOAD USER DATA</p>`;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 投稿処理
+        // -------------------------------------------------------------
         document.getElementById('jobDate').valueAsDate = new Date();
 
-        // 投稿フォーム送信時の処理
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+
+            // API読み込みが完了していない場合のガード
+            if (!currentUser) {
+                alert("ユーザーデータを読み込み中です。少々お待ちください。");
+                return;
+            }
 
             const data = {
                 type: document.getElementById('jobType').value,
@@ -211,62 +337,13 @@
                 detail: document.getElementById('jobDetail').value
             };
 
-            // カードHTMLの生成
-            // ★ポイント: ここで currentUser (ログインユーザー) の情報を使ってカードを作ります
-            const cardHTML = `
-                <div class="bg-gray-800 border border-gray-700 p-5 rounded-sm hover:border-gray-500 transition-all duration-300 flex flex-col h-full group relative">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 tracking-wider bg-gray-700 text-gray-300 border border-gray-600 rounded-sm">
-                            ${data.type}
-                        </span>
-                        <span class="text-[10px] text-gray-500 tracking-widest">
-                            ${data.date}
-                        </span>
-                    </div>
-                    
-                    <h3 class="text-lg font-serif text-white mb-3 leading-tight group-hover:text-amber-400 transition-colors">
-                        ${data.title}
-                    </h3>
-                    
-                    <div class="flex flex-col gap-2 mb-4 text-[10px] uppercase tracking-widest border-l-2 border-gray-700 pl-3 py-1">
-                        <div class="flex items-center gap-2 text-gray-400">
-                            <i data-lucide="map-pin" class="w-3 h-3 text-gray-500"></i> ${data.location}
-                        </div>
-                        <div class="flex items-center gap-2 text-amber-500 font-bold">
-                            <i data-lucide="banknote" class="w-3 h-3"></i> ${data.budget}
-                        </div>
-                        <div class="flex items-center gap-2 text-gray-300">
-                            <i data-lucide="globe" class="w-3 h-3 text-gray-500"></i> ${data.publish}
-                        </div>
-                    </div>
-                    
-                    <p class="text-xs text-gray-400 leading-relaxed mb-6 flex-1 whitespace-pre-wrap">
-                        ${data.detail}
-                    </p>
-
-                    <div class="mt-auto pt-4 border-t border-gray-700">
-                        <div class="flex items-center gap-3 mb-4">
-                            <img src="${currentUser.image}" class="w-8 h-8 rounded-full object-cover border border-gray-600">
-                            <div>
-                                <p class="text-[9px] text-gray-500 uppercase tracking-widest">Posted by</p>
-                                <p class="text-xs text-white font-serif">${currentUser.name}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-2">
-                            <a href="profile.html?id=${currentUser.id}" class="text-center text-[9px] font-bold tracking-widest text-gray-400 hover:text-white border border-gray-600 hover:bg-gray-700 px-3 py-2 rounded transition-colors flex items-center justify-center gap-1">
-                                PROFILE
-                            </a>
-                            <button onclick="sendRequest('${currentUser.name}')" class="text-center text-[9px] font-bold tracking-widest text-white bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded transition-colors shadow-lg flex items-center justify-center gap-1">
-                                <i data-lucide="send" class="w-3 h-3"></i> REQUEST
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            // ★ここでAPIから取得した「currentUser」を使ってカードを作成
+            const newCardHTML = createCardHTML(data, currentUser);
 
             const wrapper = document.createElement('div');
-            wrapper.innerHTML = cardHTML;
+            wrapper.innerHTML = newCardHTML;
+            
+            // 先頭に追加
             board.prepend(wrapper.firstElementChild);
 
             form.reset();
@@ -275,50 +352,9 @@
             closeModal();
         });
 
-        // -------------------------------------------------------------------------
-        // 4. 初期表示用サンプルデータ (他のユーザーの投稿例)
-        // -------------------------------------------------------------------------
-        window.addEventListener('load', () => {
-            // 他のユーザー（自分ではない）の投稿を想定
-            const sampleData = {
-                type: 'カメラマン募集',
-                title: '新宿・歌舞伎町でのネオンポートレート撮影',
-                location: '東京都 新宿区 歌舞伎町',
-                budget: '10,000円 + 交通費',
-                publish: 'Instagram, Web Portfolio',
-                date: '2025-05-20',
-                detail: 'サイバーパンクな雰囲気での撮影ができるカメラマンさんを探しています。夜間の撮影になります。'
-            };
-            const sampleUser = { id: "user_999", name: "Kenji Sato", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&h=100" };
+        // 実行
+        init();
 
-            const sampleCard = `
-                <div class="bg-gray-800 border border-gray-700 p-5 rounded-sm hover:border-gray-500 transition-all duration-300 flex flex-col h-full group relative">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 tracking-wider bg-gray-700 text-gray-300 border border-gray-600 rounded-sm">${sampleData.type}</span>
-                        <span class="text-[10px] text-gray-500 tracking-widest">${sampleData.date}</span>
-                    </div>
-                    <h3 class="text-lg font-serif text-white mb-3 leading-tight group-hover:text-amber-400 transition-colors">${sampleData.title}</h3>
-                    <div class="flex flex-col gap-2 mb-4 text-[10px] uppercase tracking-widest border-l-2 border-gray-700 pl-3 py-1">
-                        <div class="flex items-center gap-2 text-gray-400"><i data-lucide="map-pin" class="w-3 h-3 text-gray-500"></i> ${sampleData.location}</div>
-                        <div class="flex items-center gap-2 text-amber-500 font-bold"><i data-lucide="banknote" class="w-3 h-3"></i> ${sampleData.budget}</div>
-                        <div class="flex items-center gap-2 text-gray-300"><i data-lucide="globe" class="w-3 h-3 text-gray-500"></i> ${sampleData.publish}</div>
-                    </div>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-6 flex-1 whitespace-pre-wrap">${sampleData.detail}</p>
-                    <div class="mt-auto pt-4 border-t border-gray-700">
-                        <div class="flex items-center gap-3 mb-4">
-                            <img src="${sampleUser.image}" class="w-8 h-8 rounded-full object-cover border border-gray-600">
-                            <div><p class="text-[9px] text-gray-500 uppercase tracking-widest">Posted by</p><p class="text-xs text-white font-serif">${sampleUser.name}</p></div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <a href="profile.html?id=${sampleUser.id}" class="text-center text-[9px] font-bold tracking-widest text-gray-400 hover:text-white border border-gray-600 hover:bg-gray-700 px-3 py-2 rounded transition-colors flex items-center justify-center gap-1">PROFILE</a>
-                            <button onclick="sendRequest('${sampleUser.name}')" class="text-center text-[9px] font-bold tracking-widest text-white bg-amber-700 hover:bg-amber-600 px-3 py-2 rounded transition-colors shadow-lg flex items-center justify-center gap-1"><i data-lucide="send" class="w-3 h-3"></i> REQUEST</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            board.innerHTML = sampleCard;
-            lucide.createIcons();
-        });
     </script>
 </body>
 </html>
