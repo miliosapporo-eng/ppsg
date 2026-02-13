@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Board | Integrated Auth</title>
+    <title>Job Board | Delete Function</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
@@ -65,7 +65,10 @@
             <button onclick="openModal()" class="text-[10px] font-bold tracking-widest text-amber-400 hover:text-amber-300 transition-colors border border-amber-900/50 hover:bg-amber-900/20 px-4 py-1.5 rounded flex items-center gap-2">
                 <i data-lucide="plus" class="w-3 h-3"></i> NEW POST
             </button>
-            <span class="text-[9px] text-gray-500 uppercase tracking-widest hidden md:inline" id="userStatus">Loading User...</span>
+            <div class="text-right hidden md:block">
+                <span class="block text-[9px] text-gray-500 uppercase tracking-widest" id="userStatus">Loading...</span>
+                <span class="block text-[8px] text-gray-600 uppercase tracking-widest" id="userRoleDisplay"></span>
+            </div>
             <button onclick="logout()" class="text-[10px] font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-3 py-1.5 rounded">
                 LOGOUT
             </button>
@@ -150,23 +153,26 @@
     <script>
         lucide.createIcons();
         
-        // Members Listと同じAPI URL
         const API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
         
-        // グローバル変数
         let allMembers = [];
         let currentUser = null;
         
-        // ダミーの「自分のID」 (これを変更するとログインユーザーが変わります)
-        // APIデータ内の誰かのIDを指定してください。
-        // 指定がない場合やIDが見つからない場合はリストの1人目が自動的に割り当てられます。
+        // ★重要: テスト用設定
+        // 特定のIDを「自分」として認識します。APIにあるIDを指定してください。
         const MY_MEMBER_ID = "2"; 
+        
+        // ★重要: 管理者権限シミュレーション
+        // true にすると、他人の投稿も削除ボタンが表示されます。
+        // false にすると、自分の投稿のみ削除ボタンが表示されます。
+        const IS_ADMIN_MODE = false; 
 
         const modal = document.getElementById('modalOverlay');
         const form = document.getElementById('jobForm');
         const board = document.getElementById('job-board');
         const loading = document.getElementById('loading');
         const userStatus = document.getElementById('userStatus');
+        const userRoleDisplay = document.getElementById('userRoleDisplay');
 
         function logout() {
             if(confirm('ログアウトしますか？')) {
@@ -186,15 +192,44 @@
         };
 
         // -------------------------------------------------------------
-        // カード生成関数 (共通化)
+        // ★削除機能
+        // -------------------------------------------------------------
+        window.deletePost = function(buttonElement) {
+            if(confirm('本当にこの投稿を削除しますか？\n（この操作は取り消せません）')) {
+                // ボタンの親要素（カード）を探して削除
+                const card = buttonElement.closest('.group'); 
+                if(card) {
+                    card.remove();
+                    // alert('投稿を削除しました。');
+                }
+            }
+        };
+
+        // -------------------------------------------------------------
+        // カード生成関数
         // -------------------------------------------------------------
         function createCardHTML(jobData, userData) {
             const imgUrl = userData.image ? userData.image : 'https://via.placeholder.com/100x100?text=No+Img';
             
+            // ★削除ボタンの表示判定
+            // 1. 投稿者のIDと現在のユーザーIDが一致する (本人)
+            // 2. または、現在のユーザーが管理者モードである (Admin)
+            const isOwner = (String(userData.id) === String(currentUser.id));
+            const canDelete = isOwner || IS_ADMIN_MODE;
+
+            // 削除ボタンHTML (条件を満たす場合のみ生成)
+            const deleteButtonHTML = canDelete ? `
+                <button onclick="deletePost(this)" class="absolute top-3 right-3 z-20 text-gray-600 hover:text-red-500 bg-gray-900/50 hover:bg-gray-900 p-1.5 rounded-full transition-colors backdrop-blur-sm" title="Delete Post">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+            ` : '';
+
             return `
                 <div class="bg-gray-800 border border-gray-700 p-5 rounded-sm hover:border-gray-500 transition-all duration-300 flex flex-col h-full group relative animate-fade-in">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-[9px] font-bold px-1.5 py-0.5 tracking-wider bg-gray-700 text-gray-300 border border-gray-600 rounded-sm">
+                    
+                    ${deleteButtonHTML}
+
+                    <div class="flex justify-between items-start mb-3 pr-8"> <span class="text-[9px] font-bold px-1.5 py-0.5 tracking-wider bg-gray-700 text-gray-300 border border-gray-600 rounded-sm">
                             ${jobData.type}
                         </span>
                         <span class="text-[10px] text-gray-500 tracking-widest">
@@ -244,12 +279,8 @@
             `;
         }
 
-        // -------------------------------------------------------------
-        // 初期化処理: APIデータ取得
-        // -------------------------------------------------------------
         async function init() {
             try {
-                // 1. メンバーデータを取得
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 allMembers = data;
@@ -258,51 +289,52 @@
                     throw new Error("No members data");
                 }
 
-                // 2. ログインユーザーを特定
-                // MY_MEMBER_ID と一致する人を探す、いなければ最初の1人
+                // ログインユーザー設定
                 currentUser = allMembers.find(m => m.id == MY_MEMBER_ID) || allMembers[0];
                 
-                // ヘッダーにログイン名を表示
+                // ヘッダー表示更新
                 userStatus.textContent = `Logged in as ${currentUser.name}`;
-                console.log("Logged in as:", currentUser);
+                userRoleDisplay.textContent = IS_ADMIN_MODE ? "ADMINISTRATOR MODE" : "MEMBER MODE";
+                userRoleDisplay.className = IS_ADMIN_MODE 
+                    ? "block text-[8px] text-red-400 uppercase tracking-widest font-bold" 
+                    : "block text-[8px] text-gray-600 uppercase tracking-widest";
 
-                // 3. 初期表示用のダミー投稿生成（他のメンバーによる投稿をシミュレート）
-                // 自分以外のメンバーをランダムに選んで表示
+                console.log("Logged in as:", currentUser);
+                console.log("Admin Mode:", IS_ADMIN_MODE);
+
+                // サンプル投稿の生成
                 const otherMembers = allMembers.filter(m => m.id !== currentUser.id);
                 
-                // サンプル投稿データ
-                const sampleJobs = [
-                    {
-                        type: 'カメラマン募集',
-                        title: 'Fashion Editorial Shooting',
-                        location: 'Tokyo, Aoyama',
-                        budget: '30,000 JPY',
-                        publish: 'Web Magazine',
-                        date: '2025-06-15',
-                        detail: 'Looking for a photographer for a high-end fashion editorial.'
-                    },
-                    {
-                        type: 'モデル募集',
-                        title: 'Cinematic Night Portrait',
-                        location: 'Shibuya',
-                        budget: '10,000 JPY + Transport',
-                        publish: 'SNS / Portfolio',
-                        date: '2025-05-20',
-                        detail: 'Shooting with neon lights. Cyberpunk style.'
-                    }
-                ];
+                // サンプル投稿1：他人による投稿
+                const sampleJob1 = {
+                    type: 'カメラマン募集',
+                    title: 'Fashion Editorial Shooting',
+                    location: 'Tokyo, Aoyama',
+                    budget: '30,000 JPY',
+                    publish: 'Web Magazine',
+                    date: '2025-06-15',
+                    detail: 'Looking for a photographer for a high-end fashion editorial.'
+                };
 
-                // サンプル投稿を画面に追加
+                // サンプル投稿2：自分による投稿（削除テスト用）
+                const sampleJob2 = {
+                    type: 'モデル募集',
+                    title: '[My Post] Cinematic Night Portrait',
+                    location: 'Shibuya',
+                    budget: '10,000 JPY + Transport',
+                    publish: 'SNS / Portfolio',
+                    date: '2025-05-20',
+                    detail: 'This is a test post by me. I can delete this.'
+                };
+
                 let initialHTML = '';
-                sampleJobs.forEach((job, index) => {
-                    // 投稿者をランダムに割り当て（いなければcurrentUserを使う回避策）
-                    const poster = otherMembers[index % otherMembers.length] || currentUser;
-                    initialHTML += createCardHTML(job, poster);
-                });
+                // 他人の投稿
+                initialHTML += createCardHTML(sampleJob1, otherMembers[0] || currentUser);
+                // 自分の投稿
+                initialHTML += createCardHTML(sampleJob2, currentUser);
                 
                 board.innerHTML = initialHTML;
 
-                // 画面表示切り替え
                 loading.classList.add('hidden');
                 board.classList.remove('hidden');
                 lucide.createIcons();
@@ -313,19 +345,11 @@
             }
         }
 
-        // -------------------------------------------------------------
-        // 投稿処理
-        // -------------------------------------------------------------
         document.getElementById('jobDate').valueAsDate = new Date();
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-
-            // API読み込みが完了していない場合のガード
-            if (!currentUser) {
-                alert("ユーザーデータを読み込み中です。少々お待ちください。");
-                return;
-            }
+            if (!currentUser) return;
 
             const data = {
                 type: document.getElementById('jobType').value,
@@ -337,13 +361,9 @@
                 detail: document.getElementById('jobDetail').value
             };
 
-            // ★ここでAPIから取得した「currentUser」を使ってカードを作成
             const newCardHTML = createCardHTML(data, currentUser);
-
             const wrapper = document.createElement('div');
             wrapper.innerHTML = newCardHTML;
-            
-            // 先頭に追加
             board.prepend(wrapper.firstElementChild);
 
             form.reset();
@@ -352,7 +372,6 @@
             closeModal();
         });
 
-        // 実行
         init();
 
     </script>
