@@ -10,8 +10,12 @@
     
     <script>
         // --- Configuration ---
-        // ★ GAS Web App URL (GET/POST対応版に更新してください)
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec"; 
+        
+        // 1. メンバー情報取得用 (既存)
+        const GAS_MEMBERS_API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec"; 
+
+        // 2. LOVE機能 (投票・履歴) 用 (新規追加)
+        const GAS_LOVE_API_URL = "https://script.google.com/macros/s/AKfycbwS3lHO3ytlS8PikwDv_Bw0Ba9XQHhfEfVA5ZnKdo7mmwM-5lwv9OhnS5b4BBEnSiDZSA/exec";
 
         // --- Global State ---
         let currentMemberId = null; // 表示中のプロフィールID
@@ -45,7 +49,7 @@
             // Fetch Data
             await fetchMemberDetail(currentMemberId);
             
-            // GASからLoveデータを取得
+            // GASからLoveデータを取得 (新しいURLを使用)
             fetchLoveStatus(currentMemberId);
         }
 
@@ -85,8 +89,7 @@
             updateCounterUI(type, 1);
 
             try {
-                // POST to GAS
-                // create FormData for GAS doPost(e)
+                // POST to GAS (LOVE APIを使用)
                 const formData = new FormData();
                 formData.append('action', 'send_love'); // GAS側で分岐用
                 formData.append('sheet', 'LOVE');       // シート名指定
@@ -94,9 +97,8 @@
                 formData.append('fromId', viewerId);
                 formData.append('type', type); // 'love' or 'love_sq'
                 
-                // no-cors モードで送信 (GASからのレスポンスは読めないがエラーにならない)
-                // もしGAS側でCORSヘッダーを適切に設定しているなら cors モード推奨
-                await fetch(GAS_API_URL, {
+                // no-cors モードで送信
+                await fetch(GAS_LOVE_API_URL, {
                     method: 'POST',
                     mode: 'no-cors', 
                     body: formData
@@ -106,7 +108,7 @@
             } catch (e) {
                 console.error("Error sending love:", e);
                 showToast("Error sending love", true);
-                // エラー時はカウントを戻すなどの処理が必要だが今回は省略
+                // エラー時は本来カウントを戻すべきだが省略
             }
         };
 
@@ -120,19 +122,16 @@
         // --- Logic: Fetch Love Status from GAS ---
         async function fetchLoveStatus(targetId) {
             try {
-                // GASのdoGetで action=get_love を処理することを想定
-                const url = `${GAS_API_URL}?action=get_love&sheet=LOVE&targetId=${targetId}`;
+                // LOVE APIを使用
+                const url = `${GAS_LOVE_API_URL}?action=get_love&sheet=LOVE&targetId=${targetId}`;
                 
-                // 既存のGASエンドポイントが配列を返す仕様と競合しないよう、
-                // GAS側でのパラメータ分岐実装が必要です。
-                // ここでは実装イメージとして記述します。
                 const response = await fetch(url);
                 const data = await response.json(); 
-                // data構造予想: { love: 10, love_sq: 5, history: [...] }
+                // data構造: { love: 10, love_sq: 5, targetId: ... }
 
-                // データ形式チェック（API未実装時のフォールバック）
+                // データ形式チェック
                 if (!data || typeof data.love === 'undefined') {
-                    console.warn("API response format unexpected, using mock data");
+                    console.warn("API response format unexpected, using 0");
                     return; 
                 }
 
@@ -146,7 +145,7 @@
                 if(dLoveSq) dLoveSq.innerText = data.love_sq || 0;
 
             } catch (e) {
-                console.log("Love data fetch failed (GAS API might not be updated yet):", e);
+                console.log("Love data fetch failed:", e);
             }
         }
 
@@ -156,11 +155,10 @@
             listEl.innerHTML = '<li class="text-gray-500 text-xs py-2 animate-pulse">Loading history from GAS...</li>';
 
             try {
-                // 自分宛ての履歴を取得
-                const url = `${GAS_API_URL}?action=get_love_history&sheet=LOVE&targetId=${currentMemberId}`;
+                // LOVE APIを使用
+                const url = `${GAS_LOVE_API_URL}?action=get_love_history&sheet=LOVE&targetId=${currentMemberId}`;
                 const response = await fetch(url);
                 const historyData = await response.json(); 
-                // historyData = [{ fromId: '...', type: 'love', timestamp: '...' }, ...]
 
                 listEl.innerHTML = '';
                 if (!historyData || historyData.length === 0) {
@@ -188,7 +186,7 @@
                 listEl.innerHTML = '<li class="text-gray-500 text-xs py-2 text-red-400">Failed to load history.</li>';
             }
 
-            // Requestsの読み込み (既存モックのまま、必要ならここもGAS化)
+            // Requestsの読み込み (モック)
             const requestsListEl = document.getElementById('history-requests-list');
             requestsListEl.innerHTML = `
                 <li class="text-gray-500 text-xs py-2 italic">
@@ -228,8 +226,8 @@
         // --- Fetch Member Details (Existing Logic) ---
         async function fetchMemberDetail(id) {
             try {
-                // actionパラメータなしの場合は全メンバーリストを返すと仮定
-                const response = await fetch(GAS_API_URL);
+                // MEMBERS API (古い方) を使用
+                const response = await fetch(GAS_MEMBERS_API_URL);
                 const data = await response.json();
                 
                 // 配列かどうかチェック（APIのレスポンス形式による）
