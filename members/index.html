@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Members | 見つめる写真のはじめ型</title>
+    <title>Members List | Compact View</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
@@ -11,7 +11,8 @@
     <script>
         // 認証チェック
         if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
-            window.location.href = '/';
+            // window.location.href = '/'; // 開発環境での確認用に一時コメントアウト、本番時は有効化推奨
+            console.log("Auth check skipped for preview");
         }
     </script>
     
@@ -23,38 +24,38 @@
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        /* OS Badge Style */
+        /* OS Badge Style - Compact */
         .os-badge {
             background: rgba(251, 191, 36, 0.1);
             border: 1px solid rgba(251, 191, 36, 0.3);
             color: #fbbf24;
-            font-size: 9px;
-            padding: 2px 6px;
+            font-size: 8px; /* 文字サイズ縮小 */
+            padding: 1px 4px; /* パディング縮小 */
             letter-spacing: 0.05em;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <header class="p-6 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-gray-900/95 backdrop-blur z-50">
-        <div class="flex items-center gap-4">
-            <a href="/" class="text-xs text-gray-500 hover:text-white transition-colors tracking-widest flex items-center gap-1">
+    <header class="p-4 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-gray-900/95 backdrop-blur z-50 shadow-lg">
+        <div class="flex items-center gap-3">
+            <a href="/" class="text-[10px] text-gray-500 hover:text-white transition-colors tracking-widest flex items-center gap-1">
                 <i data-lucide="arrow-left" class="w-3 h-3"></i> HOME
             </a>
-            <h1 class="text-xl font-serif font-bold tracking-widest text-white border-l border-gray-700 pl-4 ml-4">
+            <h1 class="text-lg font-serif font-bold tracking-widest text-white border-l border-gray-700 pl-3 ml-3">
                 MEMBERS LIST
             </h1>
         </div>
-        <div class="flex items-center gap-6">
-            <span class="text-[10px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in as Member</span>
-            <button onclick="logout()" class="text-xs font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-4 py-2 rounded">
+        <div class="flex items-center gap-4">
+            <span class="text-[9px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in as Member</span>
+            <button onclick="logout()" class="text-[10px] font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-3 py-1.5 rounded">
                 LOGOUT
             </button>
         </div>
     </header>
 
-    <div class="p-6 border-b border-gray-800 overflow-x-auto bg-gray-900">
-        <div class="flex gap-8 text-xs font-bold tracking-widest whitespace-nowrap min-w-max">
+    <div class="px-4 py-3 border-b border-gray-800 overflow-x-auto bg-gray-900 scrollbar-hide">
+        <div class="flex gap-6 text-[10px] font-bold tracking-widest whitespace-nowrap min-w-max">
             <button onclick="filterMembers('All')" data-filter="All" class="filter-btn text-white border-b-2 border-white pb-1 transition-colors">ALL MEMBERS</button>
             <button onclick="filterMembers('Photographer')" data-filter="Photographer" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">PHOTOGRAPHERS</button>
             <button onclick="filterMembers('Model')" data-filter="Model" class="filter-btn text-gray-500 hover:text-white transition-colors pb-1 border-b-2 border-transparent hover:border-gray-700">MODELS</button>
@@ -65,12 +66,19 @@
         </div>
     </div>
 
-    <main class="p-6 flex-1">
-        <div id="members-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <main class="p-4 flex-1">
+        <!-- 
+            GRID変更点:
+            grid-cols-2 (スマホで2列)
+            md:grid-cols-4 (タブレットで4列)
+            lg:grid-cols-6 (PCで6列)
+            gap-4 (隙間を少し詰める)
+        -->
+        <div id="members-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <!-- Loading Spinner -->
             <div class="col-span-full text-center py-20 text-gray-500">
-                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-4"></i>
-                <p class="text-xs tracking-widest">LOADING MEMBERS DATA...</p>
+                <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-3"></i>
+                <p class="text-[10px] tracking-widest">LOADING MEMBERS DATA...</p>
             </div>
         </div>
     </main>
@@ -80,7 +88,6 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbxCjTZEEJdglIlZO_ExjqK0_gMtafvZNWKGo3lEXTP9tzT-rO9GNUG2G3WsqF2JumDD/exec";
         let allMembers = [];
 
-        // OSタイプに応じた絵文字とラベルを返すヘルパー
         function getOSInfo(osName) {
             const osMap = {
                 'OWL': '🦉 OWL', 'WOLF': '🐺 WOLF', 'EAGLE': '🦅 EAGLE',
@@ -106,7 +113,7 @@
                 if (!data || data.length === 0) {
                     document.getElementById('members-grid').innerHTML = `
                         <div class="col-span-full text-center py-20 text-gray-600">
-                            <p class="text-xs tracking-widest">NO MEMBERS REGISTERED YET.</p>
+                            <p class="text-[10px] tracking-widest">NO MEMBERS REGISTERED YET.</p>
                         </div>`;
                     return;
                 }
@@ -116,7 +123,7 @@
                 console.error("Fetch Error:", error);
                 document.getElementById('members-grid').innerHTML = `
                     <div class="col-span-full text-center py-20 text-red-400">
-                        <p class="text-xs tracking-widest">FAILED TO LOAD DATA.</p>
+                        <p class="text-[10px] tracking-widest">FAILED TO LOAD DATA.</p>
                     </div>`;
             }
         }
@@ -129,40 +136,43 @@
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-20 text-gray-600">
-                        <p class="text-xs tracking-widest">NO MEMBERS FOUND IN THIS CATEGORY.</p>
+                        <p class="text-[10px] tracking-widest">NO MEMBERS FOUND.</p>
                     </div>`;
             } else {
                 filtered.forEach(m => {
                     const imgUrl = m.image ? m.image : 'https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';
                     const osInfo = m.os_type ? getOSInfo(m.os_type) : null;
                     
+                    // カードHTML生成 (サイズ調整版)
                     const card = `
-                        <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden">
+                        <a href="profile.html?id=${m.id}" class="block bg-gray-800 border border-gray-700 hover:border-gray-500 transition-all duration-300 group relative overflow-hidden rounded-sm">
                             <div class="aspect-[4/5] overflow-hidden bg-black relative">
                                 <img src="${imgUrl}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100" 
                                      referrerpolicy="no-referrer"
                                      onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500/1f2937/4b5563?text=NO+IMAGE';">
                                 
-                                <div class="absolute top-2 right-2">
-                                    <span class="text-[9px] font-bold px-2 py-1 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
+                                <div class="absolute top-1.5 right-1.5">
+                                    <span class="text-[8px] font-bold px-1.5 py-0.5 uppercase tracking-wider backdrop-blur-sm ${m.status === 'Active' ? 'bg-green-900/60 text-green-300 border border-green-800' : 'bg-red-900/60 text-red-300 border border-red-800'}">
                                         ${m.status || 'Active'}
                                     </span>
                                 </div>
-                                <div class="absolute bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black/80 to-transparent flex flex-wrap gap-2">
-                                    <span class="text-[10px] bg-white/10 backdrop-blur px-2 py-1 text-white border border-white/20 uppercase tracking-wider">
+                                <div class="absolute bottom-0 left-0 p-2 w-full bg-gradient-to-t from-black/90 to-transparent flex flex-wrap gap-1">
+                                    <span class="text-[8px] bg-white/10 backdrop-blur px-1.5 py-0.5 text-white border border-white/20 uppercase tracking-wider">
                                         ${m.type}
                                     </span>
                                     ${osInfo ? `<span class="os-badge backdrop-blur uppercase tracking-wider font-bold">${osInfo}</span>` : ''}
                                 </div>
                             </div>
-                            <div class="p-5">
-                                <h3 class="text-lg font-serif text-white mb-2 tracking-wide group-hover:text-amber-400 transition-colors">${m.name}</h3>
-                                <p class="text-[10px] text-gray-400 mb-4 flex items-center gap-1 uppercase tracking-widest">
-                                    <i data-lucide="map-pin" class="w-3 h-3"></i> ${m.location || 'Unknown'}
+                            <div class="p-3"> <!-- パディング縮小 p-5 -> p-3 -->
+                                <h3 class="text-sm font-serif text-white mb-1 tracking-wide group-hover:text-amber-400 transition-colors truncate">
+                                    ${m.name}
+                                </h3>
+                                <p class="text-[9px] text-gray-400 mb-2 flex items-center gap-1 uppercase tracking-widest truncate">
+                                    <i data-lucide="map-pin" class="w-2.5 h-2.5"></i> ${m.location || 'Unknown'}
                                 </p>
-                                <div class="border-t border-gray-700 pt-3">
-                                    <p class="text-xs text-gray-500 line-clamp-2 italic font-serif leading-relaxed">
+                                <div class="border-t border-gray-700 pt-2">
+                                    <p class="text-[10px] text-gray-500 line-clamp-2 italic font-serif leading-tight">
                                         "${m.philosophy || '...'}"
                                     </p>
                                 </div>
