@@ -3,19 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Board | Publish Field Added</title>
+    <title>Job Board | Professional View</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
     
+    <script>
+        // 認証チェック (Members Listと同じロジック)
+        if (localStorage.getItem('pt_auth_token_v1') !== 'xc9-access-granted') {
+            // 本番環境では以下のコメントアウトを外してリダイレクトを有効化してください
+            // window.location.href = '/'; 
+            console.log("Auth check: Token not found (Skipped for preview)");
+        }
+    </script>
+    
     <style>
         body { font-family: sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .font-serif { font-family: 'Noto Serif JP', serif; }
+        
+        /* スクロールバー設定 */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
+
+        /* ナビゲーションのアクティブ表示 (光る下線) */
+        .nav-link-active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #fbbf24; /* amber-400 */
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+        }
+
+        /* モーダルのアニメーション */
         .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; }
         .modal.active { opacity: 1; visibility: visible; }
     </style>
@@ -23,17 +47,36 @@
 <body class="min-h-screen flex flex-col">
 
     <header class="p-4 border-b border-gray-800 flex justify-between items-center sticky top-0 bg-gray-900/95 backdrop-blur z-40 shadow-lg">
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4">
             <a href="/" class="text-[10px] text-gray-500 hover:text-white transition-colors tracking-widest flex items-center gap-1">
                 <i data-lucide="arrow-left" class="w-3 h-3"></i> HOME
             </a>
-            <h1 class="text-lg font-serif font-bold tracking-widest text-white border-l border-gray-700 pl-3 ml-3">
-                JOB BOARD
-            </h1>
+
+            <nav class="flex items-center gap-6 border-l border-gray-700 pl-4 ml-2">
+                <a href="index.html" class="relative py-1 group">
+                    <span class="text-sm md:text-lg font-serif font-bold tracking-widest text-gray-600 group-hover:text-gray-400 transition-colors">
+                        MEMBERS LIST
+                    </span>
+                    <div class="absolute bottom-[-2px] left-0 w-0 h-[1px] bg-gray-600 transition-all duration-300 group-hover:w-full"></div>
+                </a>
+
+                <div class="relative py-1">
+                    <h1 class="nav-link-active text-sm md:text-lg font-serif font-bold tracking-widest text-white cursor-default">
+                        BOARD
+                    </h1>
+                </div>
+            </nav>
         </div>
-        <div>
-            <button onclick="openModal()" class="text-[10px] font-bold tracking-widest text-amber-400 hover:text-amber-300 transition-colors border border-amber-900/50 hover:bg-amber-900/20 px-4 py-2 rounded flex items-center gap-2">
+
+        <div class="flex items-center gap-4">
+            <button onclick="openModal()" class="text-[10px] font-bold tracking-widest text-amber-400 hover:text-amber-300 transition-colors border border-amber-900/50 hover:bg-amber-900/20 px-4 py-1.5 rounded flex items-center gap-2">
                 <i data-lucide="plus" class="w-3 h-3"></i> NEW POST
+            </button>
+
+            <span class="text-[9px] text-gray-500 uppercase tracking-widest hidden md:inline">Logged in as Member</span>
+            
+            <button onclick="logout()" class="text-[10px] font-bold tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-900/50 hover:bg-red-900/20 px-3 py-1.5 rounded">
+                LOGOUT
             </button>
         </div>
     </header>
@@ -111,13 +154,31 @@
     <script>
         lucide.createIcons();
 
-        // ログインユーザー情報（仮）
+        // -------------------------------------------------------------------------
+        // 1. ログインユーザーの設定
+        // -------------------------------------------------------------------------
+        // 実際の運用では認証システムから取得した情報をここにセットします。
+        // ここでは「ログイン済みユーザー」として仮のデータを定義しています。
         const currentUser = {
             id: "user_12345",
-            name: "Rui Tachibana",
-            image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100"
+            name: "Rui Tachibana", // ログイン中のユーザー名
+            image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100",
+            role: "Model"
         };
 
+        // -------------------------------------------------------------------------
+        // 2. ログアウト機能
+        // -------------------------------------------------------------------------
+        function logout() {
+            if(confirm('ログアウトしますか？')) {
+                localStorage.removeItem('pt_auth_token_v1');
+                window.location.href = '/'; // ログイン画面等のトップへ戻る
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // 3. モーダルと掲示板の機能
+        // -------------------------------------------------------------------------
         const modal = document.getElementById('modalOverlay');
         const form = document.getElementById('jobForm');
         const board = document.getElementById('job-board');
@@ -126,14 +187,17 @@
         function closeModal() { modal.classList.remove('active'); }
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
+        // リクエスト送信（シミュレーション）
         window.sendRequest = function(targetName) {
             if(confirm(`${targetName} さんにリクエストを送信しますか？`)) {
-                alert(`${targetName} さんにリクエストを送信しました！`);
+                alert(`${targetName} さんにリクエストを送信しました！\n(デモ機能: 実際には送信されていません)`);
             }
         };
 
+        // 日付の初期値を今日に設定
         document.getElementById('jobDate').valueAsDate = new Date();
 
+        // 投稿フォーム送信時の処理
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -142,11 +206,13 @@
                 title: document.getElementById('jobTitle').value,
                 location: document.getElementById('jobLocation').value,
                 budget: document.getElementById('jobBudget').value,
-                publish: document.getElementById('jobPublish').value, // 媒体情報を取得
+                publish: document.getElementById('jobPublish').value,
                 date: document.getElementById('jobDate').value,
                 detail: document.getElementById('jobDetail').value
             };
 
+            // カードHTMLの生成
+            // ★ポイント: ここで currentUser (ログインユーザー) の情報を使ってカードを作ります
             const cardHTML = `
                 <div class="bg-gray-800 border border-gray-700 p-5 rounded-sm hover:border-gray-500 transition-all duration-300 flex flex-col h-full group relative">
                     <div class="flex justify-between items-start mb-3">
@@ -209,8 +275,11 @@
             closeModal();
         });
 
-        // 初期表示サンプル
+        // -------------------------------------------------------------------------
+        // 4. 初期表示用サンプルデータ (他のユーザーの投稿例)
+        // -------------------------------------------------------------------------
         window.addEventListener('load', () => {
+            // 他のユーザー（自分ではない）の投稿を想定
             const sampleData = {
                 type: 'カメラマン募集',
                 title: '新宿・歌舞伎町でのネオンポートレート撮影',
