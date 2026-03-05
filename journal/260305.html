@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>写真を視る愉しみ | Photography Philosophy Study Group</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Noto Sans JP', 'sans-serif'], serif: ['Noto Serif JP', 'serif'] },
+                    colors: { gray: { 850: '#1f2937' } },
+                    typography: { DEFAULT: { css: { maxWidth: '100%', color: '#374151', fontFamily: 'Noto Serif JP, serif', lineHeight: '1.9', p: { marginBottom: '1.5em' }, h2: { fontFamily: 'Noto Serif JP, serif', marginTop: '2.5em', letterSpacing: '0.05em' }, blockquote: { fontStyle: 'normal', borderLeftColor: '#111827', color: '#4b5563', fontWeight: '400' } } } }
+                }
+            }
+        }
+    </script>
+    <style>
+        #progress-bar { width: 0%; transition: width 0.1s; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ccc; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-white text-gray-900 font-sans selection:bg-gray-200 antialiased">
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-transparent"><div id="progress-bar" class="h-full bg-gray-900"></div></div>
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-8">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="/" class="flex flex-col group">
+                <h1 class="text-xl font-serif tracking-widest font-bold leading-none group-hover:opacity-70 transition-opacity">見つめる写真のはじめ型</h1>
+                <span class="text-[8px] tracking-[0.15em] mt-1 font-medium text-gray-500">PHOTOGRAPHY PHILOSOPHY STUDY GROUP</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="/index.html#philosophy" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Philosophy</a>
+                <a href="/journal/" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Journal</a>
+                <a href="/index.html#community" class="text-xs uppercase tracking-[0.2em] hover:text-gray-500 transition-colors">Community</a>
+                <a href="/pricing.html" class="bg-gray-900 text-white px-6 py-2 text-xs tracking-widest hover:bg-gray-700 transition-colors">JOIN US</a>
+            </div>
+            <button id="menu-btn" class="md:hidden z-50 p-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg></button>
+        </div>
+    </nav>
+    <header class="pt-40 pb-16 md:pt-48 md:pb-24 px-6 bg-gray-50">
+        <div class="container mx-auto max-w-4xl text-center fade-in-up">
+            <div class="flex items-center justify-center gap-4 mb-8">
+                <span class="px-3 py-1 bg-gray-900 text-white text-[10px] tracking-widest uppercase">Introduction </span>
+                <span class="text-xs text-gray-500 tracking-widest uppercase">2026.3.5</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-serif font-medium leading-tight mb-8">写真を視る愉しみ</h1>
+            <p class="text-sm text-gray-500 font-serif leading-loose max-w-2xl mx-auto">過去から学び、今を知る。写真にはあらゆる社会が詰め込まれています。</p>
+        </div>
+    </header>
+    <div class="w-full h-[60vh] md:h-[80vh] overflow-hidden fade-in-up" style="animation-delay: 0.2s;">
+        <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=2574&auto=format&fit=crop" alt="Hero Image" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-[2s]">
+    </div>
+    <main class="container mx-auto px-6 py-24 flex flex-col lg:flex-row gap-16">
+        <aside class="lg:w-1/4 order-2 lg:order-1">
+            <div class="sticky top-32 space-y-12">
+                <div>
+                    <h4 class="text-xs font-bold tracking-widest uppercase text-gray-400 mb-4">Written by</h4>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center"><svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                        <div><p class="font-serif text-sm">R.Iwamura</p><p class="text-[10px] text-gray-500 mt-1">Photography Enthusiast</p></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <article class="lg:w-3/4 order-1 lg:order-2 relative">
+            <!-- ★ flow-rootクラスを追加し、内部のフロート要素がはみ出さないように設定 -->
+            <div class="prose prose-lg prose-headings:font-serif prose-headings:font-medium hover:prose-a:text-gray-600 prose-img:rounded-sm max-w-none flow-root">
+                <p class="lead text-xl font-serif text-gray-600 mb-8">
+    過去から学び、今を知る。写真にはあらゆる社会が詰め込まれています。
+</p>
+
+<h2 class="clear-both pt-4">「写真を視る」こと、はじめませんか？</h2>
+<figure class="float-left w-[300px] mr-6 mb-4">
+    <img src="https://www.shashasha.co/jp/book/people-of-the-north-place-people#" alt="Image" class="w-full h-auto rounded-sm">
+    
+</figure>
+<p>皆さん、写真集を読んだことはありますか？「値段が高い」「SNSで充分」「難しいし何から読めばよいのか」など、SNSを中心に活動されている方に話を聞くと、敷居が高いと感じている方も少なくないようです。でもそれでは勿体ない。<br><br>写真の発明から既に約200年。今ではボタンを押せば写すことができ、技術・方法論は語りつくされ、ネットには上手で綺麗な写真が日々公開される現代。誰でも出来るからこそ、写真は世の中に溢れています。しかし価値あるものとして、後の世に残るものはいったいどれだけ有るのでしょうか。<br><br>その参考になるのが、写真集です。<br>写真集には多くの写真が載せられています。それはただ技術的に優れた一枚を寄せ集めただけでは成り立ちません。主題や被写体の選択にはじまり、完成までには多くの人が携わります。一枚一枚選び出し集めることに思いが込められているのです。これは個人で完結している写真活動とは、また異なるものです。<br><br>写真は肖像写真や名所旧跡の記録にはじまり、各時代の社会問題や日常風景など様々な主題で撮影されてきました。またカメラは小型化され、モノクロからカラー、デジタル化など技術も進歩しています。写真家たちは常に模索し、新たな撮影対象と表現方法を見つけてきたのです。その現実と向き合ってきた葛藤を形に残した、貴重な記録が写真集なのです。<br><br>各時代を超えて、今に残る写真集。それを時間をかけて鑑賞することは、ネット上で次々と目の前から消え去ってゆく画像を見ることとは違う体験となるはず。何を考えて撮られ、どこが評価されたのか。それぞれに思いを巡らせ、じっくりと「写真を視る」ことを始めてみませんか？<br><br>ここでは「写真を視る」ことを楽しむために、様々なテーマを設けて世界中の写真家・写真集や関連資料などを紹介していきたいと思います。書くことで自分も勉強し、またそれが皆さんの写真活動の参考になれれば幸いです。では、一緒により深く写真を楽しみましょう！ <br><br></p>
+
+            </div>
+            <div class="mt-16 pt-8 border-t border-gray-100">
+                <div class="flex flex-wrap gap-2"><a href="#" class="px-3 py-1 bg-gray-100 text-xs text-gray-600 hover:bg-gray-200 transition-colors">#History of Photography</a>
+                <a href="#" class="px-3 py-1 bg-gray-100 text-xs text-gray-600 hover:bg-gray-200 transition-colors">#Photo Book</a></div>
+            </div>
+        </article>
+    </main>
+    <footer class="bg-white py-16 text-gray-900 border-t border-gray-100">
+        <div class="container mx-auto px-6 text-center">
+             <a href="/" class="text-xs tracking-[0.2em] border-b border-gray-900 pb-1 hover:text-gray-500 transition-colors">BACK TO HOME</a>
+             <p class="text-[10px] text-gray-400 mt-12">© 2025 MiLio, LLC All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            const isScrolled = window.scrollY > 50;
+            navbar.classList.toggle('bg-white/95', isScrolled);
+            navbar.classList.toggle('backdrop-blur-sm', isScrolled);
+            navbar.classList.toggle('border-b', isScrolled);
+            navbar.classList.toggle('border-gray-100', isScrolled);
+            navbar.classList.toggle('py-4', isScrolled);
+            navbar.classList.toggle('py-8', !isScrolled);
+            
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            if(document.getElementById("progress-bar")) document.getElementById("progress-bar").style.width = scrolled + "%";
+        });
+        if(document.getElementById('menu-btn')) document.getElementById('menu-btn').addEventListener('click', () => alert('Menu'));
+        
+        // ★ Paywall Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const isMember = localStorage.getItem('pt_auth_token_v1') === 'xc9-access-granted';
+            const content = document.getElementById('locked-content');
+            const overlay = document.getElementById('paywall-overlay');
+            
+            if (!isMember) {
+                // Non-member: Apply Lock
+                if(content) {
+                    content.classList.add('blur-sm', 'select-none', 'pointer-events-none');
+                    content.style.maxHeight = '400px'; 
+                    content.style.overflow = 'hidden';
+                }
+                if(overlay) overlay.classList.remove('hidden');
+            } else {
+                console.log('Member Access Approved');
+            }
+        });
+    </script>
+</body>
+</html>
