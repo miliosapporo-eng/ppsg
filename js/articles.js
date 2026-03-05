@@ -3,7 +3,7 @@
 const articlesData = [
     // 最新の記事を一番上にしてください
     {
-        id: '260305.html', // フォルダ名と一致させる
+        id: 'root/journal/260305.html', // フォルダ名と一致させる
         category: 'News',
         subCategory: 'News', // サブカテゴリがない場合はCategoryと同じでもOK
         date: '2026.03.05',
