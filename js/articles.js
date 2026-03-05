@@ -3,12 +3,12 @@
 const articlesData = [
     // 最新の記事を一番上にしてください
     {
-        id: 'stieglitz-nyc', // フォルダ名と一致させる
-        category: 'History',
-        subCategory: 'Context', // サブカテゴリがない場合はCategoryと同じでもOK
-        date: '2024.05.10',
-        title: 'スティーグリッツが見たニューヨーク、そして現代の路上。',
-        excerpt: '近代写真の父が切り取った街の「等価」な美しさ。その視点は、現代のストリートスナップにどう受け継がれているのか。',
+        id: '260305.html', // フォルダ名と一致させる
+        category: 'News',
+        subCategory: 'News', // サブカテゴリがない場合はCategoryと同じでもOK
+        date: '2026.03.05',
+        title: '写真を視る愉しみ',
+        excerpt: '過去から学び、今を知る。写真にはあらゆる社会が詰め込まれています。',
         image: 'https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=800'
     },
     {
